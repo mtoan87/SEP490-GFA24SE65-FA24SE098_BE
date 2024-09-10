@@ -1,0 +1,6 @@
+@SEP490_GFA24SE65_ChildrenVillageSOS_HostAddress = http://localhost:5210
+
+GET {{SEP490_GFA24SE65_ChildrenVillageSOS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
