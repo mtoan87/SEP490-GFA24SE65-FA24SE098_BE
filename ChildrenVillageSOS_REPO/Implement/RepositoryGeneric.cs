@@ -52,6 +52,12 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             return await _dbSet.FindAsync(id);
         }
+
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
         public void Update(T entity)
         {
             _dbSet.Update(entity);

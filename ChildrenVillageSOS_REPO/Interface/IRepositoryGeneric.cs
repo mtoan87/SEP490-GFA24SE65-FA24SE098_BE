@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         DbSet<T> Entities();
         Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(string id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<int> AddAsync(T entity);
         void Update(T entity);
