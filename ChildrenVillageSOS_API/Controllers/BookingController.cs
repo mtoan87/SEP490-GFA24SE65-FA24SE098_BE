@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class BookingController : ControllerBase
     {
@@ -31,14 +31,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Booking>> CreateBooking([FromForm] CreateBookingDTO createBookingDTO)
+        public async Task<ActionResult<Booking>> CreateBooking(CreateBookingDTO createBookingDTO)
         {
             var booking = await _bookingService.CreateBooking(createBookingDTO);
             return Ok(booking);
         }
 
         [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateBooking(int Id, [FromForm] UpdateBookingDTO updateBookingDTO)
+        public async Task<IActionResult> UpdateBooking(int Id, UpdateBookingDTO updateBookingDTO)
         {
             var booking = await _bookingService.UpdateBooking(Id, updateBookingDTO);
             return Ok(booking);
