@@ -17,6 +17,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IVillageRepository, VillageRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             return services;
         }
 
@@ -30,6 +31,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IVillageService, VillageService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
+            services.AddScoped<IBookingService, BookingService>();
             return services;
         }
     }
