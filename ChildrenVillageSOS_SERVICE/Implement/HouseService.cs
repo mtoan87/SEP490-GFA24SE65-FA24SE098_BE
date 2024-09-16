@@ -53,7 +53,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 HouseOwner = createHouse.HouseOwner,
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
-                IsDelete = createHouse.IsDelete
+                IsDeleted = createHouse.IsDeleted
             };
 
             await _houseRepository.AddAsync(newHouse);
@@ -76,7 +76,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.HouseOwner = updateHouse.HouseOwner;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
-            existingHouse.IsDelete = updateHouse.IsDelete;
+            existingHouse.IsDeleted = updateHouse.IsDeleted;
 
             await _houseRepository.UpdateAsync(existingHouse);
             return existingHouse;

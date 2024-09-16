@@ -13,11 +13,15 @@ public partial class Village
 
     public string Description { get; set; }
 
+    public string Status { get; set; }
+
     public string UserAccountId { get; set; }
 
-    public bool? IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<DonationDetail> DonationDetails { get; set; } = new List<DonationDetail>();
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? ModifyDate { get; set; }
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 

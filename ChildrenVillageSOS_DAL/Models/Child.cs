@@ -21,7 +21,13 @@ public partial class Child
 
     public string Certificate { get; set; }
 
-    public bool? IsDelete { get; set; }
+    public string Status { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? ModifyDate { get; set; }
 
     public virtual House House { get; set; }
 }

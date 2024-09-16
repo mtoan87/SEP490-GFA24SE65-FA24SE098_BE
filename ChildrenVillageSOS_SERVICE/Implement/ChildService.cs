@@ -51,7 +51,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 //Dob = createChild.Dob,
                 AcademicLevel = createChild.AcademicLevel,
                 Certificate = createChild.Certificate,
-                IsDelete = createChild.IsDelete
+                IsDeleted = createChild.IsDeleted
             };
             await _childRepository.AddAsync(newChild);
             return newChild;
@@ -72,7 +72,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             //existingChild.Dob = updateChild.Dob;
             existingChild.AcademicLevel = updateChild.AcademicLevel;
             existingChild.Certificate = updateChild.Certificate;
-            existingChild.IsDelete = updateChild.IsDelete;
+            existingChild.IsDeleted = updateChild.IsDeleted;
 
             await _childRepository.UpdateAsync(existingChild);
             return existingChild;

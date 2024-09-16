@@ -11,15 +11,19 @@ public partial class Booking
 
     public string UserAccountId { get; set; }
 
+    public int? BkslotId { get; set; }
+
     public DateTime Visitday { get; set; }
 
     public string Status { get; set; }
 
-    public DateTime Starttime { get; set; }
+    public bool? IsDeleted { get; set; }
 
-    public DateTime Endtime { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public bool? IsDelete { get; set; }
+    public DateTime? ModifyDate { get; set; }
+
+    public virtual BookingSlot Bkslot { get; set; }
 
     public virtual House House { get; set; }
 

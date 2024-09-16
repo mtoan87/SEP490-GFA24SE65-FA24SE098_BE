@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createExepense.Description,
                 Expenseday = DateTime.Now,
                 HouseId = createExepense.HouseId,
-                IsDelete = createExepense.IsDelete,
+                IsDeleted = createExepense.IsDeleted,
             };
             await _expenseRepository.AddAsync(newExpense);
             return newExpense;
@@ -46,10 +46,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updateExpense.ExpenseAmount = updExpense.ExpenseAmount;
-            updateExpense.Description = updExpense.Description;
-            updateExpense.HouseId = updExpense.HouseId;
-            updateExpense.IsDelete = updExpense.IsDelete;
+            updExpense.ExpenseAmount = updateExpense.ExpenseAmount;
+            updExpense.Description = updateExpense.Description;
+            updExpense.HouseId = updateExpense.HouseId;
+            updExpense.IsDeleted = updateExpense.IsDeleted;
+            await _expenseRepository.UpdateAsync(updExpense);
+            return updExpense;
+
+        }
+        public async Task<Expense> RemoveSoftExpense(int id, UpdateExpenseDTO updateExpense)
+        {
+            var updExpense = await _expenseRepository.GetByIdAsync(id);
+            if (updExpense == null)
+            {
+                throw new Exception($"Expense with ID{id} not found!");
+            }
+            
+            
+            
+            updExpense.IsDeleted = updateExpense.IsDeleted;
             await _expenseRepository.UpdateAsync(updExpense);
             return updExpense;
 

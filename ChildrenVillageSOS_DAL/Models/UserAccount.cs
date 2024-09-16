@@ -23,9 +23,15 @@ public partial class UserAccount
 
     public string Country { get; set; }
 
+    public string Status { get; set; }
+
     public int? RoleId { get; set; }
 
-    public bool? Isdelete { get; set; }
+    public bool? IsDeleted { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? ModifyDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
@@ -35,9 +41,9 @@ public partial class UserAccount
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
     public virtual Role Role { get; set; }
+
+    public virtual ICollection<SystemWallet> SystemWallets { get; set; } = new List<SystemWallet>();
 
     public virtual ICollection<Village> Villages { get; set; } = new List<Village>();
 }

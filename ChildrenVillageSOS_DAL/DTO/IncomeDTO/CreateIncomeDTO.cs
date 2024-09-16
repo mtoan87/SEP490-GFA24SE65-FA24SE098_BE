@@ -14,7 +14,7 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
 
         public string HouseId { get; set; }
 
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

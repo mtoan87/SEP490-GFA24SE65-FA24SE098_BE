@@ -32,8 +32,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var newPayment = new Payment
             {
-                PaymentMenthod = createPayment.PaymentMenthod,
-                UserAccountId = createPayment.UserAccountId,
+                PaymentMethod = createPayment.PaymentMethod,
+                DonationId = createPayment.DonationId,
                 Datetime = DateTime.Now,
                 Amount = createPayment.Amount,
                 Status = createPayment.Status,
@@ -48,11 +48,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updatePayment.UserAccountId = updaPayment.UserAccountId;
+            updaPayment.DonationId = updatePayment.DonationId;
 
-            updatePayment.PaymentMenthod = updaPayment.PaymentMenthod;
-            updatePayment.Amount = updaPayment.Amount;
-            updaPayment.Status = updaPayment.Status;    
+            updaPayment.PaymentMethod = updatePayment.PaymentMethod;
+            updaPayment.Amount = updatePayment.Amount;
+            updaPayment.Status = updatePayment.Status;    
             await _paymentRepository.UpdateAsync(updaPayment);
             return updaPayment;
 

@@ -8,8 +8,8 @@ namespace ChildrenVillageSOS_DAL.DTO.PaymentDTO
 {
     public class UpdatePaymentDTO
     {
-        public string PaymentMenthod { get; set; }
-        public string UserAccountId { get; set; }
+        public string PaymentMethod { get; set; }
+        public int DonationId { get; set; }
 
         public string Status { get; set; }
 

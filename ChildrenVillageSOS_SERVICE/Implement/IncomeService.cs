@@ -35,7 +35,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
                 HouseId = createIncome.HouseId,
-                IsDelete = createIncome.IsDelete,
+                IsDeleted = createIncome.IsDeleted,
             };
             await _incomeRepository.AddAsync(newExpense);
             return newExpense;
@@ -47,10 +47,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updateIncome.UserAccountId = updIncome.UserAccountId;
-            
-            updateIncome.HouseId = updIncome.HouseId;
-            updateIncome.IsDelete = updIncome.IsDelete;
+            updIncome.UserAccountId = updateIncome.UserAccountId;
+
+            updIncome.HouseId = updateIncome.HouseId;
+            updIncome.IsDeleted = updateIncome.IsDeleted;
             await _incomeRepository.UpdateAsync(updIncome);
             return updIncome;
 

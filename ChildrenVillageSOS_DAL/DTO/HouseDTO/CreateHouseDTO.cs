@@ -24,6 +24,6 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public string VillageId { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

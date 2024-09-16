@@ -17,11 +17,11 @@ public partial class SoschildrenVillageDbContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
+    public virtual DbSet<BookingSlot> BookingSlots { get; set; }
+
     public virtual DbSet<Child> Children { get; set; }
 
     public virtual DbSet<Donation> Donations { get; set; }
-
-    public virtual DbSet<DonationDetail> DonationDetails { get; set; }
 
     public virtual DbSet<Expense> Expenses { get; set; }
 
@@ -32,6 +32,10 @@ public partial class SoschildrenVillageDbContext : DbContext
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<SystemWallet> SystemWallets { get; set; }
+
+    public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
@@ -45,22 +49,23 @@ public partial class SoschildrenVillageDbContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__5DE3A5B134BEAA53");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__5DE3A5B11F4828DC");
 
             entity.ToTable("Booking");
 
             entity.Property(e => e.BookingId).HasColumnName("booking_id");
-            entity.Property(e => e.Endtime)
+            entity.Property(e => e.BkslotId).HasColumnName("bkslot_id");
+            entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
-                .HasColumnName("endtime");
+                .HasColumnName("createDate");
             entity.Property(e => e.HouseId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("house_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Starttime)
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
                 .HasColumnType("datetime")
-                .HasColumnName("starttime");
+                .HasColumnName("modifyDate");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -73,18 +78,49 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("visitday");
 
+            entity.HasOne(d => d.Bkslot).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.BkslotId)
+                .HasConstraintName("FK__Booking__bkslot___5EBF139D");
+
             entity.HasOne(d => d.House).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Booking__house_i__6E01572D");
+                .HasConstraintName("FK__Booking__house_i__5CD6CB2B");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Booking__userAcc__6EF57B66");
+                .HasConstraintName("FK__Booking__userAcc__5DCAEF64");
+        });
+
+        modelBuilder.Entity<BookingSlot>(entity =>
+        {
+            entity.HasKey(e => e.BkslotId).HasName("PK__BookingS__70170AD032321A0C");
+
+            entity.ToTable("BookingSlot");
+
+            entity.Property(e => e.BkslotId).HasColumnName("bkslot_id");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
+            entity.Property(e => e.EndTime)
+                .HasColumnType("datetime")
+                .HasColumnName("end_time");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.SlotTime).HasColumnName("slot_time");
+            entity.Property(e => e.StartTime)
+                .HasColumnType("datetime")
+                .HasColumnName("start_time");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
         });
 
         modelBuilder.Entity<Child>(entity =>
         {
-            entity.HasKey(e => e.ChildId).HasName("PK__Child__015ADC05080A6A23");
+            entity.HasKey(e => e.ChildId).HasName("PK__Child__015ADC05F7BCC238");
 
             entity.ToTable("Child");
 
@@ -104,6 +140,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("child_name");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.Dob).HasColumnName("dob");
             entity.Property(e => e.Gender)
                 .IsRequired()
@@ -117,7 +156,14 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("house_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.House).WithMany(p => p.Children)
                 .HasForeignKey(d => d.HouseId)
@@ -126,12 +172,34 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.DonationId).HasName("PK__Donation__296B91DCB8AFE3CB");
+            entity.HasKey(e => e.DonationId).HasName("PK__Donation__296B91DC7ED912CF");
 
             entity.ToTable("Donation");
 
             entity.Property(e => e.DonationId).HasColumnName("donation_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("datetime")
+                .HasColumnName("datetime");
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.DonationType)
+                .IsRequired()
+                .HasMaxLength(200)
+                .HasColumnName("donation_type");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
             entity.Property(e => e.UserAccountId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -142,56 +210,16 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasConstraintName("FK__Donation__userAc__5812160E");
         });
 
-        modelBuilder.Entity<DonationDetail>(entity =>
-        {
-            entity.HasKey(e => e.DonationdetailId).HasName("PK__Donation__87CAA1677434C5C5");
-
-            entity.ToTable("DonationDetail");
-
-            entity.Property(e => e.DonationdetailId).HasColumnName("donationdetail_id");
-            entity.Property(e => e.Datetime)
-                .HasColumnType("datetime")
-                .HasColumnName("datetime");
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("description");
-            entity.Property(e => e.Donation).HasColumnName("donation");
-            entity.Property(e => e.DonationId).HasColumnName("donation_id");
-            entity.Property(e => e.HouseId)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("house_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
-            entity.Property(e => e.Status)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("status");
-            entity.Property(e => e.VillageId)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("village_id");
-
-            entity.HasOne(d => d.DonationNavigation).WithMany(p => p.DonationDetails)
-                .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__DonationD__donat__5AEE82B9");
-
-            entity.HasOne(d => d.House).WithMany(p => p.DonationDetails)
-                .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__DonationD__house__5CD6CB2B");
-
-            entity.HasOne(d => d.Village).WithMany(p => p.DonationDetails)
-                .HasForeignKey(d => d.VillageId)
-                .HasConstraintName("FK__DonationD__villa__5BE2A6F2");
-        });
-
         modelBuilder.Entity<Expense>(entity =>
         {
-            entity.HasKey(e => e.ExpenseId).HasName("PK__Expense__404B6A6BB76F030E");
+            entity.HasKey(e => e.ExpenseId).HasName("PK__Expense__404B6A6B52C0140F");
 
             entity.ToTable("Expense");
 
             entity.Property(e => e.ExpenseId).HasColumnName("expense_id");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500)
@@ -204,16 +232,22 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("house_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.Status)
+                .HasMaxLength(100)
+                .HasColumnName("status");
 
             entity.HasOne(d => d.House).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Expense__house_i__6B24EA82");
+                .HasConstraintName("FK__Expense__house_i__693CA210");
         });
 
         modelBuilder.Entity<House>(entity =>
         {
-            entity.HasKey(e => e.HouseId).HasName("PK__House__E246264134BD35F4");
+            entity.HasKey(e => e.HouseId).HasName("PK__House__E24626410E0A7A92");
 
             entity.ToTable("House");
 
@@ -221,6 +255,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("house_id");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500)
@@ -235,11 +272,18 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("house_owner");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.Location)
                 .IsRequired()
                 .HasMaxLength(200)
                 .HasColumnName("location");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
             entity.Property(e => e.UserAccountId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -260,55 +304,27 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Income>(entity =>
         {
-            entity.HasKey(e => e.IncomeId).HasName("PK__Income__8DC777A6C385197E");
+            entity.HasKey(e => e.IncomeId).HasName("PK__Income__8DC777A6D46EAFE7");
 
             entity.ToTable("Income");
 
             entity.Property(e => e.IncomeId).HasColumnName("income_id");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.DonationId).HasColumnName("donation_id");
             entity.Property(e => e.HouseId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("house_id");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
             entity.Property(e => e.Receiveday)
                 .HasColumnType("datetime")
                 .HasColumnName("receiveday");
-            entity.Property(e => e.UserAccountId)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("userAccount_id");
-
-            entity.HasOne(d => d.Donation).WithMany(p => p.Incomes)
-                .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Income__donation__66603565");
-
-            entity.HasOne(d => d.House).WithMany(p => p.Incomes)
-                .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Income__house_id__68487DD7");
-
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Incomes)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Income__userAcco__6754599E");
-        });
-
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED1FC9EA6874CDCB");
-
-            entity.ToTable("Payment");
-
-            entity.Property(e => e.PaymentId).HasColumnName("payment_id");
-            entity.Property(e => e.Amount).HasColumnName("amount");
-            entity.Property(e => e.Datetime)
-                .HasColumnType("datetime")
-                .HasColumnName("datetime");
-            entity.Property(e => e.PaymentMenthod)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("payment_menthod");
             entity.Property(e => e.Status)
-                .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("status");
             entity.Property(e => e.UserAccountId)
@@ -316,14 +332,55 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("userAccount_id");
 
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Payments)
+            entity.HasOne(d => d.Donation).WithMany(p => p.Incomes)
+                .HasForeignKey(d => d.DonationId)
+                .HasConstraintName("FK__Income__donation__6477ECF3");
+
+            entity.HasOne(d => d.House).WithMany(p => p.Incomes)
+                .HasForeignKey(d => d.HouseId)
+                .HasConstraintName("FK__Income__house_id__66603565");
+
+            entity.HasOne(d => d.UserAccount).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Payment__userAcc__6383C8BA");
+                .HasConstraintName("FK__Income__userAcco__656C112C");
+        });
+
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED1FC9EAD0F41B5A");
+
+            entity.ToTable("Payment");
+
+            entity.Property(e => e.PaymentId).HasColumnName("payment_id");
+            entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
+            entity.Property(e => e.Datetime)
+                .HasColumnType("datetime")
+                .HasColumnName("datetime");
+            entity.Property(e => e.DonationId).HasColumnName("donation_id");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.PaymentMethod)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("payment_method");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
+
+            entity.HasOne(d => d.Donation).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.DonationId)
+                .HasConstraintName("FK__Payment__donatio__619B8048");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__760965CC097C5731");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__760965CC6FE59977");
 
             entity.ToTable("Role");
 
@@ -335,9 +392,59 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasColumnName("role_name");
         });
 
+        modelBuilder.Entity<SystemWallet>(entity =>
+        {
+            entity.HasKey(e => e.SystemWalletId).HasName("PK__SystemWa__8B29F19CF3143F7E");
+
+            entity.ToTable("SystemWallet");
+
+            entity.Property(e => e.SystemWalletId).HasColumnName("systemWallet_id");
+            entity.Property(e => e.Budget).HasColumnName("budget");
+            entity.Property(e => e.UserAccountId)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("userAccount_id");
+
+            entity.HasOne(d => d.UserAccount).WithMany(p => p.SystemWallets)
+                .HasForeignKey(d => d.UserAccountId)
+                .HasConstraintName("FK__SystemWal__userA__6C190EBB");
+        });
+
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF2EF5FB4A");
+
+            entity.ToTable("Transaction");
+
+            entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
+            entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.DateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("date_time");
+            entity.Property(e => e.DonationId).HasColumnName("donation_id");
+            entity.Property(e => e.IncomeId).HasColumnName("income_id");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(200)
+                .HasColumnName("status");
+            entity.Property(e => e.SystemWalletId).HasColumnName("systemWallet_id");
+
+            entity.HasOne(d => d.Donation).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.DonationId)
+                .HasConstraintName("FK__Transacti__donat__6FE99F9F");
+
+            entity.HasOne(d => d.Income).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.IncomeId)
+                .HasConstraintName("FK__Transacti__incom__70DDC3D8");
+
+            entity.HasOne(d => d.SystemWallet).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.SystemWalletId)
+                .HasConstraintName("FK__Transacti__syste__6EF57B66");
+        });
+
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.UserAccountId).HasName("PK__UserAcco__E2C600EE3509A16C");
+            entity.HasKey(e => e.UserAccountId).HasName("PK__UserAcco__E2C600EEF38974E1");
 
             entity.ToTable("UserAccount");
 
@@ -353,18 +460,28 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("country");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.Dob).HasColumnName("dob");
             entity.Property(e => e.Gender)
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("gender");
-            entity.Property(e => e.Isdelete).HasColumnName("isdelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
             entity.Property(e => e.Password)
                 .IsRequired()
                 .HasMaxLength(200)
                 .HasColumnName("password");
             entity.Property(e => e.Phone).HasColumnName("phone");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
             entity.Property(e => e.UserEmail)
                 .IsRequired()
                 .HasMaxLength(200)
@@ -381,7 +498,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Village>(entity =>
         {
-            entity.HasKey(e => e.VillageId).HasName("PK__Village__71031D95935E23CC");
+            entity.HasKey(e => e.VillageId).HasName("PK__Village__71031D95FFF195C7");
 
             entity.ToTable("Village");
 
@@ -389,15 +506,25 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("village_id");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createDate");
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500)
                 .HasColumnName("description");
-            entity.Property(e => e.IsDelete).HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.Location)
                 .IsRequired()
                 .HasMaxLength(200)
                 .HasColumnName("location");
+            entity.Property(e => e.ModifyDate)
+                .HasColumnType("datetime")
+                .HasColumnName("modifyDate");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("status");
             entity.Property(e => e.UserAccountId)
                 .HasMaxLength(100)
                 .IsUnicode(false)

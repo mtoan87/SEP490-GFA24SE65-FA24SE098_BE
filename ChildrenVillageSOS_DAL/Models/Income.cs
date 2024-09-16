@@ -11,15 +11,23 @@ public partial class Income
 
     public DateTime Receiveday { get; set; }
 
+    public string Status { get; set; }
+
     public string UserAccountId { get; set; }
 
     public string HouseId { get; set; }
 
-    public bool IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? ModifyDate { get; set; }
 
     public virtual Donation Donation { get; set; }
 
     public virtual House House { get; set; }
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual UserAccount UserAccount { get; set; }
 }

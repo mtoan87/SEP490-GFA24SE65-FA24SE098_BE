@@ -19,17 +19,21 @@ public partial class House
 
     public string HouseOwner { get; set; }
 
+    public string Status { get; set; }
+
     public string UserAccountId { get; set; }
 
     public string VillageId { get; set; }
 
-    public bool? IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? ModifyDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
-
-    public virtual ICollection<DonationDetail> DonationDetails { get; set; } = new List<DonationDetail>();
 
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
