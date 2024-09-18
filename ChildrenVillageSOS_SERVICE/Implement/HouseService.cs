@@ -36,7 +36,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             // Lấy toàn bộ danh sách HouseId hiện có
             var allHouseIds = await _houseRepository.Entities()
-                                                    .Select(h => h.HouseId)
+                                                    .Select(h => h.Id)
                                                     .ToListAsync();
 
             // Sử dụng hàm GenerateId từ IdGenerator
@@ -44,7 +44,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             var newHouse = new House
             {
-                HouseId = newHouseId,
+                Id = newHouseId,
                 HouseName = createHouse.HouseName,
                 HouseNumber = createHouse.HouseNumber,
                 Location = createHouse.Location,

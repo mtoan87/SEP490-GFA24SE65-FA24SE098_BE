@@ -14,6 +14,6 @@ namespace ChildrenVillageSOS_DAL.DTO.PaymentDTO
 
         public string Status { get; set; }
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 }

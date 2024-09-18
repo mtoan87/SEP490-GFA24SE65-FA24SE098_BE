@@ -5,9 +5,9 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class SystemWallet
 {
-    public int SystemWalletId { get; set; }
+    public int Id { get; set; }
 
-    public double Budget { get; set; }
+    public decimal Budget { get; set; }
 
     public string UserAccountId { get; set; }
 

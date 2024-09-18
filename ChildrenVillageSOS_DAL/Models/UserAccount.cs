@@ -5,7 +5,7 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class UserAccount
 {
-    public string UserAccountId { get; set; }
+    public string Id { get; set; }
 
     public string UserName { get; set; }
 
@@ -29,9 +29,9 @@ public partial class UserAccount
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

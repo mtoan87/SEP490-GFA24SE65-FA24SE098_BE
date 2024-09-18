@@ -5,7 +5,7 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class Income
 {
-    public int IncomeId { get; set; }
+    public int Id { get; set; }
 
     public int? DonationId { get; set; }
 
@@ -19,9 +19,9 @@ public partial class Income
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual Donation Donation { get; set; }
 

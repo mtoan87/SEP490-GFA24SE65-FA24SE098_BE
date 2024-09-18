@@ -5,7 +5,7 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class House
 {
-    public string HouseId { get; set; }
+    public string Id { get; set; }
 
     public string HouseName { get; set; }
 
@@ -27,9 +27,9 @@ public partial class House
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

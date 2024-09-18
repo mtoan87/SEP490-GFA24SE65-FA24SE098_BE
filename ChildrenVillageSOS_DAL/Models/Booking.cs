@@ -5,13 +5,13 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class Booking
 {
-    public int BookingId { get; set; }
+    public int Id { get; set; }
 
     public string HouseId { get; set; }
 
     public string UserAccountId { get; set; }
 
-    public int? BkslotId { get; set; }
+    public int? BookingSlotId { get; set; }
 
     public DateTime Visitday { get; set; }
 
@@ -19,11 +19,11 @@ public partial class Booking
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
-    public virtual BookingSlot Bkslot { get; set; }
+    public virtual BookingSlot BookingSlot { get; set; }
 
     public virtual House House { get; set; }
 
