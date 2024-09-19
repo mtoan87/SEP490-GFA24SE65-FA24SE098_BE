@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> CreateHouse(CreateHouseDTO createHouse);
         Task<House> UpdateHouse(string id, UpdateHouseDTO updateHouse);
         Task<House> DeleteHouse(string id);
+        Task<House> RestoreHouse(string id);
     }
 }

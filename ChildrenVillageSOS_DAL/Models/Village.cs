@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ChildrenVillageSOS_DAL.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Village
+public partial class Village : ISoftDelete
 {
     public string Id { get; set; }
 

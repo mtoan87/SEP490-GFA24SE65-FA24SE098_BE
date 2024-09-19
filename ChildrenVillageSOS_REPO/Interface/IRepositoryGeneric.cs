@@ -13,11 +13,13 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<T> GetByIdAsync(int id);
         Task<T> GetByIdAsync(string id);
         Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllNotDeletedAsync();
         Task<int> AddAsync(T entity);
         void Update(T entity);
-        void Delete(T entity);
+        //void Delete(T entity);
         Task<bool> RemoveAsync(T entity);
         Task SaveChangesAsync();
         Task<int> UpdateAsync(T entity);
+        Task<bool> RestoreAsync(T entity);
     }
 }
