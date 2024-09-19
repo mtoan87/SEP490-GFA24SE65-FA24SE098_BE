@@ -21,9 +21,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _childRepository = childRepository;
         }
 
+        //public async Task<IEnumerable<Child>> GetAllChildren()
+        //{
+        //    return await _childRepository.GetAllAsync();
+        //}
+
         public async Task<IEnumerable<Child>> GetAllChildren()
         {
-            return await _childRepository.GetAllAsync();
+            return await _childRepository.GetAllNotDeletedAsync();
         }
 
         public async Task<Child> GetChildById(string id)
@@ -51,6 +56,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 //Dob = createChild.Dob,
                 AcademicLevel = createChild.AcademicLevel,
                 Certificate = createChild.Certificate,
+                Status = createChild.Status,
                 IsDeleted = createChild.IsDeleted
             };
             await _childRepository.AddAsync(newChild);
@@ -72,6 +78,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             //existingChild.Dob = updateChild.Dob;
             existingChild.AcademicLevel = updateChild.AcademicLevel;
             existingChild.Certificate = updateChild.Certificate;
+            existingChild.Status = updateChild.Status;
             existingChild.IsDeleted = updateChild.IsDeleted;
 
             await _childRepository.UpdateAsync(existingChild);
@@ -86,7 +93,33 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Child with ID {id} not found");
             }
 
-            await _childRepository.RemoveAsync(child);
+            if (child.IsDeleted == true)
+            {
+                // Hard delete
+                await _childRepository.RemoveAsync(child);
+            }
+            else
+            {
+                // Soft delete (đặt IsDeleted = true)
+                child.IsDeleted = true;
+                await _childRepository.UpdateAsync(child);
+            }
+            return child;
+        }
+
+        public async Task<Child> RestoreChild(string id)
+        {
+            var child = await _childRepository.GetByIdAsync(id);
+            if (child == null)
+            {
+                throw new Exception($"Child with ID {id} not found");
+            }
+
+            if (child.IsDeleted == true) // Nếu đã bị soft delete
+            {
+                child.IsDeleted = false;  // Khôi phục bằng cách đặt lại IsDeleted = false
+                await _childRepository.UpdateAsync(child);
+            }
             return child;
         }
     }

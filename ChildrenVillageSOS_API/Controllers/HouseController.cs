@@ -53,5 +53,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var deletedHouse = await _houseService.DeleteHouse(id);
             return Ok(deletedHouse);
         }
+
+        [HttpPut("{id}/restore")]
+        public async Task<IActionResult> RestoreHouse(string id)
+        {
+            var house = await _houseService.RestoreHouse(id);
+            return Ok(house);
+        }
     }
 }
