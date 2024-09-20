@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ChildrenVillageSOS_DAL.DTO.TransactionDTO
+{
+    public class UpdateTransactionDTO
+    {
+        
+
+        
+
+        public decimal Amount { get; set; }
+
+        
+
+        public string Status { get; set; }
+
+        
+    }
+}

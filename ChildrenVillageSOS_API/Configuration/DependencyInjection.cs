@@ -20,11 +20,14 @@ namespace ChildrenVillageSOS_API.Configuration
             //services.AddScoped<IBookingRepository, BookingRepository>();
             //services.AddScoped<IDonationRepository, DonationRepository>();
             //services.AddScoped<IDonationDetailRepository, DonationDetailRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ISystemWalletRepository, SystemWalletRepository>();
             return services;
         }
 
         public static IServiceCollection AddService(this IServiceCollection services)
         {
+            services.AddScoped<ISystemWalletService, SystemWalletService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IIncomeService, IncomeService>();
@@ -33,6 +36,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IVillageService, VillageService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             //services.AddScoped<IBookingService, BookingService>();
             //services.AddScoped<IDonationService, DonationService>();
             //services.AddScoped<IDonationDetailService, DonationDetailService>();
