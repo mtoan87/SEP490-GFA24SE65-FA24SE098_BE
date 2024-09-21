@@ -47,9 +47,9 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("{Id}/{isDeleted}")]
-        public async Task<IActionResult> DeleteOrEnable(int Id, int isDeleted)
+        public async Task<IActionResult> RestoreBookingSlot(int Id)
         {
-            await _bookingSlotService.DeleteOrEnable(Id, isDeleted > 0);
+            await _bookingSlotService.RestoreBookingSlot(Id);
             return Ok();
         }
 

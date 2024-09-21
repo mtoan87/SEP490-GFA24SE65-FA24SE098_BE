@@ -15,6 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<BookingSlot> CreateBookingSlot(CreateBookingSlotDTO createBookingSlot);
         Task<BookingSlot> UpdateBookingSlot(int id, UpdateBookingSlotDTO updateBookingSlot);
         Task<BookingSlot> DeleteBookingSlot(int id);
-        Task DeleteOrEnable(int id, bool isDeleted);
+        Task<BookingSlot> RestoreBookingSlot(int id);
     }
 }

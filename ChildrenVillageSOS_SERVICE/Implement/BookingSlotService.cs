@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.BookingSlotDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -38,19 +39,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Booking slot with ID{id} is not found");
             }
-            await _bookingSlotRepository.RemoveAsync(slot);
+            slot.IsDeleted = true;
+            await _bookingSlotRepository.UpdateAsync(slot);
             return slot;
-        }
-
-        public async Task DeleteOrEnable(int id, bool isDeleted)
-        {
-            var slot = await _bookingSlotRepository.GetByIdAsync(id);
-            if (slot == null)
-            {
-                throw new Exception($"Booking slot with ID{id} is not found");
-            }
-            slot.IsDeleted = isDeleted;
-            await _bookingSlotRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<BookingSlot>> GetAllBookingSlots()
@@ -61,6 +52,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<BookingSlot> GetBookingSlotById(int id)
         {
             return await _bookingSlotRepository.GetByIdAsync(id);
+        }
+
+        public async Task<BookingSlot> RestoreBookingSlot(int id)
+        {
+            var slot = await _bookingSlotRepository.GetByIdAsync(id);
+            if (slot == null)
+            {
+                throw new Exception($"Booking slot with ID{id} is not found");
+            }
+            if (slot.IsDeleted == true)
+            {
+                slot.IsDeleted = false;
+                await _bookingSlotRepository.UpdateAsync(slot);
+            }
+            return slot;
         }
 
         public async Task<BookingSlot> UpdateBookingSlot(int id, UpdateBookingSlotDTO updateBookingSlot)

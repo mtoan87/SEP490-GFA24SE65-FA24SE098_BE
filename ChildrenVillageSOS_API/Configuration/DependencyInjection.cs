@@ -12,20 +12,22 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IIncomeRepository, IncomeRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IBookingSlotRepository, BookingSlotRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IChildRepository, ChildRepository>();
             services.AddScoped<IDonationRepository, DonationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IVillageRepository, VillageRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
-            services.AddSingleton<ICurrentTime, CurrentTime>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ISystemWalletRepository, SystemWalletRepository>();
             return services;
         }
 
         public static IServiceCollection AddService(this IServiceCollection services)
         {
             services.AddScoped<ISystemWalletService, SystemWalletService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IIncomeService, IncomeService>();

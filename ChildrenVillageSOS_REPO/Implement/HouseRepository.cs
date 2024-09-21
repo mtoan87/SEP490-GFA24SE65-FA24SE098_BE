@@ -10,7 +10,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 {
     public class HouseRepository : RepositoryGeneric<House>, IHouseRepository
     {
-        public HouseRepository(SoschildrenVillageDbContext context, ICurrentTime currentTime) : base(context, currentTime)
+        public HouseRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
     }

@@ -1,14 +1,14 @@
-﻿//using ChildrenVillageSOS_DAL.DTO.DonationDTO;
-//using ChildrenVillageSOS_DAL.Models;
-//using ChildrenVillageSOS_REPO.Implement;
-//using ChildrenVillageSOS_REPO.Interface;
-//using ChildrenVillageSOS_SERVICE.Interface;
-//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
+using ChildrenVillageSOS_REPO.Interface;
+using ChildrenVillageSOS_SERVICE.Interface;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChildrenVillageSOS_SERVICE.Implement
 {
@@ -34,26 +34,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return donation;
         }
 
-//        public async Task<Donation> DeleteDonation(int id)
-//        {
-//            var donation = await _donationRepository.GetByIdAsync(id);
-//            if (donation == null)
-//            {
-//                throw new Exception($"Donation with ID{id} is not found");
-//            }
-//            await _donationRepository.RemoveAsync(donation);
-//            return donation;
-//        }
-
-        public async Task DeleteOrEnable(int id, bool isDeleted)
+        public async Task<Donation> DeleteDonation(int id)
         {
             var donation = await _donationRepository.GetByIdAsync(id);
             if (donation == null)
             {
                 throw new Exception($"Donation with ID{id} is not found");
             }
-            donation.IsDeleted = isDeleted;
-            await _donationRepository.SaveChangesAsync();
+            donation.IsDeleted = true;
+            await _donationRepository.UpdateAsync(donation);
+            return donation;
         }
 
         public async Task<IEnumerable<Donation>> GetAllDonations()
@@ -61,10 +51,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _donationRepository.GetAllAsync();
         }
 
-//        public async Task<Donation> GetDonationById(int id)
-//        {
-//            return await _donationRepository.GetByIdAsync(id);
-//        }
+        public async Task<Donation> GetDonationById(int id)
+        {
+            return await _donationRepository.GetByIdAsync(id);
+        }
+
+        public async Task<Donation> RestoreDonation(int id)
+        {
+            var donation = await _donationRepository.GetByIdAsync(id);
+            if (donation == null)
+            {
+                throw new Exception($"Donation with ID{id} is not found");
+            }
+            if (donation.IsDeleted == true)
+            {
+                donation.IsDeleted = false;
+                await _donationRepository.UpdateAsync(donation);
+            }
+            return donation;
+        }
 
         public async Task<Donation> UpdateDonation(int id, UpdateDonationDTO updateDonation)
         {

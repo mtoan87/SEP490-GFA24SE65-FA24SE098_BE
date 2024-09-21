@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Payment : BaseEntity
+public partial class Payment : ISoftDelete
 {
     public int Id { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class BookingSlot : BaseEntity
+public partial class BookingSlot : ISoftDelete
 {
     public int Id { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Transaction : BaseEntity
+public partial class Transaction 
 {
     public int Id { get; set; }
 
