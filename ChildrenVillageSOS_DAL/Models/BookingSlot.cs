@@ -1,10 +1,9 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class BookingSlot : ISoftDelete
+public partial class BookingSlot
 {
     public int Id { get; set; }
 
@@ -12,7 +11,7 @@ public partial class BookingSlot : ISoftDelete
 
     public DateTime EndTime { get; set; }
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public int SlotTime { get; set; }
 

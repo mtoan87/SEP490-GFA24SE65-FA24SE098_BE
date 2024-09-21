@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ChildrenVillageSOS_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +18,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<IEnumerable<T>> GetAllNotDeletedAsync();
         Task<int> AddAsync(T entity);
         void Update(T entity);
+        void Delete(T entity);
         //void Delete(T entity);
         Task<bool> RemoveAsync(T entity);
         Task SaveChangesAsync();

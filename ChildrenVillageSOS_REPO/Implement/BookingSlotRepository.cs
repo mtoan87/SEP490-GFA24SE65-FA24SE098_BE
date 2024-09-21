@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChildrenVillageSOS_REPO.Implement
 {
-    public class DonationRepository : RepositoryGeneric<Donation>, IDonationRepository
+    public class BookingSlotRepository : RepositoryGeneric<BookingSlot>, IBookingSlotRepository
     {
-        public DonationRepository(SoschildrenVillageDbContext context) : base(context)
+        public BookingSlotRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
     }

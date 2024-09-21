@@ -1,20 +1,19 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Payment : ISoftDelete
+public partial class Payment
 {
     public int Id { get; set; }
 
-    public string PaymentMethod { get; set; }
+    public string PaymentMethod { get; set; } = null!;
 
     public DateTime DateTime { get; set; }
 
     public int? DonationId { get; set; }
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public decimal Amount { get; set; }
 
@@ -24,5 +23,5 @@ public partial class Payment : ISoftDelete
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual Donation Donation { get; set; }
+    public virtual Donation? Donation { get; set; }
 }

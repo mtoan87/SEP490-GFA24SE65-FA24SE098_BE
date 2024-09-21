@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ChildrenVillageSOS_REPO.Interface
 {
-    public interface IBookingRepository : IRepositoryGeneric<Booking>
+    public interface IBookingSlotRepository : IRepositoryGeneric<BookingSlot>
     {
     }
 }

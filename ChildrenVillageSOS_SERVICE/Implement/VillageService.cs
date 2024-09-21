@@ -31,7 +31,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var newVillage = new Village
             {
-                Id = createVillage.VillageId,
+                Id = createVillage.Id,
                 VillageName = createVillage.VillageName,
                 Location = createVillage.Location,
                 Description = createVillage.Description,

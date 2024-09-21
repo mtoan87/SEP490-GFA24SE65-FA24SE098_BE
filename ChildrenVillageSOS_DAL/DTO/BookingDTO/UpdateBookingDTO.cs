@@ -8,18 +8,14 @@ namespace ChildrenVillageSOS_DAL.DTO.BookingDTO
 {
     public class UpdateBookingDTO
     {
-        public string HouseId { get; set; }
+        public string? HouseId { get; set; }
 
-        public string UserAccountId { get; set; }
+        public string? UserAccountId { get; set; }
+
+        public int? BookingSlotId { get; set; }
 
         public DateTime Visitday { get; set; }
 
-        public string Status { get; set; }
-
-        public DateTime Starttime { get; set; }
-
-        public DateTime Endtime { get; set; }
-
-        public bool? IsDelete { get; set; }
+        public string Status { get; set; } = null!;
     }
 }
