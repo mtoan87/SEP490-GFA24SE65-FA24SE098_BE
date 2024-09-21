@@ -20,8 +20,13 @@ namespace ChildrenVillageSOS_REPO.Interface
         void Update(T entity);
         void Delete(T entity);
         void SoftRemove(T entity);
+        Task<IEnumerable<T>> GetAllNotDeletedAsync();
+        Task<int> AddAsync(T entity);
+        void Update(T entity);
+        //void Delete(T entity);
         Task<bool> RemoveAsync(T entity);
         Task SaveChangesAsync();
         Task<int> UpdateAsync(T entity);
+        Task<bool> RestoreAsync(T entity);
     }
 }

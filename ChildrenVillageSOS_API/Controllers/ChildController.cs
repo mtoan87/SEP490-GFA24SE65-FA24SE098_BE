@@ -53,5 +53,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var deletedChild = await _childService.DeleteChild(id);
             return Ok(deletedChild);
         }
+
+        [HttpPut("RestoreChild/{id}")]
+        public async Task<IActionResult> RestoreChild(string id)
+        {
+            var restoredChild = await _childService.RestoreChild(id);
+            return Ok(restoredChild);
+        }
     }
 }

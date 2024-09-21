@@ -1,19 +1,19 @@
-﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
-using ChildrenVillageSOS_DAL.Models;
-using ChildrenVillageSOS_REPO.Interface;
-using ChildrenVillageSOS_SERVICE.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+//using ChildrenVillageSOS_DAL.Models;
+//using ChildrenVillageSOS_REPO.Interface;
+//using ChildrenVillageSOS_SERVICE.Interface;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Runtime.InteropServices;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace ChildrenVillageSOS_SERVICE.Implement
-{
-    public class BookingService : IBookingService
-    {
-        private readonly IBookingRepository _bookingRepository;
+//namespace ChildrenVillageSOS_SERVICE.Implement
+//{
+//    public class BookingService : IBookingService
+//    {
+//        private readonly IBookingRepository _bookingRepository;
 
         public BookingService(IBookingRepository bookingRepository)
         {
@@ -33,16 +33,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return newBooking;
         }
 
-        public async Task<Booking> DeleteBooking(int id)
-        {
-            var booking = await _bookingRepository.GetByIdAsync(id);
-            if (booking == null)
-            {
-                throw new Exception($"Booking with ID{id} is not found");
-            }
-            await _bookingRepository.RemoveAsync(booking);
-            return booking;
-        }
+//        public async Task<Booking> DeleteBooking(int id)
+//        {
+//            var booking = await _bookingRepository.GetByIdAsync(id);
+//            if (booking == null)
+//            {
+//                throw new Exception($"Booking with ID{id} is not found");
+//            }
+//            await _bookingRepository.RemoveAsync(booking);
+//            return booking;
+//        }
 
         public async Task DeleteOrEnable(int id, bool isDeleted)
         {
@@ -60,18 +60,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _bookingRepository.GetAllAsync();
         }
 
-        public async Task<Booking> GetBookingById(int id)
-        {
-            return await _bookingRepository.GetByIdAsync(id);
-        }
+//        public async Task<Booking> GetBookingById(int id)
+//        {
+//            return await _bookingRepository.GetByIdAsync(id);
+//        }
 
-        public async Task<Booking> UpdateBooking(int id, UpdateBookingDTO updateBooking)
-        {
-            var booking = await _bookingRepository.GetByIdAsync(id);
-            if (booking == null)
-            {
-                throw new Exception($"Booking with ID{id} is not found");
-            }
+//        public async Task<Booking> UpdateBooking(int id, UpdateBookingDTO updateBooking)
+//        {
+//            var booking = await _bookingRepository.GetByIdAsync(id);
+//            if (booking == null)
+//            {
+//                throw new Exception($"Booking with ID{id} is not found");
+//            }
             
             booking.HouseId = updateBooking.HouseId;
             booking.UserAccountId = updateBooking.UserAccountId;

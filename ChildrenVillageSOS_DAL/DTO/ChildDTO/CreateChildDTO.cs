@@ -22,6 +22,8 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string Certificate { get; set; }
 
+        public string Status { get; set; }
+
         public bool? IsDeleted { get; set; }
     }
 }

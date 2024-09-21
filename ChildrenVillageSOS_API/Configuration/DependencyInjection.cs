@@ -25,6 +25,7 @@ namespace ChildrenVillageSOS_API.Configuration
 
         public static IServiceCollection AddService(this IServiceCollection services)
         {
+            services.AddScoped<ISystemWalletService, SystemWalletService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IIncomeService, IncomeService>();

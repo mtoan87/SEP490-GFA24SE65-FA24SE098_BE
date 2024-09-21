@@ -31,7 +31,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("CreatePayment")]
-        public async Task<ActionResult<Income>> CreatePayment([FromForm] CreatePaymentDTO expDTO)
+        public async Task<ActionResult<Payment>> CreatePayment([FromForm] CreatePaymentDTO expDTO)
         {
             var createExpense = await _paymentService.CreatePayment(expDTO);
             return Ok(createExpense);

@@ -24,7 +24,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<House>> GetAllHouses()
         {
-            return await _houseRepository.GetAllAsync();
+            // Chỉ lấy những nhà chưa bị soft delete (IsDeleted = false)
+            return await _houseRepository.GetAllNotDeletedAsync();
         }
 
         public async Task<House> GetHouseById(string id)
@@ -51,6 +52,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createHouse.Description,
                 HouseMember = createHouse.HouseMember,
                 HouseOwner = createHouse.HouseOwner,
+                Status = createHouse.Status,
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
                 IsDeleted = createHouse.IsDeleted
@@ -74,6 +76,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Description = updateHouse.Description;
             existingHouse.HouseMember = updateHouse.HouseMember;
             existingHouse.HouseOwner = updateHouse.HouseOwner;
+            existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
             existingHouse.IsDeleted = updateHouse.IsDeleted;
@@ -90,7 +93,33 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"House with ID {id} not found!");
             }
 
-            await _houseRepository.RemoveAsync(house);
+            if (house.IsDeleted == true)
+            {
+                // Hard delete nếu IsDeleted = true
+                await _houseRepository.RemoveAsync(house);
+            }
+            else
+            {
+                // Soft delete (IsDeleted = true)
+                house.IsDeleted = true;
+                await _houseRepository.UpdateAsync(house);
+            }
+            return house;
+        }
+
+        public async Task<House> RestoreHouse(string id)
+        {
+            var house = await _houseRepository.GetByIdAsync(id);
+            if (house == null)
+            {
+                throw new Exception($"House with ID {id} not found!");
+            }
+
+            if (house.IsDeleted == true) // Nếu đã bị soft delete
+            {
+                house.IsDeleted = false;  // Khôi phục bằng cách đặt lại IsDeleted = false
+                await _houseRepository.UpdateAsync(house);
+            }
             return house;
         }
     }
