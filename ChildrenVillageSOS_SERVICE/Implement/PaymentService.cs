@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 PaymentMethod = createPayment.PaymentMethod,
                 DonationId = createPayment.DonationId,
-                Datetime = DateTime.Now,
+                DateTime = DateTime.Now,
                 Amount = createPayment.Amount,
                 Status = createPayment.Status,
             };

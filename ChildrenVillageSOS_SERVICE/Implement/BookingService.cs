@@ -25,11 +25,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 HouseId = createBooking.HouseId,
                 UserAccountId = createBooking.UserAccountId,
+                BookingSlotId = createBooking.BookingSlotId,
                 Visitday = createBooking.Visitday,
                 Status = createBooking.Status,
-                Starttime = createBooking.Starttime,
-                Endtime = createBooking.Endtime,
-                IsDelete = createBooking.IsDelete,
             };
             await _bookingRepository.AddAsync(newBooking);
             return newBooking;
@@ -44,6 +42,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             await _bookingRepository.RemoveAsync(booking);
             return booking;
+        }
+
+        public async Task DeleteOrEnable(int id, bool isDeleted)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+            {
+                throw new Exception($"Booking with ID{id} is not found");
+            }
+            booking.IsDeleted = isDeleted;
+            await _bookingRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetAllBookings()
@@ -66,11 +75,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             
             booking.HouseId = updateBooking.HouseId;
             booking.UserAccountId = updateBooking.UserAccountId;
+            booking.BookingSlotId = updateBooking.BookingSlotId;
             booking.Visitday = updateBooking.Visitday;
             booking.Status = updateBooking.Status;
-            booking.Starttime = updateBooking.Starttime;
-            booking.Endtime = updateBooking.Endtime;
-            booking.IsDelete = updateBooking.IsDelete;
             await _bookingRepository.UpdateAsync(booking);
             return booking;
         }

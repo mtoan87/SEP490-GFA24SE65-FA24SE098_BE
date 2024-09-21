@@ -10,7 +10,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 {
     public class PaymentRepository : RepositoryGeneric<Payment>, IPaymentRepository
     {
-        public PaymentRepository(SoschildrenVillageDbContext context) : base(context)
+        public PaymentRepository(SoschildrenVillageDbContext context, ICurrentTime currentTime) : base(context, currentTime)
         {
             
         }

@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Donation
+public partial class Donation : BaseEntity
 {
-    public int DonationId { get; set; }
+    public int Id { get; set; }
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
-    public string DonationType { get; set; }
+    public string DonationType { get; set; } = null!;
 
-    public DateTime Datetime { get; set; }
+    public DateTime DateTime { get; set; }
 
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
@@ -31,5 +31,5 @@ public partial class Donation
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public virtual UserAccount UserAccount { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 }

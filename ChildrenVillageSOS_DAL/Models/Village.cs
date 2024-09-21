@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Village
+public partial class Village : BaseEntity
 {
-    public string VillageId { get; set; }
+    public string Id { get; set; } = null!;
 
-    public string VillageName { get; set; }
+    public string VillageName { get; set; } = null!;
 
-    public string Location { get; set; }
+    public string Location { get; set; } = null!;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
-    public virtual UserAccount UserAccount { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 }

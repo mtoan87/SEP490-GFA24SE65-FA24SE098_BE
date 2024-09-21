@@ -10,7 +10,8 @@ namespace ChildrenVillageSOS_REPO.Implement
 {
     public class BookingRepository : RepositoryGeneric<Booking>, IBookingRepository
     {
-        public BookingRepository(SoschildrenVillageDbContext context) : base(context)
+        private readonly SoschildrenVillageDbContext _dbContext;
+        public BookingRepository(SoschildrenVillageDbContext context, ICurrentTime currentTime) : base(context, currentTime)
         {
         }
     }

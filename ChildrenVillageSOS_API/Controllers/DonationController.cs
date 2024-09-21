@@ -46,6 +46,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(donation);
         }
 
+        [HttpPut("{Id}/{isDeleted}")]
+        public async Task<IActionResult> DeleteOrEnable(int Id, int isDeleted)
+        {
+            await _donationService.DeleteOrEnable(Id, isDeleted > 0);
+            return Ok();
+        }
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteDonation(int Id)
         {

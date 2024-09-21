@@ -12,14 +12,14 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IIncomeRepository, IncomeRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IBookingSlotRepository, BookingSlotRepository>();
             services.AddScoped<IChildRepository, ChildRepository>();
-            services.AddScoped<IHouseRepository, HouseRepository>();
+            services.AddScoped<IDonationRepository, DonationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IVillageRepository, VillageRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
-            services.AddScoped<IBookingRepository, BookingRepository>();
-            services.AddScoped<IDonationRepository, DonationRepository>();
-            services.AddScoped<IDonationDetailRepository, DonationDetailRepository>();
+            services.AddSingleton<ICurrentTime, CurrentTime>();
             return services;
         }
 
@@ -28,14 +28,13 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IIncomeService, IncomeService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IBookingSlotService, BookingSlotService>();
             services.AddScoped<IChildService, ChildService>();
-            services.AddScoped<IHouseService, HouseService>();
+            services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IVillageService, VillageService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
-            services.AddScoped<IBookingService, BookingService>();
-            services.AddScoped<IDonationService, DonationService>();
-            services.AddScoped<IDonationDetailService, DonationDetailService>();
             return services;
         }
     }

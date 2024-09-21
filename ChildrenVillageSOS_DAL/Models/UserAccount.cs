@@ -3,35 +3,35 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class UserAccount
+public partial class UserAccount : BaseEntity
 {
-    public string UserAccountId { get; set; }
+    public string Id { get; set; } = null!;
 
-    public string UserName { get; set; }
+    public string UserName { get; set; } = null!;
 
-    public string UserEmail { get; set; }
+    public string UserEmail { get; set; } = null!;
 
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
 
     public long Phone { get; set; }
 
-    public string Address { get; set; }
+    public string Address { get; set; } = null!;
 
     public DateOnly Dob { get; set; }
 
-    public string Gender { get; set; }
+    public string Gender { get; set; } = null!;
 
-    public string Country { get; set; }
+    public string Country { get; set; } = null!;
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public int? RoleId { get; set; }
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
@@ -41,7 +41,7 @@ public partial class UserAccount
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
-    public virtual Role Role { get; set; }
+    public virtual Role? Role { get; set; }
 
     public virtual ICollection<SystemWallet> SystemWallets { get; set; } = new List<SystemWallet>();
 

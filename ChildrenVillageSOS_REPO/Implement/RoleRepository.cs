@@ -10,7 +10,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 {
     public class RoleRepository : RepositoryGeneric<Role>, IRoleRepository
     {
-        public RoleRepository(SoschildrenVillageDbContext context) : base(context)
+        public RoleRepository(SoschildrenVillageDbContext context, ICurrentTime currentTime) : base(context, currentTime)
         {
 
         }

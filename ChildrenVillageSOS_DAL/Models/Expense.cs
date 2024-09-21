@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Expense
+public partial class Expense : BaseEntity
 {
-    public int ExpenseId { get; set; }
+    public int Id { get; set; }
 
-    public double ExpenseAmount { get; set; }
+    public decimal ExpenseAmount { get; set; }
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
     public DateTime Expenseday { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
-    public string HouseId { get; set; }
+    public string? HouseId { get; set; }
 
     public bool? IsDeleted { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
-    public virtual House House { get; set; }
+    public virtual House? House { get; set; }
 }

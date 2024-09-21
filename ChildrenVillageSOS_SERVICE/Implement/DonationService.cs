@@ -24,7 +24,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donation = new Donation
             {
                 UserAccountId = createDonation.UserAccountId,
-                IsDelete = createDonation.IsDelete,
+                DonationType = createDonation.DonationType,
+                DateTime = createDonation.DateTime,
+                Amount = createDonation.Amount,
+                Description = createDonation.Description,
+                Status = createDonation.Status
             };
             await _donationRepository.AddAsync(donation);
             return donation;
@@ -39,6 +43,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             await _donationRepository.RemoveAsync(donation);
             return donation;
+        }
+
+        public async Task DeleteOrEnable(int id, bool isDeleted)
+        {
+            var donation = await _donationRepository.GetByIdAsync(id);
+            if (donation == null)
+            {
+                throw new Exception($"Donation with ID{id} is not found");
+            }
+            donation.IsDeleted = isDeleted;
+            await _donationRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Donation>> GetAllDonations()
@@ -59,7 +74,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Donation with ID{id} is not found");
             }
             donation.UserAccountId = updateDonation.UserAccountId;
-            donation.IsDelete = updateDonation.IsDelete;
+            donation.DonationType = updateDonation.DonationType;
+            donation.DateTime = updateDonation.DateTime;
+            donation.Amount = updateDonation.Amount;
+            donation.Description = updateDonation.Description;
+            donation.Status = updateDonation.Status;
             await _donationRepository.UpdateAsync(donation);
             return donation;
         }

@@ -44,6 +44,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(booking);
         }
 
+        [HttpPut("{Id}/{isDeleted}")]
+        public async Task<IActionResult> DeleteOrEnable(int Id, int isDeleted)
+        {
+            await _bookingService.DeleteOrEnable(Id, isDeleted > 0);
+            return Ok();
+        }
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteBooking(int Id)
         {

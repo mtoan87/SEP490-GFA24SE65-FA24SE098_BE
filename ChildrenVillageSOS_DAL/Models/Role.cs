@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Role
+public partial class Role : BaseEntity
 {
-    public int RoleId { get; set; }
+    public int Id { get; set; }
 
-    public string RoleName { get; set; }
+    public string? RoleName { get; set; }
 
     public virtual ICollection<UserAccount> UserAccounts { get; set; } = new List<UserAccount>();
 }

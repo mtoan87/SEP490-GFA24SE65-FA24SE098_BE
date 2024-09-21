@@ -10,7 +10,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 {
     public class UserAccountRepository : RepositoryGeneric<UserAccount>, IUserAccountRepository
     {
-        public UserAccountRepository(SoschildrenVillageDbContext context) : base(context)
+        public UserAccountRepository(SoschildrenVillageDbContext context, ICurrentTime currentTime) : base(context, currentTime)
         {
 
         }

@@ -35,7 +35,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             // Lấy toàn bộ danh sách ChildId hiện có
             var allChildIds = await _childRepository.Entities()
-                                                    .Select(c => c.ChildId)
+                                                    .Select(c => c.Id)
                                                     .ToListAsync();
 
             // Sử dụng hàm GenerateId từ IdGenerator
@@ -43,7 +43,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             var newChild = new Child
             {
-                ChildId = newChildId,  // Gán ID mới
+                Id = newChildId,  // Gán ID mới
                 ChildName = createChild.ChildName,
                 HealthStatus = createChild.HealthStatus,
                 HouseId = createChild.HouseId,

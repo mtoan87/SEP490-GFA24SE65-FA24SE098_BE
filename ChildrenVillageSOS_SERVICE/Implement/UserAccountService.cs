@@ -29,7 +29,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var newUser = new UserAccount
             {
-                UserAccountId = createUser.UserAccountId,
+                Id = createUser.Id,
                 UserName = createUser.UserName,
                 UserEmail = createUser.UserEmail,
                 Password = createUser.Password,
