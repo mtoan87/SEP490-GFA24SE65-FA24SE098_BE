@@ -1,10 +1,9 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class SystemWallet 
+public partial class SystemWallet
 {
     public int Id { get; set; }
 

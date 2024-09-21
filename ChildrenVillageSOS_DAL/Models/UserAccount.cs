@@ -1,10 +1,9 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class UserAccount : ISoftDelete
+public partial class UserAccount
 {
     public string Id { get; set; } = null!;
 

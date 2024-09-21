@@ -49,7 +49,7 @@ public partial class SoschildrenVillageDbContext : DbContext
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC07487AD09F");
+            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC07B070B198");
 
             entity.ToTable("Booking");
 
@@ -59,6 +59,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("House_id");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
             entity.Property(e => e.UserAccountId)
@@ -69,20 +72,20 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.BookingSlot).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.BookingSlotId)
-                .HasConstraintName("FK__Booking__Booking__4CA06362");
+                .HasConstraintName("FK__Booking__Booking__52593CB8");
 
             entity.HasOne(d => d.House).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Booking__House_i__4AB81AF0");
+                .HasConstraintName("FK__Booking__House_i__5070F446");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Booking__UserAcc__4BAC3F29");
+                .HasConstraintName("FK__Booking__UserAcc__5165187F");
         });
 
         modelBuilder.Entity<BookingSlot>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC07A9B4201B");
+            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC0725FF5366");
 
             entity.ToTable("BookingSlot");
 
@@ -90,6 +93,9 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.EndTime)
                 .HasColumnType("datetime")
                 .HasColumnName("End_time");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.SlotTime).HasColumnName("Slot_time");
             entity.Property(e => e.StartTime)
@@ -100,7 +106,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Child>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC071ED6B8F6");
+            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC076016BBC6");
 
             entity.ToTable("Child");
 
@@ -123,17 +129,20 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("House_Id");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
 
             entity.HasOne(d => d.House).WithMany(p => p.Children)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Child__House_Id__4316F928");
+                .HasConstraintName("FK__Child__House_Id__45F365D3");
         });
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC073940B2CA");
+            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC07FCACE774");
 
             entity.ToTable("Donation");
 
@@ -146,6 +155,9 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.DonationType)
                 .HasMaxLength(200)
                 .HasColumnName("Donation_Type");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
             entity.Property(e => e.UserAccountId)
@@ -155,12 +167,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Donation__UserAc__45F365D3");
+                .HasConstraintName("FK__Donation__UserAc__49C3F6B7");
         });
 
         modelBuilder.Entity<Expense>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC07942E67EE");
+            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC070215927B");
 
             entity.ToTable("Expense");
 
@@ -174,17 +186,20 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("House_Id");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
 
             entity.HasOne(d => d.House).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Expense__House_I__571DF1D5");
+                .HasConstraintName("FK__Expense__House_I__5FB337D6");
         });
 
         modelBuilder.Entity<House>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__House__3214EC07A86678C6");
+            entity.HasKey(e => e.Id).HasName("PK__House__3214EC07CFFFD7A8");
 
             entity.ToTable("House");
 
@@ -201,6 +216,9 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.HouseOwner)
                 .HasMaxLength(100)
                 .HasColumnName("House_Owner");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.Location).HasMaxLength(200);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
@@ -215,16 +233,16 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Houses)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__House__UserAccou__3F466844");
+                .HasConstraintName("FK__House__UserAccou__412EB0B6");
 
             entity.HasOne(d => d.Village).WithMany(p => p.Houses)
                 .HasForeignKey(d => d.VillageId)
-                .HasConstraintName("FK__House__Village_I__403A8C7D");
+                .HasConstraintName("FK__House__Village_I__4222D4EF");
         });
 
         modelBuilder.Entity<Income>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC0726968E01");
+            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC0733FAA0C1");
 
             entity.ToTable("Income");
 
@@ -234,6 +252,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("House_Id");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Receiveday).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
@@ -244,20 +265,20 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Income__Donation__52593CB8");
+                .HasConstraintName("FK__Income__Donation__59FA5E80");
 
             entity.HasOne(d => d.House).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Income__House_Id__5441852A");
+                .HasConstraintName("FK__Income__House_Id__5BE2A6F2");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Income__UserAcco__534D60F1");
+                .HasConstraintName("FK__Income__UserAcco__5AEE82B9");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07E0549498");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07D9B65D77");
 
             entity.ToTable("Payment");
 
@@ -267,6 +288,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Time");
             entity.Property(e => e.DonationId).HasColumnName("Donation_Id");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(100)
@@ -275,12 +299,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Payment__Donatio__4F7CD00D");
+                .HasConstraintName("FK__Payment__Donatio__5629CD9C");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC07E675B3DF");
+            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC07B9D58D29");
 
             entity.ToTable("Role");
 
@@ -291,7 +315,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<SystemWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC077E38B228");
+            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC072A97D1AA");
 
             entity.ToTable("SystemWallet");
 
@@ -303,12 +327,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.SystemWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__SystemWal__UserA__59FA5E80");
+                .HasConstraintName("FK__SystemWal__UserA__6383C8BA");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC0700307931");
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC07286F29FD");
 
             entity.ToTable("Transaction");
 
@@ -323,20 +347,20 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Transacti__Donat__5DCAEF64");
+                .HasConstraintName("FK__Transacti__Donat__6754599E");
 
             entity.HasOne(d => d.Income).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IncomeId)
-                .HasConstraintName("FK__Transacti__Incom__5EBF139D");
+                .HasConstraintName("FK__Transacti__Incom__68487DD7");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Transacti__Syste__5CD6CB2B");
+                .HasConstraintName("FK__Transacti__Syste__66603565");
         });
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC076B53C52C");
+            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC07A80EFDE5");
 
             entity.ToTable("UserAccount");
 
@@ -347,6 +371,9 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.Country).HasMaxLength(100);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Gender).HasMaxLength(100);
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(200);
             entity.Property(e => e.RoleId).HasColumnName("Role_Id");
@@ -365,7 +392,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Village>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC078E79A067");
+            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC0702454E27");
 
             entity.ToTable("Village");
 
@@ -374,6 +401,9 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("('0')");
             entity.Property(e => e.Location).HasMaxLength(200);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
@@ -387,7 +417,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Villages)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Village__UserAcc__3C69FB99");
+                .HasConstraintName("FK__Village__UserAcc__3D5E1FD2");
         });
 
         OnModelCreatingPartial(modelBuilder);
