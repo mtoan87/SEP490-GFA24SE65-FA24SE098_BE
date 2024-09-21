@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IUserAccountRepository : IRepositoryGeneric<UserAccount>
     {
+        Task<UserAccount> Login(string email, string password);
     }
 }

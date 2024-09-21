@@ -72,5 +72,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _userAccountRepository.RemoveAsync(user);
             return user;    
         }
+        public async Task<UserAccount> Login(string useremail, string password)
+        {
+            var login = await _userAccountRepository.Login(useremail, password);
+            if (login == null)
+            {
+                throw new Exception("Login Fail!");
+            }
+            return login;
+        }
     }
 }
