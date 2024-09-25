@@ -20,6 +20,4 @@ public partial class BookingSlot
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
-
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

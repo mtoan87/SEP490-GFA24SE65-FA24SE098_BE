@@ -23,8 +23,6 @@ public partial class Booking
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual BookingSlot? BookingSlot { get; set; }
-
     public virtual House? House { get; set; }
 
     public virtual UserAccount? UserAccount { get; set; }
