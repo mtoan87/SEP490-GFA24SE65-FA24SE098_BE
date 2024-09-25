@@ -14,16 +14,10 @@ builder.Services.AddDbContext<SoschildrenVillageDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionStringDB");
     options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
 });
+
 builder.Services.AddRepository();
 builder.Services.AddService();
-// Add repository 
-//builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
-//builder.Services.AddScoped<IIncomeRepository, IncomeRepository>();
-//builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-//// Add services to the container.
-//builder.Services.AddScoped<IPaymentService, PaymentService>();
-//builder.Services.AddScoped<IExpenseService, ExpenseService>();
-//builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,6 +32,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
