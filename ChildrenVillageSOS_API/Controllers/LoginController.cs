@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_API.Model;
+using ChildrenVillageSOS_DAL.DTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
@@ -25,12 +26,38 @@ namespace ChildrenVillageSOS_API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] Model.LoginRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    StatusCode = 400,
+                    Message = "Invalid client request",
+                    Data = null,
+                    RoleId = 0
+                });
+            }
             var account = await this._customerService.Login(request.UserEmail, request.Password);
             if (account == null)
-                return Unauthorized();
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    StatusCode = 401,
+                    Message = "Unauthorized",
+                    Data = null,
+                    RoleId = 0
+                });
+            }
 
             var token = this.GenerateJSONWebToken(account);
-            return Ok(token);
+            var user = await _customerService.GetUserById(account.Id);
+            var roleId = user.RoleId;
+            return Ok(new ApiResponse
+            {
+                StatusCode = 200,
+                Message = "Login successful",
+                Data = token,
+                RoleId = (int)roleId
+            });
         }
 
         private string GenerateJSONWebToken(UserAccount userInfo)
