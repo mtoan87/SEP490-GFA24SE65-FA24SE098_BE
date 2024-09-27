@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ChildrenVillageSOS_DAL.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class House
+public partial class House : ISoftDelete
 {
     public string Id { get; set; } = null!;
 
@@ -36,6 +37,8 @@ public partial class House
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
 
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 

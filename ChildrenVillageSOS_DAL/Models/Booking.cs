@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ChildrenVillageSOS_DAL.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Booking
+public partial class Booking : ISoftDelete
 {
     public int Id { get; set; }
 

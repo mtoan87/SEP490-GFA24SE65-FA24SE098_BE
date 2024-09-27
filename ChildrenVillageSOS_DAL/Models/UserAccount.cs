@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ChildrenVillageSOS_DAL.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class UserAccount
+public partial class UserAccount : ISoftDelete
 {
     public string Id { get; set; } = null!;
 
@@ -38,6 +39,8 @@ public partial class UserAccount
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 

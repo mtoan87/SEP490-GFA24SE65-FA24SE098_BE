@@ -54,8 +54,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 HouseId = createChild.HouseId,
                 Gender = createChild.Gender,
                 //Dob = createChild.Dob,
-                AcademicLevel = createChild.AcademicLevel,
-                Certificate = createChild.Certificate,
                 Status = createChild.Status,
                 IsDeleted = createChild.IsDeleted
             };
@@ -76,8 +74,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.HouseId = updateChild.HouseId;
             existingChild.Gender = updateChild.Gender;
             //existingChild.Dob = updateChild.Dob;
-            existingChild.AcademicLevel = updateChild.AcademicLevel;
-            existingChild.Certificate = updateChild.Certificate;
             existingChild.Status = updateChild.Status;
             existingChild.IsDeleted = updateChild.IsDeleted;
 
