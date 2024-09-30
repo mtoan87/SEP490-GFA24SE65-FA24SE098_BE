@@ -39,6 +39,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Gender = createUser.Gender,
                 Country = createUser.Country,
                 RoleId = createUser.RoleId,
+                CreatedDate = createUser.CreatedDate,
             };
             await _userAccountRepository.AddAsync(newUser);
             return newUser;
@@ -59,6 +60,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             updateUser.Gender = updaUser.Gender;
             updateUser.Country = updaUser.Country;
             updateUser.RoleId = updaUser.RoleId;
+            updateUser.ModifiedDate = updaUser.ModifiedDate;
             await _userAccountRepository.UpdateAsync(updaUser);
             return updaUser;
         }

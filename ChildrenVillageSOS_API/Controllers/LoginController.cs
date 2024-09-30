@@ -23,7 +23,7 @@ namespace ChildrenVillageSOS_API.Controllers
             _config = configuration;
             _customerService = customerService;
         }
-        [HttpPost("Login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] Model.LoginRequest request)
         {
             if (request == null)
