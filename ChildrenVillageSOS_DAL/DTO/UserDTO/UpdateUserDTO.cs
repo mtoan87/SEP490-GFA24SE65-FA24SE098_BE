@@ -29,5 +29,8 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
         public string Status { get; set; } = null!;
 
         public int? RoleId { get; set; }
+        public DateTime? CreatedDate { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 }
