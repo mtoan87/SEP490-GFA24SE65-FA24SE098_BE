@@ -12,8 +12,9 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         Task<IEnumerable<Payment>> GetAllPayments();
         Task<Payment> GetPaymentById(int id);
-        Task<Payment> CreatePayment(CreatePaymentDTO createPayment);
+        //Task<Payment> CreatePayment(CreatePaymentDTO createPayment);
         Task<Payment> UpdatePayment(int id, UpdatePaymentDTO updatePayment);
         Task<Payment> DeletePayment(int id);
+        Task<string> CreatePayment(PaymentRequest paymentRequest);
     }
 }

@@ -29,13 +29,19 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _paymentService.GetPaymentById(Id);
             return Ok(exp);
         }
-        [HttpPost]
-        [Route("CreatePayment")]
-        public async Task<ActionResult<Payment>> CreatePayment([FromForm] CreatePaymentDTO expDTO)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest request)
         {
-            var createExpense = await _paymentService.CreatePayment(expDTO);
-            return Ok(createExpense);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Tạo URL thanh toán VNPay
+            var paymentUrl = await _paymentService.CreatePayment(request);
+
+            // Trả về URL để người dùng redirect đến VNPay
+            return Ok(new { url = paymentUrl });
         }
+
         [HttpPut]
         [Route("UpdatePayment")]
         public async Task<IActionResult> UpdatePayment(int id, [FromForm] UpdatePaymentDTO updateExp)

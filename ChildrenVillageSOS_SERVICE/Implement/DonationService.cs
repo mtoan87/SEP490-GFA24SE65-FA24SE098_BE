@@ -33,7 +33,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _donationRepository.AddAsync(donation);
             return donation;
         }
-
+        public async Task<Donation> CreateDonationPayment(CreateDonationPayment createDonation)
+        {
+            var donation = new Donation
+            {
+                UserAccountId = createDonation.UserAccountId,
+                DonationType = createDonation.DonationType,
+                DateTime = createDonation.DateTime,
+                Amount = createDonation.Amount,
+                Description = createDonation.Description,
+                IsDeleted = false,
+                Status = createDonation.Status
+            };
+            await _donationRepository.AddAsync(donation);
+            return donation;
+        }
         public async Task<Donation> DeleteDonation(int id)
         {
             var donation = await _donationRepository.GetByIdAsync(id);
