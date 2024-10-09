@@ -36,7 +36,7 @@ namespace ChildrenVillageSOS_API.Controllers
                     RoleId = 0
                 });
             }
-            var account = await this._customerService.Login(request.UserEmail, request.Password);
+            var account = await this._customerService.Login(request.Email, request.Password);
             if (account == null)
             {
                 return Unauthorized(new ApiResponse

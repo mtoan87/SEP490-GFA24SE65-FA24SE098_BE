@@ -15,6 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<UserAccount> CreateUser(CreateUserDTO createUser);
         Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser);
         Task<UserAccount> DeleteUser(string id);
-        Task<UserAccount> Login(string useremail, string password);
+        Task<UserAccount> Login(string email, string password);
     }
 }

@@ -1,14 +1,9 @@
 using ChildrenVillageSOS_API.Configuration;
 using ChildrenVillageSOS_DAL.Models;
-using ChildrenVillageSOS_REPO.Implement;
-using ChildrenVillageSOS_REPO.Interface;
-using ChildrenVillageSOS_SERVICE.Implement;
-using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Runtime.Intrinsics.X86;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<SoschildrenVillageDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionStringDB");
@@ -19,6 +14,16 @@ builder.Services.AddRepository();
 builder.Services.AddService();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000", "http://localhost:7073", "http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,11 +38,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-
+// Ensure CORS is configured before authentication and authorization
+app.UseCors();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
