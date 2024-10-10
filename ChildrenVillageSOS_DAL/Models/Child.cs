@@ -16,7 +16,7 @@ public partial class Child : ISoftDelete
 
     public string Gender { get; set; } = null!;
 
-    public DateOnly Dob { get; set; }
+    public DateTime Dob { get; set; }
 
     public string Status { get; set; } = null!;
 
