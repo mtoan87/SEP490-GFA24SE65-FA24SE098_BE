@@ -15,6 +15,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IBookingSlotRepository, BookingSlotRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IChildRepository, ChildRepository>();
+            services.AddScoped<IHouseRepository, HouseRepository>();
             services.AddScoped<IDonationRepository, DonationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IVillageRepository, VillageRepository>();
@@ -35,6 +36,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IBookingSlotService, BookingSlotService>();
             services.AddScoped<IChildService, ChildService>();
+            services.AddScoped<IHouseService, HouseService>();
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IVillageService, VillageService>();

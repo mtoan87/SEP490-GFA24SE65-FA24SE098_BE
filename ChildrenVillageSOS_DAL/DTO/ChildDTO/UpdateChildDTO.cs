@@ -16,7 +16,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string Gender { get; set; }
 
-        //public DateOnly Dob { get; set; }
+        public DateTime Dob { get; set; }
 
         public string Status { get; set; }
 

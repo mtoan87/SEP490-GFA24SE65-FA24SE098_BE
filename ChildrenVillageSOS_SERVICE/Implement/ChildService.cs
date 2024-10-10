@@ -53,7 +53,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 HealthStatus = createChild.HealthStatus,
                 HouseId = createChild.HouseId,
                 Gender = createChild.Gender,
-                //Dob = createChild.Dob,
+                Dob = createChild.Dob,
                 Status = createChild.Status,
                 IsDeleted = createChild.IsDeleted
             };
@@ -73,7 +73,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.HealthStatus = updateChild.HealthStatus;
             existingChild.HouseId = updateChild.HouseId;
             existingChild.Gender = updateChild.Gender;
-            //existingChild.Dob = updateChild.Dob;
+            existingChild.Dob = updateChild.Dob;
             existingChild.Status = updateChild.Status;
             existingChild.IsDeleted = updateChild.IsDeleted;
 
