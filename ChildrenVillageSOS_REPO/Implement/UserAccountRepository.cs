@@ -25,6 +25,13 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return user;
         }
+        public async Task<UserAccount> GetHighestIdUser()
+        {
+            return await _context.UserAccounts
+                                 .OrderByDescending(u => u.Id)
+                                 .FirstOrDefaultAsync();
+        }
+
 
     }
 }

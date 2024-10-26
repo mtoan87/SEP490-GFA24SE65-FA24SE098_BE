@@ -12,5 +12,6 @@ namespace ChildrenVillageSOS_DAL.DTO
         public string Message { get; set; }
         public int RoleId { get; set; }
         public object Data { get; set; }
+        public string UserId { get; set; }
     }
 }

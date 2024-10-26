@@ -27,23 +27,41 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<UserAccount> CreateUser(CreateUserDTO createUser)
         {
+            // Lấy ID hiện tại cao nhất từ bảng UserAccount
+            var highestIdUser = await _userAccountRepository.GetHighestIdUser();
+            int currentHighestIdNumber = 0;
+
+            if (highestIdUser != null)
+            {
+                // Tách số từ ID hiện tại cao nhất (VD: UA013 -> 13)
+                var highestId = highestIdUser.Id;
+                currentHighestIdNumber = int.Parse(highestId.Substring(2));
+            }
+
+            // Tăng số tự động lên 1
+            var newIdNumber = currentHighestIdNumber + 1;
+            var newId = $"UA{newIdNumber:D3}"; // D3 định dạng số với ít nhất 3 chữ số, thêm 0 ở trước nếu cần
+
             var newUser = new UserAccount
             {
-                Id = createUser.Id,
+                Id = newId,
                 UserName = createUser.UserName,
                 UserEmail = createUser.UserEmail,
                 Password = createUser.Password,
                 Phone = createUser.Phone,
                 Address = createUser.Address,
-/*                Dob = createUser.Dob,*/
+                Dob = createUser.Dob,
                 Gender = createUser.Gender,
                 Country = createUser.Country,
-                RoleId = createUser.RoleId,
-                CreatedDate = createUser.CreatedDate,
+                RoleId = 2,
+                Status = "Active",
+                CreatedDate = DateTime.Now,
             };
+
             await _userAccountRepository.AddAsync(newUser);
             return newUser;
         }
+
         public async Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser)
         {
             var updaUser = await _userAccountRepository.GetByIdAsync(id);
