@@ -18,7 +18,7 @@ public partial class UserAccount : ISoftDelete
 
     public string Address { get; set; } = null!;
 
-    public DateOnly Dob { get; set; }
+    public DateTime Dob { get; set; }
 
     public string Gender { get; set; } = null!;
 
