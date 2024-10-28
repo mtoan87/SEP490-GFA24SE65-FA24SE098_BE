@@ -69,16 +69,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updateUser.UserName = updaUser.UserName;
-            updateUser.UserEmail = updaUser.UserEmail;
-            updateUser.Password = updaUser.Password;
-            updateUser.Phone = updaUser.Phone;
-            updateUser.Address = updaUser.Address;
-/*            updateUser.Dob = updaUser.Dob;*/
-            updateUser.Gender = updaUser.Gender;
-            updateUser.Country = updaUser.Country;
-            updateUser.RoleId = updaUser.RoleId;
-            updateUser.ModifiedDate = updaUser.ModifiedDate;
+            updaUser.UserName = updateUser.UserName;
+            updaUser.UserEmail = updateUser.UserEmail;
+            updaUser.Password = updateUser.Password;
+            updaUser.Phone = updateUser.Phone;
+            updaUser.Address = updateUser.Address;
+            updaUser.Dob = updateUser.Dob;
+            updaUser.Gender = updateUser.Gender;
+            updaUser.Country = updateUser.Country;
+            updaUser.RoleId = updateUser.RoleId;
+            updaUser.Status = updateUser.Status;
+            updaUser.ModifiedDate = DateTime.Now;
             await _userAccountRepository.UpdateAsync(updaUser);
             return updaUser;
         }
