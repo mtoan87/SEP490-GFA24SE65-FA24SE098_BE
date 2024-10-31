@@ -1,30 +1,29 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class House : ISoftDelete
+public partial class House
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string HouseName { get; set; } = null!;
+    public string HouseName { get; set; }
 
     public int HouseNumber { get; set; }
 
-    public string Location { get; set; } = null!;
+    public string Location { get; set; }
 
-    public string Description { get; set; } = null!;
+    public string Description { get; set; }
 
     public int HouseMember { get; set; }
 
-    public string HouseOwner { get; set; } = null!;
+    public string HouseOwner { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string Status { get; set; }
 
-    public string? UserAccountId { get; set; }
+    public string UserAccountId { get; set; }
 
-    public string? VillageId { get; set; }
+    public string VillageId { get; set; }
 
     public bool? IsDeleted { get; set; }
 
@@ -42,7 +41,7 @@ public partial class House : ISoftDelete
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
-    public virtual UserAccount? UserAccount { get; set; }
+    public virtual UserAccount UserAccount { get; set; }
 
-    public virtual Village? Village { get; set; }
+    public virtual Village Village { get; set; }
 }

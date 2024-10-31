@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class SystemWallet
+public partial class FoodStuffWallet
 {
     public int Id { get; set; }
 

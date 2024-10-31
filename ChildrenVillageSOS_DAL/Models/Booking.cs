@@ -1,22 +1,21 @@
-﻿using ChildrenVillageSOS_DAL.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Booking : ISoftDelete
+public partial class Booking
 {
     public int Id { get; set; }
 
-    public string? HouseId { get; set; }
+    public string HouseId { get; set; }
 
-    public string? UserAccountId { get; set; }
+    public string UserAccountId { get; set; }
 
     public int? BookingSlotId { get; set; }
 
     public DateTime Visitday { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string Status { get; set; }
 
     public bool? IsDeleted { get; set; }
 
@@ -24,7 +23,7 @@ public partial class Booking : ISoftDelete
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual House? House { get; set; }
+    public virtual House House { get; set; }
 
-    public virtual UserAccount? UserAccount { get; set; }
+    public virtual UserAccount UserAccount { get; set; }
 }

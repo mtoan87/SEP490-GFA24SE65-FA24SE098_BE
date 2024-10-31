@@ -15,14 +15,16 @@ builder.Services.AddService();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 
-builder.Services.AddCors(opt =>
+builder.Services.AddCors(options =>
 {
-    opt.AddDefaultPolicy(builder =>
-    {
-        builder.WithOrigins("https://localhost:3000", "https://localhost:7073", "http://localhost:5173")
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin()    // Cho phép m?i ngu?n g?c
+                .AllowAnyHeader()    // Cho phép m?i header
+                .AllowAnyMethod();   // Cho phép m?i ph??ng th?c (GET, POST, PUT, DELETE, etc.)
+        });
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,7 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Ensure CORS is configured before authentication and authorization
-app.UseCors();
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
