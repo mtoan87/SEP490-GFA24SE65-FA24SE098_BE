@@ -63,5 +63,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _repo.RemoveAsync(pay);
             return pay;
         }
+        public async Task<decimal> GetTotalBudget()
+        {
+            var facilitiesWallets = await _repo.GetAllAsync();
+            return facilitiesWallets.Sum(fw => fw.Budget);
+        }
     }
 }

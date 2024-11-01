@@ -17,6 +17,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             _repo = repo;
         }
+        public async Task<decimal> GetTotalBudget()
+        {
+            var facilitiesWallets = await _repo.GetAllAsync();
+            return facilitiesWallets.Sum(fw => fw.Budget);
+        }
         public async Task<IEnumerable<FoodStuffWallet>> GetFoodWallets()
         {
             return await _repo.GetAllAsync();

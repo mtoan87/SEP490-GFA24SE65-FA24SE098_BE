@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<FoodStuffWallet> CreateFoodWallet(CreateFoodWalletDTO createPayment);
         Task<FoodStuffWallet> UpdateFoodWalet(int id, UpdateFoodWalletDTO updatePayment);
         Task<FoodStuffWallet> DeleteFoodWallet(int id);
+        Task<decimal> GetTotalBudget();
     }
 }
