@@ -26,6 +26,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetByIdAsync(id);
         }
+        public async Task<FacilitiesWallet> GetFacilitiesWalletByUserIdAsync(string userAccountId)
+        {
+          return await _repo.GetFacilitiesWalletByUserIdAsync(userAccountId);
+        }
 
         public async Task<FacilitiesWallet> CreateFacilitiesWallet(CreateFacilitiesWalletDTO createPayment)
         {

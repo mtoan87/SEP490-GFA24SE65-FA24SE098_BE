@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IPaymentRepository : IRepositoryGeneric<Payment>
     {
+        Task<Payment> GetPaymentByDonationIdAsync(int donationId);
     }
 }
