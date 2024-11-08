@@ -15,10 +15,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ChildService : IChildService
     {
         private readonly IChildRepository _childRepository;
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
 
-        public ChildService(IChildRepository childRepository)
+        public ChildService(IChildRepository childRepository, IImageService imageService, IImageRepository imageRepository)
         {
             _childRepository = childRepository;
+            _imageRepository = imageRepository;
+            _imageService = imageService;
         }
 
         //public async Task<IEnumerable<Child>> GetAllChildren()
@@ -58,6 +62,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = createChild.IsDeleted
             };
             await _childRepository.AddAsync(newChild);
+
+            string url = await _imageService.UploadChildImage(createChild.Img, newChild.Id);
+            var image = new Image
+            {
+                UrlPath = url,
+                ChildId = newChild.Id,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false,
+            };
+            await _imageRepository.AddAsync(image);
             return newChild;
         }
 
@@ -76,6 +90,47 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.Dob = updateChild.Dob;
             existingChild.Status = updateChild.Status;
             existingChild.IsDeleted = updateChild.IsDeleted;
+
+            if (updateChild.Img != null)
+            {
+                var existingImage = await _imageRepository.GetByChildIdAsync(existingChild.Id);
+
+                if (existingImage != null)
+                {
+                    // Xóa ảnh cũ trên Cloudinary
+                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "ChildImages");
+
+                    if (!isDeleted)
+                    {
+                        throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
+                    }
+
+                    // Tải ảnh mới lên Cloudinary và lấy URL
+                    string newImageUrl = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
+
+                    // Cập nhật URL của ảnh cũ
+                    existingImage.UrlPath = newImageUrl;
+                    existingImage.ModifiedDate = DateTime.UtcNow;
+
+                    // Lưu thay đổi vào database
+                    await _imageRepository.UpdateAsync(existingImage);
+                }
+                else
+                {
+                    // Nếu không có ảnh cũ, tạo ảnh mới
+                    string newImageUrl = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
+
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        ChildId = existingChild.Id,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                    };
+
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
 
             await _childRepository.UpdateAsync(existingChild);
             return existingChild;

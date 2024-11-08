@@ -23,6 +23,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ISystemWalletRepository, SystemWalletRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
             return services;
         }
 
@@ -42,6 +43,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IVillageService, VillageService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IImageService, ImageService>();
             return services;
         }
     }

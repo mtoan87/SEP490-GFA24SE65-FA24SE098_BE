@@ -16,10 +16,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class HouseService : IHouseService
     {
         private readonly IHouseRepository _houseRepository;
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
 
-        public HouseService(IHouseRepository houseRepository)
+        public HouseService(IHouseRepository houseRepository, IImageService imageService, IImageRepository imageRepository)
         {
             _houseRepository = houseRepository;
+            _imageRepository = imageRepository;
+            _imageService = imageService;
         }
 
         public async Task<IEnumerable<House>> GetAllHouses()
@@ -57,8 +61,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 VillageId = createHouse.VillageId,
                 IsDeleted = createHouse.IsDeleted
             };
-
             await _houseRepository.AddAsync(newHouse);
+
+            string url = await _imageService.UploadChildImage(createHouse.Img, newHouse.Id);
+            var image = new Image
+            {
+                UrlPath = url,
+                HouseId = newHouse.Id,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false,
+            };
+            await _imageRepository.AddAsync(image);
             return newHouse;
         }
 
@@ -80,6 +93,47 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
             existingHouse.IsDeleted = updateHouse.IsDeleted;
+
+            if (updateHouse.Img != null)
+            {
+                var existingImage = await _imageRepository.GetByHouseIdAsync(existingHouse.Id);
+
+                if (existingImage != null)
+                {
+                    // Xóa ảnh cũ trên Cloudinary
+                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "HouseImages");
+
+                    if (!isDeleted)
+                    {
+                        throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
+                    }
+
+                    // Tải ảnh mới lên Cloudinary và lấy URL
+                    string newImageUrl = await _imageService.UploadHouseImage(updateHouse.Img, existingHouse.Id);
+
+                    // Cập nhật URL của ảnh cũ
+                    existingImage.UrlPath = newImageUrl;
+                    existingImage.ModifiedDate = DateTime.UtcNow;
+
+                    // Lưu thay đổi vào database
+                    await _imageRepository.UpdateAsync(existingImage);
+                }
+                else
+                {
+                    // Nếu không có ảnh cũ, tạo ảnh mới
+                    string newImageUrl = await _imageService.UploadHouseImage(updateHouse.Img, existingHouse.Id);
+
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        HouseId = existingHouse.Id,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                    };
+
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
 
             await _houseRepository.UpdateAsync(existingHouse);
             return existingHouse;

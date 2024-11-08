@@ -1,8 +1,17 @@
 using ChildrenVillageSOS_API.Configuration;
 using ChildrenVillageSOS_DAL.Models;
+using CloudinaryDotNet;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var cloudinarySettings = new CloudinaryDotNet.Account(
+    builder.Configuration["Cloudinary:CloudName"],
+    builder.Configuration["Cloudinary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiSecret"]
+);
+builder.Services.AddSingleton(new Cloudinary(cloudinarySettings));
 
 builder.Services.AddDbContext<SoschildrenVillageDbContext>(options =>
 {
@@ -28,6 +37,13 @@ builder.Services.AddCors(opt =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    });
 
 var app = builder.Build();
 

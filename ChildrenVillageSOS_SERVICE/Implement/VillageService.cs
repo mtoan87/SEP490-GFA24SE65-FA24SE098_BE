@@ -15,9 +15,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class VillageService : IVillageService
     {
         private readonly IVillageRepository _villageRepository;
-        public VillageService(IVillageRepository villageRepository)
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
+        public VillageService(IVillageRepository villageRepository, IImageService imageService, IImageRepository imageRepository)
         {
             _villageRepository = villageRepository;
+            _imageRepository = imageRepository;
+            _imageService = imageService;
         }
         public async Task<IEnumerable<Village>> GetAllVillage()
         {
@@ -35,9 +39,20 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 VillageName = createVillage.VillageName,
                 Location = createVillage.Location,
                 Description = createVillage.Description,
+                Status = createVillage.Status,
                 UserAccountId = createVillage.UserAccountId,
             };
             await _villageRepository.AddAsync(newVillage);
+
+            string url = await _imageService.UploadVillageImage(createVillage.Img, newVillage.Id);
+            var image = new Image
+            {
+                UrlPath = url,
+                VillageId = newVillage.Id,
+                CreatedDate = DateTime.UtcNow,
+                IsDeleted = false,
+            };
+            await _imageRepository.AddAsync(image);
             return newVillage;
         }
         public async Task<Village> UpdateVillage(string villageId, UpdateVillageDTO updateVillage)
@@ -51,7 +66,49 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             updaVillage.Location = updateVillage.Location;
             updaVillage.Description = updateVillage.Description;
-            updaVillage.UserAccountId = updateVillage.UserAccountId;
+            updateVillage.Status = updateVillage.Status;
+
+            if (updateVillage.Img != null)
+            {
+                var existingImage = await _imageRepository.GetByVillageIdAsync(updaVillage.Id);
+
+                if (existingImage != null)
+                {
+                    // Xóa ảnh cũ trên Cloudinary
+                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "VillageImages");
+
+                    if (!isDeleted)
+                    {
+                        throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
+                    }
+
+                    // Tải ảnh mới lên Cloudinary và lấy URL
+                    string newImageUrl = await _imageService.UploadVillageImage(updateVillage.Img, updaVillage.Id);
+
+                    // Cập nhật URL của ảnh cũ
+                    existingImage.UrlPath = newImageUrl;
+                    existingImage.ModifiedDate = DateTime.UtcNow;
+
+                    // Lưu thay đổi vào database
+                    await _imageRepository.UpdateAsync(existingImage);
+                }
+                else
+                {
+                    // Nếu không có ảnh cũ, tạo ảnh mới
+                    string newImageUrl = await _imageService.UploadVillageImage(updateVillage.Img, updaVillage.Id);
+
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        VillageId = updaVillage.Id,
+                        CreatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                    };
+
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
+
             await _villageRepository.UpdateAsync(updaVillage);
             return updaVillage;
 

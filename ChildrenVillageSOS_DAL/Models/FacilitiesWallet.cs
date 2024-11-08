@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class SystemWallet
+public partial class FacilitiesWallet
 {
     public int Id { get; set; }
 
@@ -14,6 +14,8 @@ public partial class SystemWallet
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
 
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
+
+    public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 

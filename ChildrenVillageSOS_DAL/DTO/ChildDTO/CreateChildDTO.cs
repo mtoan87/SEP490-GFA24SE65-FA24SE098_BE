@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,6 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public string Status { get; set; }
 
         public bool? IsDeleted { get; set; }
+        public IFormFile Img { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,10 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
 
         public string Description { get; set; } = null!;
 
-        public string Status { get; set; } = null!;
+        public string Status { get; set; }
 
         public string? UserAccountId { get; set; }
+        public IFormFile Img { get; set; }
 
     }
 }
