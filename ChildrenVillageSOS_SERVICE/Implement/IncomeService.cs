@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationId = createIncome.DonationId,
                 UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
-                HouseId = createIncome.HouseId,
+               
                 IsDeleted = createIncome.IsDeleted,
             };
             await _incomeRepository.AddAsync(newExpense);
@@ -49,7 +49,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             updIncome.UserAccountId = updateIncome.UserAccountId;
 
-            updIncome.HouseId = updateIncome.HouseId;
+            
             updIncome.IsDeleted = updateIncome.IsDeleted;
             await _incomeRepository.UpdateAsync(updIncome);
             return updIncome;

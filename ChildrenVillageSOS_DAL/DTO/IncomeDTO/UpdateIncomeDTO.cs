@@ -12,7 +12,7 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
 
         public string UserAccountId { get; set; }
 
-        public string HouseId { get; set; }
+        
 
         public bool IsDeleted { get; set; }
 

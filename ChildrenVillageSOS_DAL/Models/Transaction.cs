@@ -15,11 +15,15 @@ public partial class Transaction
 
     public int? HealthWalletId { get; set; }
 
+    public int? NecessitiesWalletId { get; set; }
+
     public decimal Amount { get; set; }
 
     public DateTime DateTime { get; set; }
 
     public string Status { get; set; }
+
+    public string UserAccountId { get; set; }
 
     public int? DonationId { get; set; }
 
@@ -35,5 +39,9 @@ public partial class Transaction
 
     public virtual Income Income { get; set; }
 
+    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+
     public virtual SystemWallet SystemWallet { get; set; }
+
+    public virtual UserAccount UserAccount { get; set; }
 }

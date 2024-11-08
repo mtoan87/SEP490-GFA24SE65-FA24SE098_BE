@@ -49,9 +49,13 @@ public partial class UserAccount
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
+    public virtual ICollection<NecessitiesWallet> NecessitiesWallets { get; set; } = new List<NecessitiesWallet>();
+
     public virtual Role Role { get; set; }
 
     public virtual ICollection<SystemWallet> SystemWallets { get; set; } = new List<SystemWallet>();
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual ICollection<Village> Villages { get; set; } = new List<Village>();
 }

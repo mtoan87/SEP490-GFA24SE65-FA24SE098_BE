@@ -39,8 +39,6 @@ public partial class House
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
-
     public virtual UserAccount UserAccount { get; set; }
 
     public virtual Village Village { get; set; }

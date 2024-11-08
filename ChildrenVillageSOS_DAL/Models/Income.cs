@@ -9,13 +9,23 @@ public partial class Income
 
     public int? DonationId { get; set; }
 
+    public decimal? Amount { get; set; }
+
+    public int? SystemWalletId { get; set; }
+
+    public int? FacilitiesWalletId { get; set; }
+
+    public int? FoodStuffWalletId { get; set; }
+
+    public int? HealthWalletId { get; set; }
+
+    public int? NecessitiesWalletId { get; set; }
+
     public DateTime Receiveday { get; set; }
 
     public string Status { get; set; }
 
     public string UserAccountId { get; set; }
-
-    public string HouseId { get; set; }
 
     public bool? IsDeleted { get; set; }
 
@@ -25,7 +35,15 @@ public partial class Income
 
     public virtual Donation Donation { get; set; }
 
-    public virtual House House { get; set; }
+    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+
+    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
+
+    public virtual HealthWallet HealthWallet { get; set; }
+
+    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+
+    public virtual SystemWallet SystemWallet { get; set; }
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
