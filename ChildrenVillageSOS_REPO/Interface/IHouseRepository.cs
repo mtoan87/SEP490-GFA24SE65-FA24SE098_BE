@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IHouseRepository : IRepositoryGeneric<House>
     {
+        Task<string?> GetUserAccountIdByHouseId(string houseId);
     }
 }

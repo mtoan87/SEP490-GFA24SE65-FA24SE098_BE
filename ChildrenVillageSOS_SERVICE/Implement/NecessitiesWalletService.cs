@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthWalletDTO;
+using ChildrenVillageSOS_DAL.DTO.NecessitiesWalletDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -15,7 +16,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly INecessitiesWalletRepository _repo;
         public NecessitiesWalletService(INecessitiesWalletRepository repo)
         {
-            repo = _repo;
+            _repo = repo;
         }
         public async Task<IEnumerable<NecessitiesWallet>> GetNecessitiesWallets()
         {
@@ -31,18 +32,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var facilitiesWallets = await _repo.GetAllAsync();
             return facilitiesWallets.Sum(fw => fw.Budget);
         }
-        public async Task<NecessitiesWallet> CreateNecessitiesWallet(CreateHealthWalletDTO createPayment)
+        public async Task<NecessitiesWallet> CreateNecessitiesWallet(CreateNecessitiesWalletDTO createPayment)
         {
-            var newPayment = new NecessitiesWallet
+            var newWallet = new NecessitiesWallet
             {
                 Budget = createPayment.Budget,
                 UserAccountId = createPayment.UserAccountId,
 
             };
-            await _repo.AddAsync(newPayment);
-            return newPayment;
+            await _repo.AddAsync(newWallet);
+            return newWallet;
         }
-        public async Task<NecessitiesWallet> UpdateNecessitiesWalet(int id, UpdateHealthWalletDTO updatePayment)
+        public async Task<NecessitiesWallet> UpdateNecessitiesWalet(int id, UpdateNecessitiesWalletDTO updatePayment)
         {
             var updaPayment = await _repo.GetByIdAsync(id);
             if (updaPayment == null)

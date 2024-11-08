@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthWalletDTO;
+using ChildrenVillageSOS_DAL.DTO.NecessitiesWalletDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
@@ -29,14 +30,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("CreateNecessitiesWallet")]
-        public async Task<ActionResult<HealthWallet>> CreateNecessitiesWallet([FromForm] CreateHealthWalletDTO expDTO)
+        public async Task<ActionResult<HealthWallet>> CreateNecessitiesWallet([FromForm] CreateNecessitiesWalletDTO expDTO)
         {
             var createExpense = await _service.CreateNecessitiesWallet(expDTO);
             return Ok(createExpense);
         }
         [HttpPut]
         [Route("UpdateNecessitiesWalet")]
-        public async Task<IActionResult> UpdateNecessitiesWalet(int id, [FromForm] UpdateHealthWalletDTO updateExp)
+        public async Task<IActionResult> UpdateNecessitiesWalet(int id, [FromForm] UpdateNecessitiesWalletDTO updateExp)
         {
             var rs = await _service.UpdateNecessitiesWalet(id, updateExp);
             return Ok(rs);

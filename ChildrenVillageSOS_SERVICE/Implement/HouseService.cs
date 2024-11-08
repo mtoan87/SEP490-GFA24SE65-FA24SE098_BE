@@ -75,6 +75,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return newHouse;
         }
 
+        public async Task<string?> GetUserAccountIdByHouseId(string houseId)
+        {
+            return await _houseRepository.GetUserAccountIdByHouseId(houseId);
+        }
         public async Task<House> UpdateHouse(string id, UpdateHouseDTO updateHouse)
         {
             var existingHouse = await _houseRepository.GetByIdAsync(id);
