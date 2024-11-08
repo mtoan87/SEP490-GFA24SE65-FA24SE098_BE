@@ -101,5 +101,56 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _donationRepository.UpdateAsync(donation);
             return donation;
         }
+        public async Task<Dictionary<int, Dictionary<string, decimal>>> GetMonthlyDonations()
+        {
+            var donations = await _donationRepository.GetAllAsync();
+
+            // Group donations by year and month
+            var monthlyDonations = donations
+                .GroupBy(d => new { d.DateTime.Year, d.DateTime.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalAmount = g.Sum(d => d.Amount)
+                });
+
+            // Create a nested dictionary to hold the total amounts for each month of each year
+            var result = new Dictionary<int, Dictionary<string, decimal>>();
+            foreach (var item in monthlyDonations)
+            {
+                if (!result.ContainsKey(item.Year))
+                {
+                    result[item.Year] = new Dictionary<string, decimal>();
+                }
+
+                string monthName = new DateTime(item.Year, item.Month, 1).ToString("MMMM");
+                result[item.Year][monthName] = item.TotalAmount;
+            }
+
+            // Fill in months with zero for years that have no donations
+            foreach (var year in result.Keys)
+            {
+                for (int month = 1; month <= 12; month++)
+                {
+                    string monthName = new DateTime(year, month, 1).ToString("MMMM");
+                    if (!result[year].ContainsKey(monthName))
+                    {
+                        result[year][monthName] = 0.00m; // Set to zero if no donations for that month
+                    }
+                }
+            }
+
+            return result;
+        }
+        public async Task<int> GetTotalDonationsByYear(int year)
+        {
+            var donations = await _donationRepository.GetAllAsync();
+
+            // Filter donations for the specified year and count them
+            var totalDonations = donations.Count(d => d.DateTime.Year == year);
+
+            return totalDonations;
+        }
     }
 }

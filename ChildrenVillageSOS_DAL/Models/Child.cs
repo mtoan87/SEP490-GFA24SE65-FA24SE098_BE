@@ -5,13 +5,13 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class Child
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; set; }
 
-    public string ChildName { get; set; } = null!;
+    public string ChildName { get; set; }
 
-    public string HealthStatus { get; set; } = null!;
+    public string HealthStatus { get; set; }
 
-    public string? HouseId { get; set; }
+    public string HouseId { get; set; }
 
     public int? FacilitiesWalletId { get; set; }
 
@@ -31,7 +31,7 @@ public partial class Child
 
     public DateTime Dob { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string Status { get; set; }
 
     public bool? IsDeleted { get; set; }
 
@@ -39,15 +39,19 @@ public partial class Child
 
     public DateTime? ModifiedDate { get; set; }
 
-    public string? BirthCertificate { get; set; }
+    public string BirthCertificate { get; set; }
 
-    public string? CitizenIdentification { get; set; }
+    public string CitizenIdentification { get; set; }
 
     public int? EventId { get; set; }
 
     public virtual ICollection<AcademicReport> AcademicReports { get; set; } = new List<AcademicReport>();
 
-    public virtual Event? Event { get; set; }
+    public virtual Event Event { get; set; }
+
+    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+
+    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
 
     public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 

@@ -9,8 +9,8 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
 {
     public class UpdateUserDTO
     {
-        public string Id { get; set; } = null!;
-
+/*        public string Id { get; set; } = null!;
+*/
         public string UserName { get; set; } = null!;
 
         public string UserEmail { get; set; } = null!;
@@ -21,7 +21,7 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
 
         public string Address { get; set; } = null!;
 
-        public DateOnly Dob { get; set; }
+        public DateTime Dob { get; set; }
 
         public string Gender { get; set; } = null!;
 
@@ -30,8 +30,8 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
         public string Status { get; set; } = null!;
 
         public int? RoleId { get; set; }
-        public DateTime? CreatedDate { get; set; }
-
+/*        public DateTime? CreatedDate { get; set; }
+*/
         public DateTime? ModifiedDate { get; set; }
         public IFormFile Img { get; set; }
     }

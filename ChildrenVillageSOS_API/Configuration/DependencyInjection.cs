@@ -22,6 +22,10 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ISystemWalletRepository, SystemWalletRepository>();
+            services.AddScoped<IHealthWalletRepository, HealthWalletRepository>();
+            services.AddScoped<IFoodStuffWalletRepository, FoodStuffWalletRepository>();
+            services.AddScoped<IFacilitiesWalletRepository, FacilitiesWalletRepository>();
+            services.AddScoped<INecessitiesWalletRepository, NecessitiesWalletRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             return services;

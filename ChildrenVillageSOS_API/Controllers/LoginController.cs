@@ -56,7 +56,8 @@ namespace ChildrenVillageSOS_API.Controllers
                 StatusCode = 200,
                 Message = "Login successful",
                 Data = token,
-                RoleId = (int)roleId
+                RoleId = (int)roleId,
+                UserId = account.Id
             });
         }
 

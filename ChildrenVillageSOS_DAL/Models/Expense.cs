@@ -9,11 +9,11 @@ public partial class Expense
 
     public decimal ExpenseAmount { get; set; }
 
-    public string Description { get; set; } = null!;
+    public string Description { get; set; }
 
     public DateTime Expenseday { get; set; }
 
-    public string? Status { get; set; }
+    public string Status { get; set; }
 
     public int? SystemWalletId { get; set; }
 

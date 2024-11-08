@@ -7,11 +7,11 @@ public partial class AcademicReport
 {
     public int Id { get; set; }
 
-    public string? Diploma { get; set; }
+    public string Diploma { get; set; }
 
-    public string? ChildId { get; set; }
+    public string ChildId { get; set; }
 
-    public string? SchoolReport { get; set; }
+    public string SchoolReport { get; set; }
 
-    public virtual Child? Child { get; set; }
+    public virtual Child Child { get; set; }
 }

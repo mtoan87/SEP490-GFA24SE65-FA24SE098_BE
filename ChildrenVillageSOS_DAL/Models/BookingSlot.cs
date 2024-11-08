@@ -11,7 +11,7 @@ public partial class BookingSlot
 
     public DateTime EndTime { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string Status { get; set; }
 
     public int SlotTime { get; set; }
 
