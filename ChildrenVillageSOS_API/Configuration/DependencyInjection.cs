@@ -25,6 +25,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IHealthWalletRepository, HealthWalletRepository>();
             services.AddScoped<IFoodStuffWalletRepository, FoodStuffWalletRepository>();
             services.AddScoped<IFacilitiesWalletRepository, FacilitiesWalletRepository>();
+            services.AddScoped<INecessitiesWalletRepository, NecessitiesWalletRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             return services;
         }
@@ -48,6 +49,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IFoodStuffWalletService, FoodStuffWalletService>();
             services.AddScoped<IFacilitiesWalletService, FacilitiesWalletService>();
             services.AddScoped<IHealthWalletService, HealthWalletService>();
+            services.AddScoped<INecessitiesWalletService, NecessitiesWalletService>();
             return services;
         }
     }
