@@ -28,14 +28,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("CreateEvent")]
-        public async Task<ActionResult<Event>> CreateEvent([FromBody] CreateEventDTO creEvent)
+        public async Task<ActionResult<Event>> CreateEvent([FromForm] CreateEventDTO creEvent)
         {
             var newEvent = await _eventService.CreateEvent(creEvent);
             return Ok(newEvent);    
         }
         [HttpPut]
         [Route("UpdateEvent")]
-        public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDTO updateEvent)
+        public async Task<IActionResult> UpdateEvent(int id, [FromForm] UpdateEventDTO updateEvent)
         {
             var editEvent = await _eventService.UpdateEvent(id, updateEvent);
             return Ok(editEvent);
