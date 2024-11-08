@@ -29,8 +29,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<UserAccount> GetUserById(string id)
         {
-            return await _userAccountRepository.GetByIdAsync(id);
+            return await _userAccountRepository.GetUserWithImagesByIdAsync(id);
         }
+
         public async Task<UserAccount> CreateUser(CreateUserDTO createUser)
         {
             var allUserId = await _userAccountRepository.Entities().Select(u => u.Id).ToListAsync();
@@ -43,11 +44,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Password = createUser.Password,
                 Phone = createUser.Phone,
                 Address = createUser.Address,
-/*                Dob = createUser.Dob,*/
+                Dob = createUser.Dob,
                 Gender = createUser.Gender,
                 Country = createUser.Country,
                 RoleId = createUser.RoleId,
-                CreatedDate = createUser.CreatedDate,
+                Status = createUser.Status,
+                CreatedDate = DateTime.Now,
             };
             await _userAccountRepository.AddAsync(newUser);
 
@@ -69,16 +71,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updateUser.UserName = updaUser.UserName;
-            updateUser.UserEmail = updaUser.UserEmail;
-            updateUser.Password = updaUser.Password;
-            updateUser.Phone = updaUser.Phone;
-            updateUser.Address = updaUser.Address;
-/*            updateUser.Dob = updaUser.Dob;*/
-            updateUser.Gender = updaUser.Gender;
-            updateUser.Country = updaUser.Country;
-            updateUser.RoleId = updaUser.RoleId;
-            updateUser.ModifiedDate = updaUser.ModifiedDate;
+            updaUser.UserName = updateUser.UserName;
+            updaUser.UserEmail = updateUser.UserEmail;
+            updaUser.Password = updateUser.Password;
+            updaUser.Phone = updateUser.Phone;
+            updaUser.Address = updateUser.Address;
+            updateUser.Dob = updateUser.Dob;
+            updaUser.Gender = updateUser.Gender;
+            updaUser.Country = updateUser.Country;
+            updaUser.RoleId = updateUser.RoleId;
+            updaUser.Status = updateUser.Status;
+            updaUser.ModifiedDate = DateTime.Now;
 
             if (updateUser.Img != null)
             {
