@@ -13,13 +13,15 @@ namespace ChildrenVillageSOS_API.Controllers
         private readonly IFoodStuffWalletService _foodStuffWalletService;
         private readonly ISystemWalletService _systemWalletService;
         private readonly IDonationService _donationService;
-        public DashboardController(IFacilitiesWalletService facilitiesWalletService, IHealthWalletService healthWalletService,IFoodStuffWalletService foodStuffWalletService, ISystemWalletService systemWalletService, IDonationService donationService)
+        private readonly INecessitiesWalletService _necessitiesWalletService;
+        public DashboardController(IFacilitiesWalletService facilitiesWalletService, IHealthWalletService healthWalletService,IFoodStuffWalletService foodStuffWalletService, ISystemWalletService systemWalletService, IDonationService donationService, INecessitiesWalletService necessitiesWalletService)
         {
             _facilitiesWalletService = facilitiesWalletService;
             _healthWalletService = healthWalletService;
             _foodStuffWalletService = foodStuffWalletService;
             _systemWalletService = systemWalletService;
             _donationService = donationService;
+            _necessitiesWalletService = necessitiesWalletService;   
         }
 
         [HttpGet("TotalFacilitiesWalletBudget")]
@@ -44,6 +46,12 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> TotalSystemWalletBudget()
         {
             var totalBudget = await _systemWalletService.GetTotalBudget();
+            return Ok(new { TotalBudget = totalBudget });
+        }
+        [HttpGet("TotalNecessitiesWalletBudget")]
+        public async Task<IActionResult> TotalNecessitiesWalletBudget()
+        {
+            var totalBudget = await _necessitiesWalletService.GetTotalBudget();
             return Ok(new { TotalBudget = totalBudget });
         }
         [HttpGet("MonthlyDonations")]
