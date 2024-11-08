@@ -25,6 +25,13 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return user;
         }
+        public async Task<UserAccount> GetUserWithImagesByIdAsync(string id)
+        {
+            return await _dbSet
+                .Include(u => u.Images) // Bao gồm hình ảnh liên kết
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<UserAccount> GetHighestIdUser()
         {
             return await _context.UserAccounts

@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<UserAccount> Login(string email, string password);
         Task<UserAccount> GetHighestIdUser();
+        Task<UserAccount> GetUserWithImagesByIdAsync(string id);
 
     }
 }
