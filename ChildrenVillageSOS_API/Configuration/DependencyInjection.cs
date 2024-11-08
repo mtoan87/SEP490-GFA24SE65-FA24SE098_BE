@@ -45,7 +45,11 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IDonationService, DonationService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IVillageService, VillageService>();
+            services.AddScoped<IHealthWalletService, HealthWalletService>();
+            services.AddScoped<IFoodStuffWalletService, FoodStuffWalletService>();
+            services.AddScoped<IFacilitiesWalletService, FacilitiesWalletService>();
             services.AddScoped<IUserAccountService, UserAccountService>();
+            services.AddScoped<INecessitiesWalletService, NecessitiesWalletService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IImageService, ImageService>();
             return services;

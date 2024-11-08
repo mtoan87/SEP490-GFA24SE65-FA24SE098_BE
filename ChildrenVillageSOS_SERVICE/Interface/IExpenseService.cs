@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<Expense>> GetAllExpenses();
         Task<Expense> GetExpenseById(int id);
         Task<Expense> CreateExpense(CreateExepenseDTO createExepense);
+        
         Task<Expense> UpdateExpense(int id, UpdateExpenseDTO updateExpense);
         Task<Expense> DeleteExpense(int id);
     }
