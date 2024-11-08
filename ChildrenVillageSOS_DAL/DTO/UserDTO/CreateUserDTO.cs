@@ -9,8 +9,8 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
 {
     public class CreateUserDTO
     {
-/*        public string Id { get; set; } = null!;
-*/
+        public string Id { get; set; } = null!;
+
         public string UserName { get; set; } = null!;
 
         public string UserEmail { get; set; } = null!;

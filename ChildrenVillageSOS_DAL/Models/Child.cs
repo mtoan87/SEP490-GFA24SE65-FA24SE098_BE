@@ -53,10 +53,9 @@ public partial class Child
 
     public virtual FoodStuffWallet FoodStuffWallet { get; set; }
 
-    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
+    
 
-    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
-
+    
     public virtual ICollection<HealthReport> HealthReports { get; set; } = new List<HealthReport>();
 
     public virtual HealthWallet? HealthWallet { get; set; }

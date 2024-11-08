@@ -17,11 +17,7 @@ public partial class SystemWallet
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
-    public virtual ICollection<Child> Children { get; set; } = new List<Child>();
-
-    public virtual ICollection<Event> Events { get; set; } = new List<Event>();
-
-    public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
+    
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
