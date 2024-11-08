@@ -9,7 +9,7 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
 {
     public class CreateVillageDTO
     {
-        public string Id { get; set; } = null!;
+/*        public string Id { get; set; } = null!;*/
 
         public string VillageName { get; set; } = null!;
 

@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(createVil);
         }
         [HttpPut]
-        [Route("UpdatePayment")]
+        [Route("UpdateVillage")]
         public async Task<IActionResult> UpdateVillage(string villageId, [FromForm] UpdateVillageDTO updavilDTO)
         {
             var vil = await _villageService.UpdateVillage(villageId, updavilDTO);
