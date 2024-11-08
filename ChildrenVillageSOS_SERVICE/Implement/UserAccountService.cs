@@ -1,7 +1,9 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.UserDTO;
+using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +33,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<UserAccount> CreateUser(CreateUserDTO createUser)
         {
+            var allUserId = await _userAccountRepository.Entities().Select(u => u.Id).ToListAsync();
+            string newUserId = IdGenerator.GenerateId(allUserId, "UA");
             var newUser = new UserAccount
             {
-                Id = createUser.Id,
+                Id = newUserId,
                 UserName = createUser.UserName,
                 UserEmail = createUser.UserEmail,
                 Password = createUser.Password,
