@@ -33,6 +33,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ExpenseAmount = createExepense.ExpenseAmount,
                 Description = createExepense.Description,
                 Expenseday = DateTime.Now,
+                Status = "Approved",
                 HouseId = createExepense.HouseId,
                 IsDeleted = createExepense.IsDeleted,
             };

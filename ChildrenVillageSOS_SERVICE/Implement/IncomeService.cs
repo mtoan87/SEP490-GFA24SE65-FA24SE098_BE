@@ -34,6 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationId = createIncome.DonationId,
                 UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
+                Status = "Approved",
                 IsDeleted = createIncome.IsDeleted,
             };
             await _incomeRepository.AddAsync(newExpense);
