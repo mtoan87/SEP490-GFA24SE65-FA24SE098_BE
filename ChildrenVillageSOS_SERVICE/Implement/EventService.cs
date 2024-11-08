@@ -1,7 +1,9 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,15 +35,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var newEvent = new Event
             {
-                Id = createEvent.Id,
                 Name = createEvent.Name,
                 Description = createEvent.Description,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
-                Status = createEvent.Status,
+                Status = "Active",
+                IsDeleted = false,
                 CreatedDate = DateTime.Now,
-                ModifiedDate = createEvent.ModifiedDate,
                 Amount = createEvent.Amount,
+                AmountLimit = createEvent.AmountLimit,
                 ChildId = createEvent.ChildId,
             };
             await _eventRepository.AddAsync(newEvent);
@@ -64,15 +66,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            updateEvent.Name = editEvent.Name;
-            updateEvent.Description = editEvent.Description;
-            updateEvent.StartTime = editEvent.StartTime;
-            updateEvent.EndTime = editEvent.EndTime;
-            updateEvent.Status = editEvent.Status;
-            updateEvent.ModifiedDate = DateTime.Now;
-            updateEvent.IsDeleted = editEvent.IsDeleted;
-            updateEvent.Amount = editEvent.Amount;
-            updateEvent.ChildId = editEvent.ChildId;
+
+            editEvent.Name = updateEvent.Name;
+            editEvent.Description = updateEvent.Description;
+            editEvent.StartTime = updateEvent.StartTime;
+            editEvent.EndTime = updateEvent.EndTime;
+            editEvent.Status = updateEvent.Status;
+            editEvent.ModifiedDate = DateTime.Now;
+            editEvent.IsDeleted = updateEvent.IsDeleted;
+            editEvent.Amount = updateEvent.Amount;
+            editEvent.AmountLimit = updateEvent.AmountLimit;
+            editEvent.ChildId = updateEvent.ChildId;
 
             if (updateEvent.Img != null)
             {

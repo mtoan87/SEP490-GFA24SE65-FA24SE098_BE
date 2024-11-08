@@ -9,8 +9,6 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 {
     public class UpdateEventDTO
     {
-        public int Id { get; set; }
-
         public string? Name { get; set; }
 
         public string? Description { get; set; }
@@ -21,14 +19,10 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 
         public string? Status { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
-
         public bool? IsDeleted { get; set; }
 
         public decimal? Amount { get; set; }
-
+        public decimal? AmountLimit { get; set; }
         public string? ChildId { get; set; }
         public IFormFile Img { get; set; }
     }
