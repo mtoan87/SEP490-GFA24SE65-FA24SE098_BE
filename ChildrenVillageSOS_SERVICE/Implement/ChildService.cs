@@ -60,6 +60,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Dob = createChild.Dob,
                 Status = createChild.Status,
                 IsDeleted = createChild.IsDeleted
+                
             };
             await _childRepository.AddAsync(newChild);
 
@@ -110,7 +111,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Cập nhật URL của ảnh cũ
                     existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.UtcNow;
+                    existingImage.ModifiedDate = DateTime.Now;
 
                     // Lưu thay đổi vào database
                     await _imageRepository.UpdateAsync(existingImage);
@@ -124,7 +125,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         ChildId = existingChild.Id,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         IsDeleted = false,
                     };
 

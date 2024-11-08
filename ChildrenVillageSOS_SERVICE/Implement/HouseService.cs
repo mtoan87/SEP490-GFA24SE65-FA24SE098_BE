@@ -59,7 +59,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = createHouse.Status,
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
-                IsDeleted = createHouse.IsDeleted
+                IsDeleted = createHouse.IsDeleted,
+                CreatedDate = DateTime.Now
             };
             await _houseRepository.AddAsync(newHouse);
 
@@ -68,7 +69,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 UrlPath = url,
                 HouseId = newHouse.Id,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 IsDeleted = false,
             };
             await _imageRepository.AddAsync(image);
@@ -97,6 +98,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
             existingHouse.IsDeleted = updateHouse.IsDeleted;
+            existingHouse.ModifiedDate = DateTime.Now;
 
             if (updateHouse.Img != null)
             {
@@ -117,7 +119,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Cập nhật URL của ảnh cũ
                     existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.UtcNow;
+                    existingImage.ModifiedDate = DateTime.Now;
 
                     // Lưu thay đổi vào database
                     await _imageRepository.UpdateAsync(existingImage);
@@ -131,7 +133,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         HouseId = existingHouse.Id,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         IsDeleted = false,
                     };
 

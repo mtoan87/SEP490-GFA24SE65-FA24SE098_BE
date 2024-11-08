@@ -27,6 +27,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 EndTime = createBookingSlot.EndTime,
                 Status = createBookingSlot.Status,
                 SlotTime = createBookingSlot.SlotTime,
+                CreatedDate = DateTime.Now
             };
             await _bookingSlotRepository.AddAsync(slot);
             return slot;
@@ -80,6 +81,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             slot.EndTime = updateBookingSlot.EndTime;
             slot.SlotTime = updateBookingSlot.SlotTime;
             slot.Status = updateBookingSlot.Status;
+            slot.ModifiedDate = DateTime.Now;
 
             await _bookingSlotRepository.UpdateAsync(slot);
             return slot;

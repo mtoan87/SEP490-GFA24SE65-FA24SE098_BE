@@ -28,7 +28,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DateTime = createDonation.DateTime,
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
-                Status = createDonation.Status
+                Status = createDonation.Status,
+                CreatedDate = DateTime.Now
             };
             await _donationRepository.AddAsync(donation);
             return donation;
@@ -43,7 +44,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
                 IsDeleted = false,
-                Status = createDonation.Status
+                Status = createDonation.Status,
+                CreatedDate= DateTime.Now
             };
             await _donationRepository.AddAsync(donation);
             return donation;
@@ -98,6 +100,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             donation.Amount = updateDonation.Amount;
             donation.Description = updateDonation.Description;
             donation.Status = updateDonation.Status;
+            donation.ModifiedDate = DateTime.Now;
             await _donationRepository.UpdateAsync(donation);
             return donation;
         }

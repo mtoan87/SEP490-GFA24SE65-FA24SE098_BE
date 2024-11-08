@@ -39,7 +39,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 Status = createEvent.Status,
-                CreatedDate = createEvent.CreatedDate,
+                CreatedDate = DateTime.Now,
                 ModifiedDate = createEvent.ModifiedDate,
                 Amount = createEvent.Amount,
                 ChildId = createEvent.ChildId,
@@ -51,7 +51,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 UrlPath = url,
                 EventId = newEvent.Id,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 IsDeleted = false,
             };
             await _imageRepository.AddAsync(image);
@@ -69,7 +69,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             updateEvent.StartTime = editEvent.StartTime;
             updateEvent.EndTime = editEvent.EndTime;
             updateEvent.Status = editEvent.Status;
-            updateEvent.ModifiedDate = editEvent.ModifiedDate;
+            updateEvent.ModifiedDate = DateTime.Now;
             updateEvent.IsDeleted = editEvent.IsDeleted;
             updateEvent.Amount = editEvent.Amount;
             updateEvent.ChildId = editEvent.ChildId;
@@ -93,7 +93,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Cập nhật URL của ảnh cũ
                     existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.UtcNow;
+                    existingImage.ModifiedDate = DateTime.Now;
 
                     // Lưu thay đổi vào database
                     await _imageRepository.UpdateAsync(existingImage);
@@ -107,7 +107,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         EventId = editEvent.Id,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         IsDeleted = false,
                     };
 

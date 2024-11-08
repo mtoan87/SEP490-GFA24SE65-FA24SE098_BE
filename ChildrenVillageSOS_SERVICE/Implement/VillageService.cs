@@ -45,6 +45,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createVillage.Description,
                 Status = createVillage.Status,
                 UserAccountId = createVillage.UserAccountId,
+                CreatedDate = DateTime.Now
             };
             await _villageRepository.AddAsync(newVillage);
 
@@ -72,6 +73,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             updaVillage.Description = updateVillage.Description;
             updaVillage.Status = updateVillage.Status;
             updaVillage.UserAccountId = updateVillage.UserAccountId;
+            updaVillage.ModifiedDate = DateTime.Now;
 
             if (updateVillage.Img != null)
             {
@@ -92,7 +94,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Cập nhật URL của ảnh cũ
                     existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.UtcNow;
+                    existingImage.ModifiedDate = DateTime.Now;
 
                     // Lưu thay đổi vào database
                     await _imageRepository.UpdateAsync(existingImage);
@@ -106,7 +108,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         VillageId = updaVillage.Id,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         IsDeleted = false,
                     };
 

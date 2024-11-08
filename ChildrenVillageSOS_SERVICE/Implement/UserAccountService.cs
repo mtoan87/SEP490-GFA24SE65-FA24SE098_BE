@@ -58,7 +58,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 UrlPath = url,
                 UserAccountId = newUser.Id,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 IsDeleted = false,
             };
             await _imageRepository.AddAsync(image);
@@ -102,7 +102,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Cập nhật URL của ảnh cũ
                     existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.UtcNow;
+                    existingImage.ModifiedDate = DateTime.Now;
 
                     // Lưu thay đổi vào database
                     await _imageRepository.UpdateAsync(existingImage);
@@ -116,7 +116,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         UserAccountId = updaUser.Id,
-                        CreatedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
                         IsDeleted = false,
                     };
 

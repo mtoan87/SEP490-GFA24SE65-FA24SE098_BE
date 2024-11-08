@@ -29,6 +29,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 BookingSlotId = createBooking.BookingSlotId,
                 Visitday = createBooking.Visitday,
                 Status = createBooking.Status,
+                CreatedDate = DateTime.Now
             };
             await _bookingRepository.AddAsync(newBooking);
             return newBooking;
@@ -84,6 +85,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             booking.BookingSlotId = updateBooking.BookingSlotId;
             booking.Visitday = updateBooking.Visitday;
             booking.Status = updateBooking.Status;
+            booking.ModifiedDate = DateTime.Now;
             await _bookingRepository.UpdateAsync(booking);
             return booking;
         }
