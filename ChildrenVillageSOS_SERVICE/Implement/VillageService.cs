@@ -1,9 +1,11 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +35,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Village> CreateVillage(CreateVillageDTO createVillage)
         {
+            var allVillageId = await _villageRepository.Entities().Select(v => v.Id).ToListAsync();
+            string newVillageId = IdGenerator.GenerateId(allVillageId, "V");
             var newVillage = new Village
             {
-                Id = createVillage.Id,
+                Id = newVillageId,
                 VillageName = createVillage.VillageName,
                 Location = createVillage.Location,
                 Description = createVillage.Description,
@@ -66,7 +70,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             updaVillage.Location = updateVillage.Location;
             updaVillage.Description = updateVillage.Description;
-            updateVillage.Status = updateVillage.Status;
+            updaVillage.Status = updateVillage.Status;
+            updaVillage.UserAccountId = updateVillage.UserAccountId;
 
             if (updateVillage.Img != null)
             {
