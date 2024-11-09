@@ -15,9 +15,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class IncomeService : IIncomeService
     {
         private readonly IIncomeRepository _incomeRepository;
-        public IncomeService(IIncomeRepository incomeRepository) 
+        private readonly IDonationRepository _donationRepository;
+        public IncomeService(IIncomeRepository incomeRepository, IDonationRepository donationRepository) 
         { 
             _incomeRepository = incomeRepository;   
+            _donationRepository = donationRepository;
         }
         public async Task<IEnumerable<Income>> GetAllIncomes()
         {
@@ -29,8 +31,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Income> CreateIncome(CreateIncomeDTO createIncome)
         {
+           
             var newExpense = new Income
             {
+              
+                Amount = createIncome.Amount,
                 DonationId = createIncome.DonationId,
                 UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
@@ -45,10 +50,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var updIncome = await _incomeRepository.GetByIdAsync(id);
             if (updIncome == null)
             {
-                throw new Exception($"Expense with ID{id} not found!");
+                throw new Exception($"Income with ID{id} not found!");
             }
             updIncome.UserAccountId = updateIncome.UserAccountId;
-
+            updIncome.ModifiedDate = DateTime.Now;
             updIncome.IsDeleted = updateIncome.IsDeleted;
             await _incomeRepository.UpdateAsync(updIncome);
             return updIncome;
@@ -63,6 +68,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             await _incomeRepository.RemoveAsync(inc);
             return inc;
+        }
+        public async Task<Income> SoftDelete(int id)
+        {
+            var updIncome = await _incomeRepository.GetByIdAsync(id);
+            if (updIncome == null)
+            {
+                throw new Exception($"Income with ID{id} not found!");
+            }           
+            updIncome.IsDeleted = true;
+            await _incomeRepository.UpdateAsync(updIncome);
+            return updIncome;
         }
     }
 }

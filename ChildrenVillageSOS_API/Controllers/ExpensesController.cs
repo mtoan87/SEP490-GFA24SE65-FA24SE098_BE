@@ -48,5 +48,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var rs = await _expenseService.DeleteExpense(id);
             return Ok(rs);
         }
+        [HttpPut]
+        [Route("SoftDelete")]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            var rs = await _expenseService.SoftDelete(id);
+            return Ok(rs);
+        }
     }
 }

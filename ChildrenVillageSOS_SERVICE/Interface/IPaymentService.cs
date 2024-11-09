@@ -18,5 +18,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<string> CreatePayment(PaymentRequest paymentRequest);
         Task<Payment> GetPaymentByDonationIdAsync(int donationId);
         Task<string> CreateFacilitiesWalletPayment(PaymentRequest paymentRequest);
+        Task<Payment> SoftDelete(int id);
     }
 }

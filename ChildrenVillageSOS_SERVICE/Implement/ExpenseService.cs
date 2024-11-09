@@ -209,5 +209,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _expenseRepository.RemoveAsync(exp);
             return exp;
         }
+        public async Task<Expense> SoftDelete(int id)
+        {
+            var income = await _expenseRepository.GetByIdAsync(id);
+            if (income == null)
+            {
+                throw new Exception($"Expense with ID{id} not found!");
+            }
+            income.IsDeleted = true;
+            await _expenseRepository.UpdateAsync(income);
+            return income;
+        }
     }
 }

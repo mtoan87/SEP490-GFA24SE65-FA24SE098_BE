@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Income> CreateIncome(CreateIncomeDTO createIncome);
         Task<Income> UpdateIncome(int id, UpdateIncomeDTO updateIncome);
         Task<Income> DeleteIncome(int id);
+        Task<Income> SoftDelete(int id);
     }
 }

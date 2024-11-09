@@ -204,9 +204,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _paymentRepository.GetPaymentByDonationIdAsync(donationId);
         }
-        public Task<Payment> CreatePayment(CreatePaymentDTO createPayment)
+
+        public async Task<Payment> SoftDelete(int id)
         {
-            throw new NotImplementedException();
+            var updaPayment = await _paymentRepository.GetByIdAsync(id);
+            if (updaPayment == null)
+            {
+                throw new Exception($"Payment with ID{id} not found!");
+            }          
+            updaPayment.IsDeleted = true;
+            await _paymentRepository.UpdateAsync(updaPayment);
+            return updaPayment;
+
         }
     }
 }

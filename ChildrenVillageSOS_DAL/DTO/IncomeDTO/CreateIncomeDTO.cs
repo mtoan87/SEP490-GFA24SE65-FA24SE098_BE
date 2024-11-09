@@ -8,12 +8,12 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
 {
     public class CreateIncomeDTO
     {
-        public int? DonationId { get; set; }
+        public int DonationId { get; set; }
 
         public string UserAccountId { get; set; }
 
-        
 
+        public decimal? Amount { get; set; }
         public bool IsDeleted { get; set; }
 
     }

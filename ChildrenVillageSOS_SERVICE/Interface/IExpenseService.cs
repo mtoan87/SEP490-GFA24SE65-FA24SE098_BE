@@ -16,5 +16,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         
         Task<Expense> UpdateExpense(int id, UpdateExpenseDTO updateExpense);
         Task<Expense> DeleteExpense(int id);
+
+        Task<Expense> SoftDelete(int id);
     }
 }
