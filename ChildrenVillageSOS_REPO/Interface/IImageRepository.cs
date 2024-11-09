@@ -9,10 +9,10 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IImageRepository : IRepositoryGeneric<Image>
     {
-        public Task<Image?> GetByChildIdAsync(string childId);
-        public Task<Image?> GetByHouseIdAsync(string houseId);
-        public Task<Image?> GetByVillageIdAsync(string villageId);
-        public Task<Image?> GetByEventIdAsync(int eventId);
-        public Task<Image?> GetByUserAccountIdAsync(string userAccountId);
+        Task<List<Image>> GetByChildIdAsync(string childId);
+        Task<List<Image>> GetByHouseIdAsync(string houseId);
+        Task<List<Image>> GetByVillageIdAsync(string villageId);
+        Task<List<Image>> GetByEventIdAsync(int eventId);
+        Task<List<Image>> GetByUserAccountIdAsync(string userAccountId);
     }
 }

@@ -86,135 +86,237 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
         }
 
-        public async Task<string> UploadChildImage(IFormFile file, string ChildId)
+        public async Task<List<string>> UploadChildImage(List<IFormFile> files, string ChildId)
         {
-            if (!file.ContentType.ToLower().StartsWith("image/"))
+            // Kiểm tra danh sách file có rỗng hay không
+            if (files == null || files.Count == 0)
             {
-                throw new Exception("File is not a image!");
+                throw new Exception("No files to upload!");
             }
+
             var account = new CloudinaryDotNet.Account(_cloudName, _apiKey, _apiSecret);
             _cloudinary = new Cloudinary(account);
-            var uploadParameters = new ImageUploadParams
+
+            // Danh sách URL ảnh sau khi upload
+            var imageUrls = new List<string>();
+
+            foreach (var file in files)
             {
-                // Tạo một folder riêng 
-                Folder = $"ChildImages/{ChildId}",
-                PublicId = $"{ChildId}_{Path.GetFileNameWithoutExtension(file.FileName)}"
-            };
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                // Kiểm tra định dạng file
+                if (!file.ContentType.ToLower().StartsWith("image/"))
+                {
+                    throw new Exception($"File {file.FileName} is not an image!");
+                }
+
+                // Thiết lập các tham số upload
+                var uploadParameters = new ImageUploadParams
+                {
+                    Folder = $"ChildImages/{ChildId}",
+                    PublicId = $"{ChildId}_{Path.GetFileNameWithoutExtension(file.FileName)}",
+                    File = new FileDescription(file.FileName)
+                };
+
+                // Đọc file vào memory stream
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                }
+
+                // Thực hiện upload ảnh lên Cloudinary
+                var result = await _cloudinary.UploadAsync(uploadParameters);
+
+                // Kiểm tra lỗi khi upload
+                if (result.Error != null)
+                {
+                    throw new Exception($"Error uploading image {file.FileName}: {result.Error.Message}");
+                }
+
+                // Thêm URL ảnh vào danh sách
+                imageUrls.Add(result.SecureUrl.ToString());
             }
-            var result = await _cloudinary.UploadAsync(uploadParameters);
-            if (result.Error != null)
-            {
-                throw new Exception($"Error upload image: {result.Error.Message}");
-            }
-            return result.SecureUrl.ToString();
+
+            return imageUrls;
         }
 
-        public async Task<string> UploadHouseImage(IFormFile file, string HouseId)
+        public async Task<List<string>> UploadHouseImage(List<IFormFile> files, string HouseId)
         {
-            if (!file.ContentType.ToLower().StartsWith("image/"))
+            if (files == null || files.Count == 0)
             {
-                throw new Exception("File is not a image!");
+                throw new Exception("No files to upload!");
             }
+
             var account = new CloudinaryDotNet.Account(_cloudName, _apiKey, _apiSecret);
             _cloudinary = new Cloudinary(account);
-            var uploadParameters = new ImageUploadParams
+
+            var imageUrls = new List<string>();
+
+            foreach (var file in files)
             {
-                Folder = $"HouseImages/{HouseId}",
-                PublicId = $"{HouseId}_{Path.GetFileNameWithoutExtension(file.FileName)}"
-            };
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                if (!file.ContentType.ToLower().StartsWith("image/"))
+                {
+                    throw new Exception($"File {file.FileName} is not an image!");
+                }
+
+                var uploadParameters = new ImageUploadParams
+                {
+                    Folder = $"HouseImages/{HouseId}",
+                    PublicId = $"{HouseId}_{Path.GetFileNameWithoutExtension(file.FileName)}",
+                    File = new FileDescription(file.FileName)
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                }
+
+                var result = await _cloudinary.UploadAsync(uploadParameters);
+
+                if (result.Error != null)
+                {
+                    throw new Exception($"Error uploading image {file.FileName}: {result.Error.Message}");
+                }
+
+                imageUrls.Add(result.SecureUrl.ToString());
             }
-            var result = await _cloudinary.UploadAsync(uploadParameters);
-            if (result.Error != null)
-            {
-                throw new Exception($"Error upload image: {result.Error.Message}");
-            }
-            return result.SecureUrl.ToString();
+
+            return imageUrls;
         }
 
-        public async Task<string> UploadVillageImage(IFormFile file, string VillageId)
+        public async Task<List<string>> UploadVillageImage(List<IFormFile> files, string VillageId)
         {
-            if (!file.ContentType.ToLower().StartsWith("image/"))
+            if (files == null || files.Count == 0)
             {
-                throw new Exception("File is not a image!");
+                throw new Exception("No files to upload!");
             }
+
             var account = new CloudinaryDotNet.Account(_cloudName, _apiKey, _apiSecret);
             _cloudinary = new Cloudinary(account);
-            var uploadParameters = new ImageUploadParams
+
+            var imageUrls = new List<string>();
+
+            foreach (var file in files)
             {
-                Folder = $"VillageImages/{VillageId}",
-                PublicId = $"{VillageId}_{Path.GetFileNameWithoutExtension(file.FileName)}"
-            };
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                if (!file.ContentType.ToLower().StartsWith("image/"))
+                {
+                    throw new Exception($"File {file.FileName} is not an image!");
+                }
+
+                var uploadParameters = new ImageUploadParams
+                {
+                    Folder = $"VillageImages/{VillageId}",
+                    PublicId = $"{VillageId}_{Path.GetFileNameWithoutExtension(file.FileName)}",
+                    File = new FileDescription(file.FileName)
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                }
+
+                var result = await _cloudinary.UploadAsync(uploadParameters);
+
+                if (result.Error != null)
+                {
+                    throw new Exception($"Error uploading image {file.FileName}: {result.Error.Message}");
+                }
+
+                imageUrls.Add(result.SecureUrl.ToString());
             }
-            var result = await _cloudinary.UploadAsync(uploadParameters);
-            if (result.Error != null)
-            {
-                throw new Exception($"Error upload image: {result.Error.Message}");
-            }
-            return result.SecureUrl.ToString();
+
+            return imageUrls;
         }
 
-        public async Task<string> UploadEventImage(IFormFile file, int EventId)
+        public async Task<List<string>> UploadEventImage(List<IFormFile> files, int EventId)
         {
-            if (!file.ContentType.ToLower().StartsWith("image/"))
+            if (files == null || files.Count == 0)
             {
-                throw new Exception("File is not a image!");
+                throw new Exception("No files to upload!");
             }
+
             var account = new CloudinaryDotNet.Account(_cloudName, _apiKey, _apiSecret);
             _cloudinary = new Cloudinary(account);
-            var uploadParameters = new ImageUploadParams
+
+            var imageUrls = new List<string>();
+
+            foreach (var file in files)
             {
-                Folder = $"EventImages/{EventId}",
-                PublicId = $"{EventId}_{Path.GetFileNameWithoutExtension(file.FileName)}"
-            };
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                if (!file.ContentType.ToLower().StartsWith("image/"))
+                {
+                    throw new Exception($"File {file.FileName} is not an image!");
+                }
+
+                var uploadParameters = new ImageUploadParams
+                {
+                    Folder = $"EventImages/{EventId}",
+                    PublicId = $"{EventId}_{Path.GetFileNameWithoutExtension(file.FileName)}",
+                    File = new FileDescription(file.FileName)
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                }
+
+                var result = await _cloudinary.UploadAsync(uploadParameters);
+
+                if (result.Error != null)
+                {
+                    throw new Exception($"Error uploading image {file.FileName}: {result.Error.Message}");
+                }
+
+                imageUrls.Add(result.SecureUrl.ToString());
             }
-            var result = await _cloudinary.UploadAsync(uploadParameters);
-            if (result.Error != null)
-            {
-                throw new Exception($"Error upload image: {result.Error.Message}");
-            }
-            return result.SecureUrl.ToString();
+
+            return imageUrls;
         }
 
-        public async Task<string> UploadUserAccountImage(IFormFile file, string UserAccountId)
+        public async Task<List<string>> UploadUserAccountImage(List<IFormFile> files, string UserAccountId)
         {
-            if (!file.ContentType.ToLower().StartsWith("image/"))
+            if (files == null || files.Count == 0)
             {
-                throw new Exception("File is not a image!");
+                throw new Exception("No files to upload!");
             }
+
             var account = new CloudinaryDotNet.Account(_cloudName, _apiKey, _apiSecret);
             _cloudinary = new Cloudinary(account);
-            var uploadParameters = new ImageUploadParams
+
+            var imageUrls = new List<string>();
+
+            foreach (var file in files)
             {
-                Folder = $"UserImages/{UserAccountId}",
-                PublicId = $"{UserAccountId}_{Path.GetFileNameWithoutExtension(file.FileName)}"
-            };
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                if (!file.ContentType.ToLower().StartsWith("image/"))
+                {
+                    throw new Exception($"File {file.FileName} is not an image!");
+                }
+
+                var uploadParameters = new ImageUploadParams
+                {
+                    Folder = $"UserImages/{UserAccountId}",
+                    PublicId = $"{UserAccountId}_{Path.GetFileNameWithoutExtension(file.FileName)}",
+                    File = new FileDescription(file.FileName)
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    uploadParameters.File = new FileDescription(file.FileName, new MemoryStream(memoryStream.ToArray()));
+                }
+
+                var result = await _cloudinary.UploadAsync(uploadParameters);
+
+                if (result.Error != null)
+                {
+                    throw new Exception($"Error uploading image {file.FileName}: {result.Error.Message}");
+                }
+
+                imageUrls.Add(result.SecureUrl.ToString());
             }
-            var result = await _cloudinary.UploadAsync(uploadParameters);
-            if (result.Error != null)
-            {
-                throw new Exception($"Error upload image: {result.Error.Message}");
-            }
-            return result.SecureUrl.ToString();
+
+            return imageUrls;
         }
     }
 }

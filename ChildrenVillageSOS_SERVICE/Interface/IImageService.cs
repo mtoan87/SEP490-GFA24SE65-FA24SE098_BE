@@ -12,11 +12,11 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         Task<IEnumerable<Image>> GetAllImages();
         Task<bool> DeleteImageAsync(string urlImage, string path);
-        Task<string> UploadChildImage(IFormFile file, string ChildId);
-        Task<string> UploadHouseImage(IFormFile file, string HouseId);
-        Task<string> UploadVillageImage(IFormFile file, string VillageId);
-        Task<string> UploadEventImage(IFormFile file, int EventId);
-        Task<string> UploadUserAccountImage(IFormFile file, string UserAccountId);
+        Task<List<string>> UploadChildImage(List<IFormFile> files, string ChildId);
+        Task<List<string>> UploadHouseImage(List<IFormFile> files, string HouseId);
+        Task<List<string>> UploadVillageImage(List<IFormFile> files, string VillageId);
+        Task<List<string>> UploadEventImage(List<IFormFile> files, int EventId);
+        Task<List<string>> UploadUserAccountImage(List<IFormFile> files, string UserAccountId);
 
     }
 }

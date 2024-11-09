@@ -53,15 +53,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
             await _userAccountRepository.AddAsync(newUser);
 
-            string url = await _imageService.UploadUserAccountImage(createUser.Img, newUser.Id);
-            var image = new Image
+            // Upload danh sách ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadUserAccountImage(createUser.Img, newUser.Id);
+
+            // Lưu thông tin các ảnh vào bảng Image
+            foreach (var url in imageUrls)
             {
-                UrlPath = url,
-                UserAccountId = newUser.Id,
-                CreatedDate = DateTime.Now,
-                IsDeleted = false,
-            };
-            await _imageRepository.AddAsync(image);
+                var image = new Image
+                {
+                    UrlPath = url,
+                    UserAccountId = newUser.Id,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(image);
+            }
             return newUser;
         }
         public async Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser)
@@ -76,50 +82,43 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             updaUser.Password = updateUser.Password;
             updaUser.Phone = updateUser.Phone;
             updaUser.Address = updateUser.Address;
-            updateUser.Dob = updateUser.Dob;
+            updaUser.Dob = updateUser.Dob;
             updaUser.Gender = updateUser.Gender;
             updaUser.Country = updateUser.Country;
             updaUser.RoleId = updateUser.RoleId;
             updaUser.Status = updateUser.Status;
             updaUser.ModifiedDate = DateTime.Now;
 
-            if (updateUser.Img != null)
+            // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
+            if (updateUser.Img != null && updateUser.Img.Any())
             {
-                var existingImage = await _imageRepository.GetByUserAccountIdAsync(updaUser.Id);
+                // Lấy danh sách ảnh hiện tại của KoiFishy từ database
+                var existingImages = await _imageRepository.GetByUserAccountIdAsync(updaUser.Id);
 
-                if (existingImage != null)
+                // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
+                foreach (var existingImage in existingImages)
                 {
-                    // Xóa ảnh cũ trên Cloudinary
+                    // Xóa ảnh trên Cloudinary
                     bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "UserImages");
-
                     if (!isDeleted)
                     {
                         throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
                     }
-
-                    // Tải ảnh mới lên Cloudinary và lấy URL
-                    string newImageUrl = await _imageService.UploadUserAccountImage(updateUser.Img, updaUser.Id);
-
-                    // Cập nhật URL của ảnh cũ
-                    existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.Now;
-
-                    // Lưu thay đổi vào database
-                    await _imageRepository.UpdateAsync(existingImage);
+                    // Xóa ảnh khỏi database
+                    await _imageRepository.RemoveAsync(existingImage);
                 }
-                else
-                {
-                    // Nếu không có ảnh cũ, tạo ảnh mới
-                    string newImageUrl = await _imageService.UploadUserAccountImage(updateUser.Img, updaUser.Id);
 
+                // Upload danh sách ảnh mới và lưu thông tin vào database
+                List<string> newImageUrls = await _imageService.UploadUserAccountImage(updateUser.Img, updaUser.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
                     var newImage = new Image
                     {
                         UrlPath = newImageUrl,
                         UserAccountId = updaUser.Id,
-                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now,
                         IsDeleted = false,
                     };
-
                     await _imageRepository.AddAsync(newImage);
                 }
             }

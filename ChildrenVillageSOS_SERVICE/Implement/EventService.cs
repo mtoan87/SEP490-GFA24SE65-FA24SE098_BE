@@ -48,15 +48,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
             await _eventRepository.AddAsync(newEvent);
 
-            string url = await _imageService.UploadEventImage(createEvent.Img, newEvent.Id);
-            var image = new Image
+            // Upload danh sách ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadEventImage(createEvent.Img, newEvent.Id);
+
+            // Lưu thông tin các ảnh vào bảng Image
+            foreach (var url in imageUrls)
             {
-                UrlPath = url,
-                EventId = newEvent.Id,
-                CreatedDate = DateTime.Now,
-                IsDeleted = false,
-            };
-            await _imageRepository.AddAsync(image);
+                var image = new Image
+                {
+                    UrlPath = url,
+                    EventId = newEvent.Id,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(image);
+            }
             return newEvent;
         }
         public async Task<Event> UpdateEvent(int id ,UpdateEventDTO updateEvent)
@@ -78,43 +84,36 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             editEvent.AmountLimit = updateEvent.AmountLimit;
             editEvent.ChildId = updateEvent.ChildId;
 
-            if (updateEvent.Img != null)
+            // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
+            if (updateEvent.Img != null && updateEvent.Img.Any())
             {
-                var existingImage = await _imageRepository.GetByEventIdAsync(editEvent.Id);
+                // Lấy danh sách ảnh hiện tại của KoiFishy từ database
+                var existingImages = await _imageRepository.GetByEventIdAsync(editEvent.Id);
 
-                if (existingImage != null)
+                // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
+                foreach (var existingImage in existingImages)
                 {
-                    // Xóa ảnh cũ trên Cloudinary
+                    // Xóa ảnh trên Cloudinary
                     bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "EventImages");
-
                     if (!isDeleted)
                     {
                         throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
                     }
-
-                    // Tải ảnh mới lên Cloudinary và lấy URL
-                    string newImageUrl = await _imageService.UploadEventImage(updateEvent.Img, editEvent.Id);
-
-                    // Cập nhật URL của ảnh cũ
-                    existingImage.UrlPath = newImageUrl;
-                    existingImage.ModifiedDate = DateTime.Now;
-
-                    // Lưu thay đổi vào database
-                    await _imageRepository.UpdateAsync(existingImage);
+                    // Xóa ảnh khỏi database
+                    await _imageRepository.RemoveAsync(existingImage);
                 }
-                else
-                {
-                    // Nếu không có ảnh cũ, tạo ảnh mới
-                    string newImageUrl = await _imageService.UploadEventImage(updateEvent.Img, editEvent.Id);
 
+                // Upload danh sách ảnh mới và lưu thông tin vào database
+                List<string> newImageUrls = await _imageService.UploadEventImage(updateEvent.Img, editEvent.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
                     var newImage = new Image
                     {
                         UrlPath = newImageUrl,
                         EventId = editEvent.Id,
-                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now,
                         IsDeleted = false,
                     };
-
                     await _imageRepository.AddAsync(newImage);
                 }
             }
