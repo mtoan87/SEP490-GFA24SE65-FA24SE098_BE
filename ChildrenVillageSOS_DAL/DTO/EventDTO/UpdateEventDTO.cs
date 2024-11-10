@@ -19,7 +19,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 
         public string? Status { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         public decimal? Amount { get; set; }
         public decimal? AmountLimit { get; set; }

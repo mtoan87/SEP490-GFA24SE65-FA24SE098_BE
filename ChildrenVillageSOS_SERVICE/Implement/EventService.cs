@@ -23,10 +23,32 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageService = imageService;
             _imageRepository = imageRepository;
         }
-        public async Task<IEnumerable<Event>> GetAllEvent()
+        public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()
         {
-            return await _eventRepository.GetAllAsync();
+            var events = await _eventRepository.GetAllAsync();
+
+            // Sử dụng Include để tải hình ảnh liên quan đến mỗi Event
+            var eventResponseDTOs = events.Select(e => new EventResponseDTO
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Description = e.Description,
+                StartTime = e.StartTime ?? DateTime.MinValue,
+                EndTime = e.EndTime ?? DateTime.MinValue,
+                Amount = e.Amount ?? 0,
+                AmountLimit = e.AmountLimit ?? 0,
+                Status = e.Status,
+                // Lấy URL của tất cả các hình ảnh
+                ImageUrls = e.Images.Where(img => !img.IsDeleted)  // Lọc hình ảnh chưa bị xóa
+                                     .Select(img => img.UrlPath)   // Chỉ lấy UrlPath
+                                     .ToArray()  // Chuyển thành mảng
+            }).ToArray();
+
+            return eventResponseDTOs;
         }
+
+
+
         public async Task<Event> GetEventById(int id)
         {
             return await _eventRepository.GetByIdAsync(id);

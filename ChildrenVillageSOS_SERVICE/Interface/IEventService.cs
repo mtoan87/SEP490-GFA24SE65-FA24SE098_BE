@@ -10,7 +10,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IEventService
     {
-        Task<IEnumerable<Event>> GetAllEvent();
+        Task<IEnumerable<EventResponseDTO>> GetAllEvent();
         Task<Event> GetEventById(int id);
         Task<Event> CreateEvent(CreateEventDTO createEvent);
         Task<Event> UpdateEvent(int id, UpdateEventDTO updateEvent);

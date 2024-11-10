@@ -21,7 +21,7 @@ public partial class Image
 
     public DateTime? CreatedDate { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
 
