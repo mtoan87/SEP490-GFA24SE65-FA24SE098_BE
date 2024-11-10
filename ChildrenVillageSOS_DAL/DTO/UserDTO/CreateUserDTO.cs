@@ -29,6 +29,6 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
 
         public int? RoleId { get; set; }
         public string Status { get; set; }
-        public IFormFile Img { get; set; }
+        public List<IFormFile> Img { get; set; }
     }
 }

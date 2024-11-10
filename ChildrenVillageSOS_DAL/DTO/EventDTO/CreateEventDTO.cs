@@ -20,6 +20,6 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public decimal? AmountLimit { get; set; }
         public string? ChildId { get; set; }
 
-        public IFormFile Img { get; set; }
+        public List<IFormFile> Img { get; set; }
     }
 }

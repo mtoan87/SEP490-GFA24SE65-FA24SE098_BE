@@ -17,34 +17,39 @@ namespace ChildrenVillageSOS_REPO.Implement
             this._dbContext = context;
         }
 
-        public async Task<Image?> GetByChildIdAsync(string childId)
+        public async Task<List<Image>> GetByChildIdAsync(string childId)
         {
             return await _dbContext.Images
-                .FirstOrDefaultAsync(img => img.ChildId == childId && img.IsDeleted == false);
+                .Where(img => img.ChildId == childId && img.IsDeleted == false)
+                .ToListAsync();
         }
 
-        public async Task<Image?> GetByEventIdAsync(int eventId)
+        public async Task<List<Image>> GetByEventIdAsync(int eventId)
         {
             return await _dbContext.Images
-                .FirstOrDefaultAsync(img => img.EventId == eventId && img.IsDeleted == false);
+                .Where(img => img.EventId == eventId && img.IsDeleted == false)
+                .ToListAsync();
         }
 
-        public async Task<Image?> GetByHouseIdAsync(string houseId)
+        public async Task<List<Image>> GetByHouseIdAsync(string houseId)
         {
             return await _dbContext.Images
-                .FirstOrDefaultAsync(img => img.HouseId == houseId && img.IsDeleted == false);
+                .Where(img => img.HouseId == houseId && img.IsDeleted == false)
+                .ToListAsync();
         }
 
-        public async Task<Image?> GetByUserAccountIdAsync(string userAccountId)
+        public async Task<List<Image>> GetByUserAccountIdAsync(string userAccountId)
         {
             return await _dbContext.Images
-                .FirstOrDefaultAsync(img => img.UserAccountId == userAccountId && img.IsDeleted == false);
+                .Where(img => img.UserAccountId == userAccountId && img.IsDeleted == false)
+                .ToListAsync();
         }
 
-        public async Task<Image?> GetByVillageIdAsync(string villageId)
+        public async Task<List<Image>> GetByVillageIdAsync(string villageId)
         {
             return await _dbContext.Images
-                .FirstOrDefaultAsync(img => img.VillageId == villageId && img.IsDeleted == false);
+                .Where(img => img.VillageId == villageId && img.IsDeleted == false)
+                .ToListAsync();
         }
     }
 }
