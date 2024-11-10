@@ -299,5 +299,155 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return updaPayment;
 
         }
+
+        public async Task<string> CreateHealthWalletPayment(PaymentRequest paymentRequest)
+        {
+            // Step 1: Create Donation
+            var donationDto = new CreateDonationPayment
+            {
+                UserAccountId = paymentRequest.UserAccountId,
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = paymentRequest.Amount,
+                Description = "Donation for SOS Children's Village",
+                IsDeleted = false,
+                Status = "Pending"
+            };
+
+            var donation = await _donationService.CreateDonationPayment(donationDto);
+
+            // Step 2: Create VNPay URL
+            var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
+            var vnp_Url = _configuration["VNPay:Url"];
+            var vnp_TmnCode = _configuration["VNPay:TmnCode"];
+            var vnp_HashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString()); // Multiply by 100 for VNPay
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderType", "donation");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            // Step 3: Update FacilitiesWallet Budget
+            var wallet = await _healthWalletRepository.GetHealthWalletByUserIdAsync("UA001");
+            if (wallet != null)
+            {
+                wallet.Budget += paymentRequest.Amount;
+                await _healthWalletRepository.UpdateAsync(wallet);
+            }
+
+            // Step 4: Create Transaction
+            var transaction = new Transaction
+            {
+                FacilitiesWalletId = wallet?.Id,
+                Amount = paymentRequest.Amount,
+                DateTime = DateTime.Now,
+                Status = "Completed",
+                DonationId = donation.Id
+            };
+            await _transactionRepository.AddAsync(transaction);
+
+            // Step 5: Create Payment
+            var payment = new Payment
+            {
+                DonationId = donation.Id,
+                Amount = paymentRequest.Amount,
+                PaymentMethod = "Banking",
+                DateTime = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            await _paymentRepository.AddAsync(payment);
+
+            // Return the VNPay URL for the user to complete the payment
+            return paymentUrl;
+        }
+
+        public async Task<string> CreateNecesstiesWalletPayment(PaymentRequest paymentRequest)
+        {
+            // Step 1: Create Donation
+            var donationDto = new CreateDonationPayment
+            {
+                UserAccountId = paymentRequest.UserAccountId,
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = paymentRequest.Amount,
+                Description = "Donation for SOS Children's Village",
+                IsDeleted = false,
+                Status = "Pending"
+            };
+
+            var donation = await _donationService.CreateDonationPayment(donationDto);
+
+            // Step 2: Create VNPay URL
+            var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
+            var vnp_Url = _configuration["VNPay:Url"];
+            var vnp_TmnCode = _configuration["VNPay:TmnCode"];
+            var vnp_HashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString()); // Multiply by 100 for VNPay
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderType", "donation");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            // Step 3: Update FacilitiesWallet Budget
+            var wallet = await _necessitiesWalletRepository.GetNecessitiesWalletByUserIdAsync("UA001");
+            if (wallet != null)
+            {
+                wallet.Budget += paymentRequest.Amount;
+                await _necessitiesWalletRepository.UpdateAsync(wallet);
+            }
+
+            // Step 4: Create Transaction
+            var transaction = new Transaction
+            {
+                FacilitiesWalletId = wallet?.Id,
+                Amount = paymentRequest.Amount,
+                DateTime = DateTime.Now,
+                Status = "Completed",
+                DonationId = donation.Id
+            };
+            await _transactionRepository.AddAsync(transaction);
+
+            // Step 5: Create Payment
+            var payment = new Payment
+            {
+                DonationId = donation.Id,
+                Amount = paymentRequest.Amount,
+                PaymentMethod = "Banking",
+                DateTime = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            await _paymentRepository.AddAsync(payment);
+
+            // Return the VNPay URL for the user to complete the payment
+            return paymentUrl;
+        }
     }
 }
