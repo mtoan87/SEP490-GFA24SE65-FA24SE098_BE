@@ -26,7 +26,7 @@ public partial class Event
     public int? NecessitiesWalletId { get; set; }
 
     public decimal? Amount { get; set; }
-
+    public decimal? CurrentAmount { get; set; }
     public decimal? AmountLimit { get; set; }
 
     public string? Status { get; set; }
