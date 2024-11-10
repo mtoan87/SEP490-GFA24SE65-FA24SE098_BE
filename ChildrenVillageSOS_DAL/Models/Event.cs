@@ -35,7 +35,7 @@ public partial class Event
 
     public DateTime? ModifiedDate { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? ChildId { get; set; }
 

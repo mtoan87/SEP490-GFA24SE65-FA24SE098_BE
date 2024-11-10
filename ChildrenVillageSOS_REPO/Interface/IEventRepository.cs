@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IEventRepository : IRepositoryGeneric<Event>
     {
+        Task<IEnumerable<Event>> GetAllAsync();
     }
 }

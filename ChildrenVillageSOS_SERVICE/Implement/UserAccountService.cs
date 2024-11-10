@@ -47,8 +47,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Dob = createUser.Dob,
                 Gender = createUser.Gender,
                 Country = createUser.Country,
-                RoleId = createUser.RoleId,
-                Status = createUser.Status,
+                RoleId = 2,
+                Status = "Active",
                 CreatedDate = DateTime.Now,
             };
             await _userAccountRepository.AddAsync(newUser);
