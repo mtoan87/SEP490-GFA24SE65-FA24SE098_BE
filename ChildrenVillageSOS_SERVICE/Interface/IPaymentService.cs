@@ -21,6 +21,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<string> CreateFoodStuffWalletPayment(PaymentRequest paymentRequest);
         Task<string> CreateHealthWalletPayment(PaymentRequest paymentRequest);
         Task<string> CreateNecesstiesWalletPayment(PaymentRequest paymentRequest);
+        Task<string> CreateSystemWalletPayment(PaymentRequest paymentRequest);
 
         Task<Payment> SoftDelete(int id);
     }
