@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IFoodStuffWalletRepository : IRepositoryGeneric<FoodStuffWallet>
     {
+        Task<FoodStuffWallet> GetWalletByUserIdAsync(string userAccountId);
     }
 }

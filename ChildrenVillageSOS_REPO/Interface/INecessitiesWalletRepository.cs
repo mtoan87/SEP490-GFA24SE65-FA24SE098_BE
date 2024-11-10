@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface INecessitiesWalletRepository : IRepositoryGeneric<NecessitiesWallet>
     {
+        Task<NecessitiesWallet> GetNecessitiesWalletByUserIdAsync(string userAccountId);
     }
 }

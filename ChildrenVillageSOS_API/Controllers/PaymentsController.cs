@@ -44,51 +44,98 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest request)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Tạo URL thanh toán VNPay
-            var paymentUrl = await _paymentService.CreatePayment(request);
-
-            // Trả về URL để người dùng redirect đến VNPay
+                return BadRequest(ModelState);           
+            var paymentUrl = await _paymentService.CreatePayment(request);           
             return Ok(new { url = paymentUrl });
         }
-        [HttpGet]
-        [Route("Success")]
-        public async Task<IActionResult> PaymentSuccess([FromQuery] VNPayCallbackDto callback)
+        [HttpGet("return")]
+        public async Task<IActionResult> Return([FromQuery] int vnp_TxnRef, [FromQuery] string vnp_ResponseCode, [FromQuery] string vnp_SecureHash)
         {
-            string hashSecret = _configuration["VNPay:HashSecret"];
-            string returnUrl = _configuration["VNPay:ReturnUrl"];
-            string tmnCode = _configuration["VNPay:TmnCode"];
-            string url = _configuration["VNPay:Url"];
-            // Bước 1: Xác thực chữ ký từ VNPay
-            bool isValidSignature = VnPayHelper.VerifySignature(callback, hashSecret);
-            if (!isValidSignature)
+            try
             {
-                return BadRequest("Invalid signature.");
-            }
+                // Kiểm tra chữ ký bảo mật (SecureHash) để xác minh tính hợp lệ của phản hồi
+                
+                var payLib = new VnPayLibrary();
+               
+                var url = _configuration.GetValue<string>("VNPay:Url");
+                var returnUrl = _configuration.GetValue<string>("VNPay:ReturnUrl");
+                var tmnCode = _configuration.GetValue<string>("VNPay:TmnCode");
+                var hashSecret = _configuration.GetValue<string>("VNPay:HashSecret");
 
-            // Bước 2: Kiểm tra mã phản hồi từ VNPay
-            if (callback.vnp_ResponseCode != "00")
+                var donation = await _donationRepository.GetByIdAsync(vnp_TxnRef);
+                payLib.AddRequestData("vnp_Version", "2.1.0");
+                payLib.AddRequestData("vnp_Command", "pay");
+                payLib.AddRequestData("vnp_TmnCode", tmnCode);
+                payLib.AddRequestData("vnp_Amount", (donation.Amount * 100).ToString()); // Multiply by 100 for VNPay
+                payLib.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                payLib.AddRequestData("vnp_CurrCode", "VND");
+                payLib.AddRequestData("vnp_IpAddr", "192.168.1.105");
+                payLib.AddRequestData("vnp_Locale", "vn");
+                payLib.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+                payLib.AddRequestData("vnp_OrderType", "donation");
+                payLib.AddRequestData("vnp_ReturnUrl", returnUrl);
+                payLib.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+                payLib.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+                string paymentUrl = payLib.CreateRequestUrl(url, hashSecret);
+
+
+
+                if (donation == null)
+                {
+                    return NotFound("Donation not found.");
+                }
+
+                var payment = await _paymentService.GetPaymentByDonationIdAsync(donation.Id);
+                if (payment == null)
+                {
+                    return NotFound("Payment not found.");
+                }
+
+                // Kiểm tra mã phản hồi
+                if (vnp_ResponseCode == "00") // "00" là mã thanh toán thành công
+                {
+                    // Cập nhật trạng thái Donation và Payment thành "Paid"
+                    donation.Status = "Paid";
+                    payment.Status = "Paid";
+                    await _donationRepository.UpdateAsync(donation);
+                    await _paymentRepository.UpdateAsync(payment);
+
+                    // Điều hướng đến trang thành công
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Payment successful.",
+                        donationId = donation.Id,
+                        paymentId = payment.Id,
+                        status = "Paid"
+                    });
+                }
+                else
+                {
+                    // Cập nhật trạng thái Donation và Payment thành "Cancelled"
+                    donation.Status = "Cancelled";
+                    payment.Status = "Cancelled";
+                    await _donationRepository.UpdateAsync(donation);
+                    await _paymentRepository.UpdateAsync(payment);
+
+                    // Điều hướng đến trang đơn hàng
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "Payment failed.",
+                        donationId = donation.Id,
+                        paymentId = payment.Id,
+                        status = "Cancelled"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                return BadRequest("Payment failed.");
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error.");
             }
-
-            // Bước 3: Truy xuất Donation và Payment dựa trên vnp_TxnRef
-            var donationId = int.Parse(callback.vnp_TxnRef);
-            var donation = await _donationRepository.GetByIdAsync(donationId);
-            var payment = await _paymentRepository.GetPaymentByDonationIdAsync(donationId);
-
-            if (donation != null && payment != null)
-            {
-                // Cập nhật trạng thái Donation và Payment thành "Paid"
-                donation.Status = "Paid";
-                payment.Status = "Paid";
-                await _donationRepository.UpdateAsync(donation);
-                await _paymentRepository.UpdateAsync(payment);
-            }
-
-            return Redirect(""); // Hoặc trả về phản hồi JSON nếu cần
         }
+
         [HttpPut]
         [Route("UpdatePayment")]
         public async Task<IActionResult> UpdatePayment(int id, [FromForm] UpdatePaymentDTO updateExp)

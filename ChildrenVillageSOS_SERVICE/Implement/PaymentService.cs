@@ -21,9 +21,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IDonationService _donationService;
         private readonly IDonationRepository _donationRepository;
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly ISystemWalletRepository _systemWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
         private readonly IConfiguration _configuration;
-        public PaymentService(IPaymentRepository paymentRepository,IDonationService donationService, IConfiguration configuration, IDonationRepository donationRepository, IFacilitiesWalletRepository failitiesWalletRepository, ITransactionRepository transactionRepository)
+        public PaymentService(IPaymentRepository paymentRepository,IDonationService donationService, IConfiguration configuration, IDonationRepository donationRepository, IFacilitiesWalletRepository failitiesWalletRepository, ITransactionRepository transactionRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository)
         {
             _paymentRepository = paymentRepository;
             _donationService = donationService;
@@ -31,6 +35,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _donationRepository = donationRepository;
             _failitiesWalletRepository = failitiesWalletRepository;
             _transactionRepository = transactionRepository;
+            _foodStuffWalletRepository = foodStuffWalletRepository;
+            _healthWalletRepository = healthWalletRepository;
+            _systemWalletRepository = systemWalletRepository;
+            _necessitiesWalletRepository = necessitiesWalletRepository;
         }
         public async Task<IEnumerable<Payment>> GetAllPayments()
         {
@@ -151,6 +159,80 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var transaction = new Transaction
             {
                 FacilitiesWalletId = facilitiesWallet?.Id,
+                Amount = paymentRequest.Amount,
+                DateTime = DateTime.Now,
+                Status = "Completed",
+                DonationId = donation.Id
+            };
+            await _transactionRepository.AddAsync(transaction);
+
+            // Step 5: Create Payment
+            var payment = new Payment
+            {
+                DonationId = donation.Id,
+                Amount = paymentRequest.Amount,
+                PaymentMethod = "Banking",
+                DateTime = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            await _paymentRepository.AddAsync(payment);
+
+            // Return the VNPay URL for the user to complete the payment
+            return paymentUrl;
+        }
+        public async Task<string> CreateFoodStuffWalletPayment(PaymentRequest paymentRequest)
+        {
+            // Step 1: Create Donation
+            var donationDto = new CreateDonationPayment
+            {
+                UserAccountId = paymentRequest.UserAccountId,
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = paymentRequest.Amount,
+                Description = "Donation for SOS Children's Village",
+                IsDeleted = false,
+                Status = "Pending"
+            };
+
+            var donation = await _donationService.CreateDonationPayment(donationDto);
+
+            // Step 2: Create VNPay URL
+            var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
+            var vnp_Url = _configuration["VNPay:Url"];
+            var vnp_TmnCode = _configuration["VNPay:TmnCode"];
+            var vnp_HashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString()); // Multiply by 100 for VNPay
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderType", "donation");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            // Step 3: Update FacilitiesWallet Budget
+            var foodWallet = await _foodStuffWalletRepository.GetWalletByUserIdAsync("UA001");
+            if (foodWallet != null)
+            {
+                foodWallet.Budget += paymentRequest.Amount;
+                await _foodStuffWalletRepository.UpdateAsync(foodWallet);
+            }
+
+            // Step 4: Create Transaction
+            var transaction = new Transaction
+            {
+                FacilitiesWalletId = foodWallet?.Id,
                 Amount = paymentRequest.Amount,
                 DateTime = DateTime.Now,
                 Status = "Completed",
