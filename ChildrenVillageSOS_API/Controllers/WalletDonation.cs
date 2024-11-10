@@ -44,5 +44,15 @@ namespace ChildrenVillageSOS_API.Controllers
             var paymentUrl = await _paymentService.CreateFoodStuffWalletPayment(request);
             return Ok(new { url = paymentUrl });
         }
+        [HttpPost("DonateHealthWallet")]
+        public async Task<IActionResult> DonateHealthWallet([FromBody] PaymentRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var paymentUrl = await _paymentService.CreateHealthWalletPayment(request);
+            return Ok(new { url = paymentUrl });
+        }
     }
 }
