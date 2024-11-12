@@ -26,8 +26,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IHealthWalletRepository _healthWalletRepository;
         private readonly ISystemWalletRepository _systemWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly IIncomeRepository _incomeRepository;
         private readonly IConfiguration _configuration;
-        public PaymentService(IPaymentRepository paymentRepository,IDonationService donationService, IConfiguration configuration, IDonationRepository donationRepository, IFacilitiesWalletRepository failitiesWalletRepository, ITransactionRepository transactionRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository)
+        public PaymentService(IPaymentRepository paymentRepository,IDonationService donationService, IConfiguration configuration, IDonationRepository donationRepository, IFacilitiesWalletRepository failitiesWalletRepository, ITransactionRepository transactionRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IIncomeRepository incomeRepository)
         {
             _paymentRepository = paymentRepository;
             _donationService = donationService;
@@ -39,6 +40,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _healthWalletRepository = healthWalletRepository;
             _systemWalletRepository = systemWalletRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
+            _incomeRepository = incomeRepository;   
         }
         public async Task<IEnumerable<Payment>> GetAllPayments()
         {
@@ -156,15 +158,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Step 4: Create Transaction
-            var transaction = new Transaction
+            var income = new Income
             {
                 FacilitiesWalletId = facilitiesWallet?.Id,
                 Amount = paymentRequest.Amount,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
+                UserAccountId = paymentRequest.UserAccountId,
                 Status = "Completed",
+                CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 5: Create Payment
             var payment = new Payment
@@ -230,15 +234,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Step 4: Create Transaction
-            var transaction = new Transaction
+            var income = new Income
             {
                 FacilitiesWalletId = foodWallet?.Id,
                 Amount = paymentRequest.Amount,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
+                UserAccountId = paymentRequest.UserAccountId,
                 Status = "Completed",
+                CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 5: Create Payment
             var payment = new Payment
@@ -348,15 +354,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Step 4: Create Transaction
-            var transaction = new Transaction
+            var income = new Income
             {
                 FacilitiesWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
+                UserAccountId = paymentRequest.UserAccountId,
                 Status = "Completed",
+                CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 5: Create Payment
             var payment = new Payment
@@ -421,16 +429,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 await _systemWalletRepository.UpdateAsync(wallet);
             }
 
-            // Step 4: Create Transaction
-            var transaction = new Transaction
+            // Step 4: Create Income
+            var income = new Income
             {
                 FacilitiesWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
+                UserAccountId = paymentRequest.UserAccountId,
                 Status = "Completed",
+                CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 5: Create Payment
             var payment = new Payment
@@ -496,15 +506,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Step 4: Create Transaction
-            var transaction = new Transaction
+            var income = new Income
             {
                 FacilitiesWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
+                UserAccountId = paymentRequest.UserAccountId,
                 Status = "Completed",
+                CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 5: Create Payment
             var payment = new Payment

@@ -31,7 +31,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
         private readonly ISystemWalletRepository _systemWalletRepository;
         private readonly IHealthWalletRepository _healthWalletRepository;
-        public EventService(IEventRepository eventRepository, IImageService imageService, IImageRepository imageRepository, IDonationRepository donationRepository, IPaymentRepository paymentRepository, ITransactionRepository transactionRepository, IConfiguration configuration, IDonationService donationService, IFacilitiesWalletRepository facilitiesWalletRepository, IPaymentService paymentService, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository)
+        private readonly IIncomeRepository _incomeRepository;
+        public EventService(IEventRepository eventRepository, IImageService imageService, IImageRepository imageRepository, IDonationRepository donationRepository, IPaymentRepository paymentRepository, ITransactionRepository transactionRepository, IConfiguration configuration, IDonationService donationService, IFacilitiesWalletRepository facilitiesWalletRepository, IPaymentService paymentService, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository,IIncomeRepository incomeRepository)
         {
             _eventRepository = eventRepository;
             _imageService = imageService;
@@ -47,6 +48,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _foodStuffWalletRepository = foodStuffWalletRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _healthWalletRepository = healthWalletRepository;
+            _incomeRepository = incomeRepository;
 
         }
         public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()
@@ -257,19 +259,20 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Step 7: Create Transaction
-            var transaction = new Transaction
+            var income = new Income
             {
+                UserAccountId = updateEvent.UserAccountId,
                 FacilitiesWalletId = editEvent.FacilitiesWalletId,
                 FoodStuffWalletId = editEvent.FoodStuffWalletId,
                 SystemWalletId = editEvent.SystemWalletId,
                 HealthWalletId = editEvent.HealthWalletId, 
                 NecessitiesWalletId = editEvent.NecessitiesWalletId,
                 Amount = updateEvent.Amount ?? 0,
-                DateTime = DateTime.Now,
+                Receiveday = DateTime.Now,
                 Status = "Completed",
                 DonationId = donation.Id
             };
-            await _transactionRepository.AddAsync(transaction);
+            await _incomeRepository.AddAsync(income);
 
             // Step 8: Create Payment
             var payment = new Payment
