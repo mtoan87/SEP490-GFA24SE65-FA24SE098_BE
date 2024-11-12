@@ -107,6 +107,7 @@ namespace ChildrenVillageSOS_API.Controllers
                         message = "Payment successful.",
                         donationId = donation.Id,
                         paymentId = payment.Id,
+                        amount = donation.Amount,
                         status = "Paid"
                     });
                 }
@@ -125,6 +126,7 @@ namespace ChildrenVillageSOS_API.Controllers
                         message = "Payment failed.",
                         donationId = donation.Id,
                         paymentId = payment.Id,
+                        amount = donation.Amount,
                         status = "Cancelled"
                     });
                 }
