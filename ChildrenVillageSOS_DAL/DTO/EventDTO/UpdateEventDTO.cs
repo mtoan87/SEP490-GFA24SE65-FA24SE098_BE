@@ -21,6 +21,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 
         public bool IsDeleted { get; set; }
 
+        public decimal? CurrentAmount { get; set; }
         public decimal? Amount { get; set; }
         public decimal? AmountLimit { get; set; }
         public string? ChildId { get; set; }
