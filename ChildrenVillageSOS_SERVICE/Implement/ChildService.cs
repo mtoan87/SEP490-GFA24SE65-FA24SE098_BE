@@ -1,9 +1,13 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +19,40 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ChildService : IChildService
     {
         private readonly IChildRepository _childRepository;
+        private readonly IDonationRepository _donationRepository;
+        private readonly IPaymentRepository _paymentRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
+        private readonly IConfiguration _configuration;
+        private readonly IDonationService _donationService;
+        private readonly IPaymentService _paymentService;
+        private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly ISystemWalletRepository _systemWalletRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IIncomeRepository _incomeRepository;
 
-        public ChildService(IChildRepository childRepository, IImageService imageService, IImageRepository imageRepository)
+
+        public ChildService(IChildRepository childRepository, IImageService imageService, IImageRepository imageRepository, IDonationRepository donationRepository, IPaymentRepository paymentRepository, ITransactionRepository transactionRepository, IConfiguration configuration, IDonationService donationService, IFacilitiesWalletRepository facilitiesWalletRepository, IPaymentService paymentService, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, IIncomeRepository incomeRepository)
         {
             _childRepository = childRepository;
-            _imageRepository = imageRepository;
             _imageService = imageService;
+            _imageRepository = imageRepository;
+            _donationRepository = donationRepository;
+            _paymentRepository = paymentRepository;
+            _transactionRepository = transactionRepository;
+            _configuration = configuration;
+            _donationService = donationService;
+            _failitiesWalletRepository = facilitiesWalletRepository;
+            _paymentService = paymentService;
+            _systemWalletRepository = systemWalletRepository;
+            _foodStuffWalletRepository = foodStuffWalletRepository;
+            _necessitiesWalletRepository = necessitiesWalletRepository;
+            _healthWalletRepository = healthWalletRepository;
+            _incomeRepository = incomeRepository;
+
         }
 
         //public async Task<IEnumerable<Child>> GetAllChildren()
@@ -81,7 +111,162 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newChild;
         }
+        public async Task<string> DonateChild(string id, ChildDonateDTO updateChild)
+        {
+            // Step 1: Retrieve the event by ID
+            var editChild = await _childRepository.GetByIdAsync(id);
+            if (editChild == null)
+            {
+                throw new Exception($"Event with ID {id} not found!");
+            }
 
+            // Step 2: Check if new donation will exceed the AmountLimit
+            var newTotalAmount = (editChild.CurrentAmount ?? 0) + (updateChild.Amount ?? 0);
+            if (newTotalAmount > (editChild.AmountLimit ?? 0))
+            {
+                throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
+            }
+
+            // Step 3: Update the CurrentAmount and ModifiedDate of the event
+            editChild.CurrentAmount = newTotalAmount;
+            editChild.ModifiedDate = DateTime.Now;
+            await _childRepository.UpdateAsync(editChild);
+
+            // Step 4: Create Donation
+            var donationDto = new CreateDonationPayment
+            {
+                UserAccountId = updateChild.UserAccountId,
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = updateChild.Amount ?? 0,
+                Description = $"Donation for Child: {editChild.ChildName}",
+                IsDeleted = false,
+                Status = "Pending"
+            };
+
+            var donation = await _donationService.CreateDonationPayment(donationDto);
+
+            // Step 5: Create VNPay URL for payment
+            var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
+            var vnp_Url = _configuration["VNPay:Url"];
+            var vnp_TmnCode = _configuration["VNPay:TmnCode"];
+            var vnp_HashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (updateChild.Amount.GetValueOrDefault() * 100).ToString());
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderType", "donation");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            // Step 6: Update the first wallet with an ID
+            if (editChild.FacilitiesWalletId.HasValue)
+            {
+                await UpdateFacilitiesWalletBudget(editChild.FacilitiesWalletId.Value, updateChild.Amount ?? 0);
+            }
+            else if (editChild.FoodStuffWalletId.HasValue)
+            {
+                await UpdateFoodStuffWalletBudget(editChild.FoodStuffWalletId.Value, updateChild.Amount ?? 0);
+            }
+            else if (editChild.SystemWalletId.HasValue)
+            {
+                await UpdateSystemWalletBudget(editChild.SystemWalletId.Value, updateChild.Amount ?? 0);
+            }
+            else if (editChild.HealthWalletId.HasValue)
+            {
+                await UpdateHealthWalletBudget(editChild.HealthWalletId.Value, updateChild.Amount ?? 0);
+            }
+            else if (editChild.NecessitiesWalletId.HasValue)
+            {
+                await UpdateNecessitiesWalletBudget(editChild.NecessitiesWalletId.Value, updateChild.Amount ?? 0);
+            }
+
+            // Step 7: Create Transaction
+            var income = new Income
+            {
+                UserAccountId = updateChild.UserAccountId,
+                FacilitiesWalletId = editChild.FacilitiesWalletId,
+                FoodStuffWalletId = editChild.FoodStuffWalletId,
+                SystemWalletId = editChild.SystemWalletId,
+                HealthWalletId = editChild.HealthWalletId,
+                NecessitiesWalletId = editChild.NecessitiesWalletId,
+                Amount = updateChild.Amount ?? 0,
+                Receiveday = DateTime.Now,
+                Status = "Completed",
+                DonationId = donation.Id
+            };
+            await _incomeRepository.AddAsync(income);
+
+            // Step 8: Create Payment
+            var payment = new Payment
+            {
+                DonationId = donation.Id,
+                Amount = updateChild.Amount ?? 0,
+                PaymentMethod = "Banking",
+                DateTime = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            await _paymentRepository.AddAsync(payment);
+
+            return paymentUrl;
+        }
+        private async Task UpdateFacilitiesWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _failitiesWalletRepository.GetByIdAsync(walletId);
+            if (wallet != null)
+            {
+                wallet.Budget += amount;
+                await _failitiesWalletRepository.UpdateAsync(wallet);
+            }
+        }
+        private async Task UpdateFoodStuffWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _foodStuffWalletRepository.GetByIdAsync(walletId);
+            if (wallet != null)
+            {
+                wallet.Budget += amount;
+                await _foodStuffWalletRepository.UpdateAsync(wallet);
+            }
+        }
+        private async Task UpdateNecessitiesWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _necessitiesWalletRepository.GetByIdAsync(walletId);
+            if (wallet != null)
+            {
+                wallet.Budget += amount;
+                await _necessitiesWalletRepository.UpdateAsync(wallet);
+            }
+        }
+        private async Task UpdateHealthWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _healthWalletRepository.GetByIdAsync(walletId);
+            if (wallet != null)
+            {
+                wallet.Budget += amount;
+                await _healthWalletRepository.UpdateAsync(wallet);
+            }
+        }
+        private async Task UpdateSystemWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _systemWalletRepository.GetByIdAsync(walletId);
+            if (wallet != null)
+            {
+                wallet.Budget += amount;
+                await _systemWalletRepository.UpdateAsync(wallet);
+            }
+        }
         public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
         {
             var existingChild = await _childRepository.GetByIdAsync(id);

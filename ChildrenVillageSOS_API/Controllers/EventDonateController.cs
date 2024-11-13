@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -12,19 +13,32 @@ namespace ChildrenVillageSOS_API.Controllers
     public class EventDonateController : ControllerBase
     {
         private readonly IEventService _eventService;
-        public EventDonateController(IEventService eventService)
+        private readonly IChildService _childService;
+        public EventDonateController(IEventService eventService, IChildService childService)
         {
             _eventService = eventService;
+            _childService = childService;
         }
 
-        [HttpPut("EventDonateFacilitiesWallet")]
-        public async Task<IActionResult> DonateFacilitiesWallet(int id,[FromBody] EventDonateDTO request)
+        [HttpPut("EventDonate")]
+        public async Task<IActionResult> DonateEvent(int id,[FromBody] EventDonateDTO request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var paymentUrl = await _eventService.DonateEvent(id,request);
+            return Ok(new { url = paymentUrl });
+        }
+
+        [HttpPut("ChildDonate")]
+        public async Task<IActionResult> DonateChild(string id, [FromBody] ChildDonateDTO request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var paymentUrl = await _childService.DonateChild(id, request);
             return Ok(new { url = paymentUrl });
         }
     }
