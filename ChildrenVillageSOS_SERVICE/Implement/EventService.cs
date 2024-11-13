@@ -93,6 +93,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 Name = createEvent.Name,
                 Description = createEvent.Description,
+                FacilitiesWalletId = createEvent.FacilitiesWalletId,
+                FoodStuffWalletId = createEvent.FoodStuffWalletId,
+                SystemWalletId = createEvent.SystemWalletId,
+                HealthWalletId = createEvent.HealthWalletId,
+                NecessitiesWalletId = createEvent.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 Status = "Active",
@@ -131,6 +136,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             editEvent.Name = updateEvent.Name;
             editEvent.Description = updateEvent.Description;
+            editEvent.FacilitiesWalletId = updateEvent.FacilitiesWalletId;
+            editEvent.FoodStuffWalletId = updateEvent.FoodStuffWalletId;
+            editEvent.SystemWalletId = updateEvent.SystemWalletId;
+            editEvent.HealthWalletId = updateEvent.HealthWalletId;
+            editEvent.NecessitiesWalletId = updateEvent.NecessitiesWalletId;
             editEvent.StartTime = updateEvent.StartTime;
             editEvent.EndTime = updateEvent.EndTime;
             editEvent.Status = updateEvent.Status;
