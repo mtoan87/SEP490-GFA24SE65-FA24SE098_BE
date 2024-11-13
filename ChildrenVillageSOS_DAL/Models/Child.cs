@@ -25,9 +25,11 @@ public partial class Child
 
     public decimal? Amount { get; set; }
 
+    public decimal? CurrentAmount { get; set; }
+
     public decimal? AmountLimit { get; set; }
 
-    public string Gender { get; set; } = null!;
+    public string Gender { get; set; }
 
     public DateTime Dob { get; set; }
 
@@ -39,31 +41,25 @@ public partial class Child
 
     public DateTime? ModifiedDate { get; set; }
 
-    public string BirthCertificate { get; set; }
+    public string? BirthCertificate { get; set; }
 
-    public string CitizenIdentification { get; set; }
-
-    public int? EventId { get; set; }
+    public string? CitizenIdentification { get; set; }
 
     public virtual ICollection<AcademicReport> AcademicReports { get; set; } = new List<AcademicReport>();
-
-    public virtual Event Event { get; set; }
 
     public virtual FacilitiesWallet FacilitiesWallet { get; set; }
 
     public virtual FoodStuffWallet FoodStuffWallet { get; set; }
 
-   
-
     public virtual ICollection<HealthReport> HealthReports { get; set; } = new List<HealthReport>();
 
-    public virtual HealthWallet? HealthWallet { get; set; }
+    public virtual HealthWallet HealthWallet { get; set; }
 
-    public virtual House? House { get; set; }
+    public virtual House House { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
 
-    public virtual SystemWallet? SystemWallet { get; set; }
+    public virtual SystemWallet SystemWallet { get; set; }
 }

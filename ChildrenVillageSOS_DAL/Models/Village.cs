@@ -23,6 +23,8 @@ public partial class Village
 
     public DateTime? ModifiedDate { get; set; }
 
+    public virtual ICollection<Event> Events { get; set; } = new List<Event>();
+
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();

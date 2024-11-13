@@ -100,7 +100,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = DateTime.Now,
                 Amount = createEvent.Amount,
                 AmountLimit = createEvent.AmountLimit, 
-                ChildId = createEvent.ChildId,
+               
             };
             await _eventRepository.AddAsync(newEvent);
 
@@ -138,7 +138,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             editEvent.IsDeleted = updateEvent.IsDeleted;
             editEvent.Amount = updateEvent.Amount;
             editEvent.AmountLimit = updateEvent.AmountLimit;
-            editEvent.ChildId = updateEvent.ChildId;
+            
 
             // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
             if (updateEvent.Img != null && updateEvent.Img.Any())

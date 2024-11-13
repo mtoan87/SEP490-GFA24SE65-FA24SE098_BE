@@ -26,10 +26,12 @@ public partial class Event
     public int? NecessitiesWalletId { get; set; }
 
     public decimal? Amount { get; set; }
+
     public decimal? CurrentAmount { get; set; }
+
     public decimal? AmountLimit { get; set; }
 
-    public string? Status { get; set; }
+    public string Status { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 
@@ -37,19 +39,19 @@ public partial class Event
 
     public bool IsDeleted { get; set; }
 
-    public string? ChildId { get; set; }
+    public string? VillageId { get; set; }
 
-    public virtual ICollection<Child> Children { get; set; } = new List<Child>();
+    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
 
-    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
+    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
 
-    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
-
-    public virtual HealthWallet? HealthWallet { get; set; }
+    public virtual HealthWallet HealthWallet { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
 
-    public virtual SystemWallet? SystemWallet { get; set; }
+    public virtual SystemWallet SystemWallet { get; set; }
+
+    public virtual Village Village { get; set; }
 }

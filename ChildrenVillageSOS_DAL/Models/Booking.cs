@@ -13,7 +13,7 @@ public partial class Booking
 
     public int? BookingSlotId { get; set; }
 
-    public DateTime Visitday { get; set; }
+    public DateTime? Visitday { get; set; }
 
     public string Status { get; set; }
 

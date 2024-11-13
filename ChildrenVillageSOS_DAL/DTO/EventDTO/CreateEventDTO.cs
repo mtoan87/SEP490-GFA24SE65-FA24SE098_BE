@@ -18,7 +18,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public DateTime? EndTime { get; set; }
         public decimal? Amount { get; set; }
         public decimal? AmountLimit { get; set; }
-        public string? ChildId { get; set; }
+       
 
         public List<IFormFile> Img { get; set; }
     }

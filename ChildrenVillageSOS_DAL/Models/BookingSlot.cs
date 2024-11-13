@@ -15,7 +15,7 @@ public partial class BookingSlot
 
     public int SlotTime { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

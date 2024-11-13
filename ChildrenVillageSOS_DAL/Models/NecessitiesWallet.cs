@@ -9,7 +9,7 @@ public partial class NecessitiesWallet
 
     public decimal Budget { get; set; }
 
-    public string? UserAccountId { get; set; }
+    public string UserAccountId { get; set; }
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
 
@@ -21,5 +21,5 @@ public partial class NecessitiesWallet
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public virtual UserAccount? UserAccount { get; set; }
+    public virtual UserAccount UserAccount { get; set; }
 }
