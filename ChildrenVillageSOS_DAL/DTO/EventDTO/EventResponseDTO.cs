@@ -27,6 +27,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public decimal CurrentAmount { get; set; }
         public decimal AmountLimit { get; set; }
         public string Status { get; set; }
+        public string? VillageId { get; set; }
 
         // Chỉ trả về mảng các URL của hình ảnh
         public string[] ImageUrls { get; set; } = new string[0];

@@ -72,6 +72,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CurrentAmount = e.CurrentAmount ?? 0,   
                 AmountLimit = e.AmountLimit ?? 0,
                 Status = e.Status,
+                VillageId = e.VillageId,
                 // Lấy URL của tất cả các hình ảnh
                 ImageUrls = e.Images.Where(img => !img.IsDeleted)  // Lọc hình ảnh chưa bị xóa
                                      .Select(img => img.UrlPath)   // Chỉ lấy UrlPath
@@ -105,6 +106,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = DateTime.Now,
                 Amount = createEvent.Amount,
                 AmountLimit = createEvent.AmountLimit, 
+                VillageId = createEvent.VillageId,
                
             };
             await _eventRepository.AddAsync(newEvent);
