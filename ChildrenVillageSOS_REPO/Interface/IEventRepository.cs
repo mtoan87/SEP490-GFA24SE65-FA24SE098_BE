@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface IEventRepository : IRepositoryGeneric<Event>
     {
         Task<IEnumerable<Event>> GetAllAsync();
+        EventResponseDTO GetEventById(int eventId);
     }
 }

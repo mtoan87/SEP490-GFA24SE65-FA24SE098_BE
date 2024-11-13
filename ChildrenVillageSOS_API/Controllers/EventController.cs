@@ -20,12 +20,17 @@ namespace ChildrenVillageSOS_API.Controllers
             var even = await _eventService.GetAllEvent();
             return Ok(even);
         }
-        [HttpGet("GetEventById/{Id}")]
-        public async Task<IActionResult> GetEventById(int Id)
+        [HttpGet("GetEventById/{id}")]
+        public async Task<ActionResult<EventResponseDTO>> GetEventById(int id)
         {
-            var even = await _eventService.GetEventById(Id);
-            return Ok(even);
+            var eventResponseDTO = await _eventService.GetEventById(id);
+            if (eventResponseDTO == null)
+            {
+                return NotFound();  // Trả về 404 nếu không tìm thấy sự kiện
+            }
+            return Ok(eventResponseDTO);  // Trả về sự kiện với mã 200
         }
+
         [HttpPost]
         [Route("CreateEvent")]
         public async Task<ActionResult<Event>> CreateEvent([FromForm] CreateEventDTO creEvent)
