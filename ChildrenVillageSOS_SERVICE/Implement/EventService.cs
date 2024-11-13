@@ -84,10 +84,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
 
 
-        public async Task<Event> GetEventById(int id)
+        public async Task<EventResponseDTO> GetEventById(int id)
         {
-            return await _eventRepository.GetByIdAsync(id);
+            return _eventRepository.GetEventById(id);
         }
+
         public async Task<Event> CreateEvent(CreateEventDTO createEvent)
         {
             var newEvent = new Event
