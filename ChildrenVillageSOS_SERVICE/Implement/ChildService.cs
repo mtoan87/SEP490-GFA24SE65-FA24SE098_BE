@@ -64,6 +64,36 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _childRepository.GetAllNotDeletedAsync();
         }
+        public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
+        {
+            var childs = await _childRepository.GetAllAsync();
+            
+            var childResponseDTOs = childs.Select(x => new ChildResponseDTO
+            {
+                Id = x.Id,
+                ChildName = x.ChildName,
+                HealthStatus = x.HealthStatus,
+                HouseId = x.HouseId,
+                FacilitiesWalletId = x.FacilitiesWalletId,
+                SystemWalletId = x.SystemWalletId,
+                FoodStuffWalletId = x.FoodStuffWalletId,
+                HealthWalletId = x.HealthWalletId,
+                NecessitiesWalletId = x.NecessitiesWalletId,
+                Amount = x.Amount ?? 0,
+                CurrentAmount = x.CurrentAmount ?? 0,
+                AmountLimit = x.AmountLimit ?? 0,
+                Gender = x.Gender,
+                Dob = x.Dob,
+                Status = x.Status,
+                CreatedDate = x.CreatedDate,
+                ImageUrls = x.Images.Where(img => !img.IsDeleted)  
+                                     .Select(img => img.UrlPath)  
+                                     .ToArray()
+            }).ToArray();
+
+            return childResponseDTOs;
+
+        }
 
         public async Task<Child> GetChildById(string id)
         {
@@ -74,6 +104,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _childRepository.GetChildByHouseIdAsync(houseId);
         }
 
+        public async Task<ChildResponseDTO> GetChildByIdWithImg(string childid)
+        {
+            return _childRepository.GetChildByIdWithImg(childid);
+        }
         public async Task<Child> CreateChild(CreateChildDTO createChild)
         {
             // Lấy toàn bộ danh sách ChildId hiện có
@@ -92,8 +126,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 HouseId = createChild.HouseId,
                 Gender = createChild.Gender,
                 Dob = createChild.Dob,
+                CreatedDate = DateTime.Now,
                 Status = createChild.Status,
-                IsDeleted = createChild.IsDeleted
+                IsDeleted = false
                 
             };
             await _childRepository.AddAsync(newChild);
