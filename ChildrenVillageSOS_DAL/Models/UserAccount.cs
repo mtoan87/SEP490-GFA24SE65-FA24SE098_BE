@@ -5,25 +5,25 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class UserAccount
 {
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
-    public string UserEmail { get; set; }
+    public string? UserEmail { get; set; }
 
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
-    public long Phone { get; set; }
+    public long? Phone { get; set; }
 
-    public string Address { get; set; }
+    public string? Address { get; set; }
 
-    public DateTime Dob { get; set; }
+    public DateTime? Dob { get; set; }
 
-    public string Gender { get; set; }
+    public string? Gender { get; set; }
 
-    public string Country { get; set; }
+    public string? Country { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public int? RoleId { get; set; }
 
@@ -45,7 +45,7 @@ public partial class UserAccount
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
-    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
+    public virtual ICollection<Image>? Images { get; set; } = new List<Image>();
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
