@@ -12,5 +12,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<IEnumerable<Child>> GetAllAsync();
         ChildResponseDTO GetChildByIdWithImg(string childId);
+        Task<List<Child>> GetChildByHouseIdAsync(string houseId);
     }
 }

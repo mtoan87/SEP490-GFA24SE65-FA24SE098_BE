@@ -11,5 +11,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         Task<List<House>> GetHouseByVillageIdAsync(string villageId);
+
     }
 }
