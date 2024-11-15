@@ -72,7 +72,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser)
         {
-            var updaUser = await _userAccountRepository.GetByIdAsync(id);
+            var updaUser = await _userAccountRepository.GetUserWithImagesByIdAsync(id);
             if (updaUser == null)
             {
                 throw new Exception($"Expense with ID{id} not found!");
