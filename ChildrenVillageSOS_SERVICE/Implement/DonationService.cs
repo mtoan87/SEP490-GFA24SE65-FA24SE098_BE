@@ -19,9 +19,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             _donationRepository = donationRepository;
         }
-        public async Task<List<Donation>> GetDonationsByUserIdAsync(string userId)
+        public async Task<List<DonationResponseDTO>> GetDonationsByUserIdAsync(string userId)
         {
-            return await _donationRepository.GetDonationsByUserIdAsync(userId);
+            return await _donationRepository.GetDonationsByUserId(userId);
         }
         public async Task<Donation> CreateDonation(CreateDonationDTO createDonation)
         {

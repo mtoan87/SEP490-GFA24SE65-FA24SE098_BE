@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,23 @@ namespace ChildrenVillageSOS_REPO.Implement
             return await _context.Donations
                 .Where(d => d.UserAccountId == userId && (d.IsDeleted == null || d.IsDeleted == false))                
                 .ToListAsync();
+        }
+        public Task<List<DonationResponseDTO>> GetDonationsByUserId(string userId)
+        {
+            var donationDetails = _context.Donations
+                .Where(d => d.UserAccountId == userId && (d.IsDeleted == null || d.IsDeleted == false))
+                .Select (d => new DonationResponseDTO
+                {
+                    Id = d.Id,
+                    UserAccountId = d.UserAccountId,
+                    DonationType = d.DonationType,
+                    DateTime = d.DateTime,
+                    Amount = d.Amount,
+                    Description = d.Description,
+                    Status = d.Status,
+                    CreatedDate = d.CreatedDate,
+                }).ToListAsync();
+            return donationDetails;
         }
     }
 }
