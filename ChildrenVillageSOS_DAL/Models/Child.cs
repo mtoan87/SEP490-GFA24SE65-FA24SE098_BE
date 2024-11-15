@@ -35,7 +35,7 @@ public partial class Child
 
     public string Status { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

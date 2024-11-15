@@ -11,7 +11,9 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     public interface IChildService
     {
         Task<IEnumerable<Child>> GetAllChildren();
+        Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg();
         Task<Child> GetChildById(string id);
+        Task<ChildResponseDTO> GetChildByIdWithImg(string childid);
         Task<Child> CreateChild(CreateChildDTO createChild);
         Task<Child> UpdateChild(string id, UpdateChildDTO updateChild);
         Task<Child> DeleteChild(string id);

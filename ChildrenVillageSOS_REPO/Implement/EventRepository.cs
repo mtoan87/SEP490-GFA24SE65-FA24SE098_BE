@@ -45,6 +45,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     SystemWalletId = e.SystemWalletId,
                     HealthWalletId = e.HealthWalletId,
                     NecessitiesWalletId = e.NecessitiesWalletId,
+                    CreatedDate = e.CreatedDate,
                     ImageUrls = e.Images
                         .Where(i => !i.IsDeleted)  // Exclude deleted images
                         .Select(i => i.UrlPath)
