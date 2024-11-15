@@ -73,6 +73,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 AmountLimit = e.AmountLimit ?? 0,
                 Status = e.Status,
                 VillageId = e.VillageId,
+                CreatedDate = e.CreatedDate,
                 // Lấy URL của tất cả các hình ảnh
                 ImageUrls = e.Images.Where(img => !img.IsDeleted)  // Lọc hình ảnh chưa bị xóa
                                      .Select(img => img.UrlPath)   // Chỉ lấy UrlPath
