@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IChildRepository : IRepositoryGeneric<Child>
     {
+        Task<List<Child>> GetChildByHouseIdAsync(string houseId);
     }
 }

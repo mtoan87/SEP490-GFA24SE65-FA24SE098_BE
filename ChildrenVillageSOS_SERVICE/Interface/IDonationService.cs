@@ -20,5 +20,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Donation> CreateDonationPayment(CreateDonationPayment createDonation);
         Task<Dictionary<int, Dictionary<string, decimal>>> GetMonthlyDonations();
         Task<int> GetTotalDonationsByYear(int year);
+        Task<List<Donation>> GetDonationsByUserIdAsync(string userId);
     }
 }

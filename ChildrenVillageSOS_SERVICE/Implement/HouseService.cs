@@ -81,7 +81,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newHouse;
         }
-
+        public async Task<List<House>> getHouseByVillageId(string villageId)
+        {
+            return await _houseRepository.GetHouseByVillageIdAsync(villageId);
+        }
         public async Task<string?> GetUserAccountIdByHouseId(string houseId)
         {
             return await _houseRepository.GetUserAccountIdByHouseId(houseId);

@@ -29,6 +29,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var house = await _houseService.GetHouseById(id);
             return Ok(house);
         }
+        [HttpGet("GetHouseByVillageId/{id}")]
+        public async Task<IActionResult> getHouseByVillageId(string id)
+        {
+            var house = await _houseService.getHouseByVillageId(id);
+            return Ok(house);
+        }
 
         [HttpPost]
         [Route("CreateHouse")]

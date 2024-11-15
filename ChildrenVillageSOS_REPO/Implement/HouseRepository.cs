@@ -24,5 +24,11 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return house;
         }
+        public async Task<List<House>> GetHouseByVillageIdAsync(string villageId)
+        {
+            return await _context.Houses
+                .Where(h => h.VillageId == villageId && (h.IsDeleted == null || h.IsDeleted == false))
+                .ToListAsync();
+        }
     }
 }

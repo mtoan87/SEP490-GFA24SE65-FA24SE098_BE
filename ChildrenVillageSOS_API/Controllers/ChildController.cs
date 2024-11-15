@@ -29,7 +29,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var child = await _childService.GetChildById(Id);
             return Ok(child);
         }
-
+        [HttpGet("GetChildByHouseId/{Id}")]
+        public async Task<IActionResult> GetChildByHouseIdAsync(string Id)
+        {
+            var child = await _childService.GetChildByHouseIdAsync(Id);
+            return Ok(child);
+        }
         [HttpPost]
         [Route("CreateChild")]
         public async Task<ActionResult<Child>> CreateChild([FromForm] CreateChildDTO createChildDTO)

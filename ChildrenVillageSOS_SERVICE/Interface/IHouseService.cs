@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> DeleteHouse(string id);
         Task<House> RestoreHouse(string id);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
+        Task<List<House>> getHouseByVillageId(string villageId);
     }
 }
