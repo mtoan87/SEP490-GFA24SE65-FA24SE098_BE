@@ -25,6 +25,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageRepository = imageRepository;
             _imageService = imageService;
         }
+        public  List<Village> GetVillagesDonatedByUser(string userAccountId)
+        {
+            return   _villageRepository.GetVillagesDonatedByUser(userAccountId);
+        }
         public async Task<IEnumerable<Village>> GetAllVillage()
         {
             return await _villageRepository.GetAllAsync();

@@ -26,6 +26,30 @@ namespace ChildrenVillageSOS_API.Controllers
             var vil = await _villageService.GetVillageById(villageId);
             return Ok(vil);
         }
+        [HttpGet("GetVillagesDonatedByUser")]
+        public IActionResult GetVillagesDonatedByUser(string userId)
+        {
+            var vil =  _villageService.GetVillagesDonatedByUser(userId);
+            return Ok(vil);
+        }
+        [HttpGet("GetVillagesByUser/{userAccountId}")]
+        public IActionResult GetVillagesByUser(string userAccountId)
+        {
+            var villages = _villageService.GetVillagesDonatedByUser(userAccountId);
+
+            if (!villages.Any())
+            {
+                return NotFound(new { Message = "No villages found for this user." });
+            }
+
+            return Ok(villages.Select(v => new
+            {
+                v.Id,
+                v.VillageName,
+                v.Location,
+                v.Description
+            }));
+        }
         [HttpPost]
         [Route("CreateVillage")]
         public async Task<ActionResult<Village>> CreateVillage([FromForm] CreateVillageDTO crevilDTO)

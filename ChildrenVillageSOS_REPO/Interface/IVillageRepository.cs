@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IVillageRepository : IRepositoryGeneric<Village>
     {
+        List<Village> GetVillagesDonatedByUser(string userAccountId);
     }
 }
