@@ -17,7 +17,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
 
         }
-        public async Task<IEnumerable<Child>> GetAllAsync()
+        public async Task<IEnumerable<Child>> GetAllNotDeletedAsync()
         {
             // Sử dụng Include để lấy các hình ảnh liên quan đến Event
             return await _context.Children
