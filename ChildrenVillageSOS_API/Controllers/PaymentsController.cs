@@ -141,7 +141,10 @@ namespace ChildrenVillageSOS_API.Controllers
                     donation.Status = "Paid";
                     payment.Status = "Paid";
                     await _donationRepository.UpdateAsync(donation);
-                    await _paymentRepository.UpdateAsync(payment);                                  
+                    await _paymentRepository.UpdateAsync(payment);
+
+
+
                     return Ok(new
                     {
                         success = true,

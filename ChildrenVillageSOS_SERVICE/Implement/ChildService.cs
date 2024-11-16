@@ -196,23 +196,35 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData(
+            "vnp_OrderInfo",
+            $"Thanh toán cho Donation {donation.Id}, childId {id}, " +
+            string.Join(", ", new[]
+            {
+            editChild.FacilitiesWalletId != null ? $"walletId {editChild.FacilitiesWalletId}" : null,
+            editChild.FoodStuffWalletId != null ? $"walletId {editChild.FoodStuffWalletId}" : null,
+            editChild.NecessitiesWalletId != null ? $"walletId {editChild.NecessitiesWalletId}" : null,
+            editChild.HealthWalletId != null ? $"walletId {editChild.HealthWalletId}" : null
+            }.Where(s => s != null))
+            );
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            //string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
+            //vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-            vnpay.AddRequestData("childId", id);
-            vnpay.AddRequestData("walletId", editChild.FacilitiesWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editChild.FoodStuffWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editChild.SystemWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editChild.HealthWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editChild.NecessitiesWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("childId", id);
+            //vnpay.AddRequestData("walletId", editChild.FacilitiesWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editChild.FoodStuffWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editChild.SystemWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editChild.HealthWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editChild.NecessitiesWalletId?.ToString() ?? string.Empty);
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
-            // Step 6: Update the first wallet with an ID
+            
             
 
-            // Step 7: Create Transaction
+            
             var income = new Income
             {
                 UserAccountId = updateChild.UserAccountId,
@@ -303,7 +315,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.Gender = updateChild.Gender;
             existingChild.Dob = updateChild.Dob;
             existingChild.Status = updateChild.Status;
-            existingChild.IsDeleted = updateChild.IsDeleted;
+            existingChild.IsDeleted =false;
             existingChild.ModifiedDate = DateTime.Now;
 
             // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật

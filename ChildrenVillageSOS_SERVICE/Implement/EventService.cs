@@ -228,17 +228,28 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData(
+            "vnp_OrderInfo",
+            $"Thanh toán cho Donation {donation.Id}, eventId {id}, " +
+            string.Join(", ", new[]
+            {
+            editEvent.FacilitiesWalletId != null ? $"walletId {editEvent.FacilitiesWalletId}" : null,
+            editEvent.FoodStuffWalletId != null ? $"walletId {editEvent.FoodStuffWalletId}" : null,
+            editEvent.NecessitiesWalletId != null ? $"walletId {editEvent.NecessitiesWalletId}" : null,
+            editEvent.HealthWalletId != null ? $"walletId {editEvent.HealthWalletId}" : null
+            }.Where(s => s != null))
+            );
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-            vnpay.AddRequestData("eventId", id.ToString());
-            vnpay.AddRequestData("walletId", editEvent.FacilitiesWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editEvent.FoodStuffWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editEvent.SystemWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editEvent.HealthWalletId?.ToString() ?? string.Empty);
-            vnpay.AddRequestData("walletId", editEvent.NecessitiesWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("eventId", id.ToString());
+            //vnpay.AddRequestData("walletId", editEvent.FacilitiesWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editEvent.FoodStuffWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editEvent.SystemWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editEvent.HealthWalletId?.ToString() ?? string.Empty);
+            //vnpay.AddRequestData("walletId", editEvent.NecessitiesWalletId?.ToString() ?? string.Empty);
+
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
             var income = new Income
             {
