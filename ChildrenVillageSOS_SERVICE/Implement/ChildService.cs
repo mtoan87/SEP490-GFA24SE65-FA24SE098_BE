@@ -156,7 +156,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var editChild = await _childRepository.GetByIdAsync(id);
             if (editChild == null)
             {
-                throw new Exception($"Event with ID {id} not found!");
+                throw new Exception($"Child with ID {id} not found!");
             }
 
             // Step 2: Check if new donation will exceed the AmountLimit
@@ -166,9 +166,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
             }
 
-            // Step 3: Update the CurrentAmount and ModifiedDate of the event
-            editChild.CurrentAmount = newTotalAmount;
-            editChild.ModifiedDate = DateTime.Now;
+           
             await _childRepository.UpdateAsync(editChild);
 
             // Step 4: Create Donation
@@ -205,30 +203,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-
+            vnpay.AddRequestData("childId", id);
+            vnpay.AddRequestData("walletId", editChild.FacilitiesWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editChild.FoodStuffWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editChild.SystemWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editChild.HealthWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editChild.NecessitiesWalletId?.ToString() ?? string.Empty);
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 6: Update the first wallet with an ID
-            if (editChild.FacilitiesWalletId.HasValue)
-            {
-                await UpdateFacilitiesWalletBudget(editChild.FacilitiesWalletId.Value, updateChild.Amount ?? 0);
-            }
-            else if (editChild.FoodStuffWalletId.HasValue)
-            {
-                await UpdateFoodStuffWalletBudget(editChild.FoodStuffWalletId.Value, updateChild.Amount ?? 0);
-            }
-            else if (editChild.SystemWalletId.HasValue)
-            {
-                await UpdateSystemWalletBudget(editChild.SystemWalletId.Value, updateChild.Amount ?? 0);
-            }
-            else if (editChild.HealthWalletId.HasValue)
-            {
-                await UpdateHealthWalletBudget(editChild.HealthWalletId.Value, updateChild.Amount ?? 0);
-            }
-            else if (editChild.NecessitiesWalletId.HasValue)
-            {
-                await UpdateNecessitiesWalletBudget(editChild.NecessitiesWalletId.Value, updateChild.Amount ?? 0);
-            }
+            
 
             // Step 7: Create Transaction
             var income = new Income

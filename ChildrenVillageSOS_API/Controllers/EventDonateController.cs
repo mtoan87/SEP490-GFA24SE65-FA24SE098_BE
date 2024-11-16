@@ -28,7 +28,7 @@ namespace ChildrenVillageSOS_API.Controllers
                 return BadRequest(ModelState);
             }
             var paymentUrl = await _eventService.DonateEvent(id,request);
-            return Ok(new { url = paymentUrl });
+            return Ok(new { url = paymentUrl});
         }
 
         [HttpPut("ChildDonate")]

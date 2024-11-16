@@ -4,6 +4,7 @@ using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -20,13 +21,19 @@ namespace ChildrenVillageSOS_API.Controllers
         private readonly IPaymentRepository _paymentRepository;
         private readonly IDonationRepository _donationRepository;
         private readonly IConfiguration _configuration;
+        private readonly IWalletRepository _walletRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IChildRepository _childRepository;
         
-        public PaymentsController(IPaymentService paymentService, IPaymentRepository paymentRepository, IDonationRepository donationRepository, IConfiguration configuration)
+        public PaymentsController(IPaymentService paymentService, IPaymentRepository paymentRepository, IDonationRepository donationRepository, IConfiguration configuration, IWalletRepository walletRepository, IEventRepository eventRepository, IChildRepository childRepository)
         {
             _paymentService = paymentService;
             _paymentRepository = paymentRepository;
             _donationRepository = donationRepository;
             _configuration = configuration;
+            _walletRepository = walletRepository;
+            _eventRepository = eventRepository;
+            _childRepository = childRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllPayments()
@@ -49,58 +56,92 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { url = paymentUrl });
         }
         [HttpGet("return")]
-        public async Task<IActionResult> Return([FromQuery] int vnp_TxnRef, [FromQuery] string vnp_ResponseCode, [FromQuery] string vnp_SecureHash)
+        public async Task<IActionResult> Return([FromQuery] int vnp_TxnRef, [FromQuery] string vnp_ResponseCode,[FromQuery] int? eventId, [FromQuery] int walletId, [FromQuery] string? childId)
         {
             try
-            {
-                // Kiểm tra chữ ký bảo mật (SecureHash) để xác minh tính hợp lệ của phản hồi
-                
-                var payLib = new VnPayLibrary();
-               
-                var url = _configuration.GetValue<string>("VNPay:Url");
-                var returnUrl = _configuration.GetValue<string>("VNPay:ReturnUrl");
-                var tmnCode = _configuration.GetValue<string>("VNPay:TmnCode");
-                var hashSecret = _configuration.GetValue<string>("VNPay:HashSecret");
-
-                var donation = await _donationRepository.GetByIdAsync(vnp_TxnRef);
-                payLib.AddRequestData("vnp_Version", "2.1.0");
-                payLib.AddRequestData("vnp_Command", "pay");
-                payLib.AddRequestData("vnp_TmnCode", tmnCode);
-                payLib.AddRequestData("vnp_Amount", (donation.Amount * 100).ToString()); // Multiply by 100 for VNPay
-                payLib.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
-                payLib.AddRequestData("vnp_CurrCode", "VND");
-                payLib.AddRequestData("vnp_IpAddr", "192.168.1.105");
-                payLib.AddRequestData("vnp_Locale", "vn");
-                payLib.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
-                payLib.AddRequestData("vnp_OrderType", "donation");
-                payLib.AddRequestData("vnp_ReturnUrl", returnUrl);
-                payLib.AddRequestData("vnp_TxnRef", donation.Id.ToString());
-                payLib.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-                string paymentUrl = payLib.CreateRequestUrl(url, hashSecret);
-
-
-
+            {                                                                    
+                var donation = await _donationRepository.GetByIdAsync(vnp_TxnRef);                              
                 if (donation == null)
                 {
-                    return NotFound("Donation not found.");
+                    return NotFound($"Donate with Id:{vnp_TxnRef} not found!");
                 }
-
                 var payment = await _paymentService.GetPaymentByDonationIdAsync(donation.Id);
                 if (payment == null)
                 {
-                    return NotFound("Payment not found.");
+                    return NotFound($"Payment with Id:{eventId} not found!");
                 }
-
-                // Kiểm tra mã phản hồi
-                if (vnp_ResponseCode == "00") // "00" là mã thanh toán thành công
+                if (eventId.HasValue) 
                 {
-                    // Cập nhật trạng thái Donation và Payment thành "Paid"
+                    var editEvent = await _eventRepository.GetByIdAsync(eventId.Value);
+                    decimal donationAmount = donation.Amount;
+                    var newTotalAmount = (editEvent.CurrentAmount) + (donation.Amount);
+                    editEvent.CurrentAmount = newTotalAmount;
+                    await _eventRepository.UpdateAsync(editEvent);
+
+                    if (editEvent == null)
+                    {
+                        return NotFound($"Event with Id:{eventId} not found!");
+                    }
+                    if (editEvent.FacilitiesWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateFacilitiesWalletBudget(walletId, donationAmount);
+                    }
+                    else if (editEvent.FoodStuffWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateFoodStuffWalletBudget(walletId, donationAmount);
+                    }
+                    else if (editEvent.NecessitiesWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateNecessitiesWalletBudget(walletId, donationAmount);
+                    }
+                    else if (editEvent.HealthWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateHealthWalletBudget(walletId, donationAmount);
+                    }
+                    else
+                    {
+                        return BadRequest(new { success = false, message = "Invalid wallet ID." });
+                    }
+                }
+                if (!string.IsNullOrEmpty(childId))
+                {
+                    var editChild = await _childRepository.GetByIdAsync(childId);
+                    decimal donationAmountChild = donation.Amount;
+                    var newTotalAmount = (editChild.CurrentAmount) + (donation.Amount);
+                    editChild.CurrentAmount = newTotalAmount;
+                    await _childRepository.UpdateAsync(editChild);
+                    if (editChild == null)
+                    {
+                        return NotFound($"Child with Id:{childId} not found!");
+                    }
+                    if (editChild.FacilitiesWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateFacilitiesWalletBudget(walletId, donationAmountChild);
+                    }
+                    else if (editChild.FoodStuffWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateFoodStuffWalletBudget(walletId, donationAmountChild);
+                    }
+                    else if (editChild.NecessitiesWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateNecessitiesWalletBudget(walletId, donationAmountChild);
+                    }
+                    else if (editChild.HealthWalletId == walletId)
+                    {
+                        await _walletRepository.UpdateHealthWalletBudget(walletId, donationAmountChild);
+                    }
+                    else
+                    {
+                        return BadRequest(new { success = false, message = "Invalid wallet ID." });
+                    }
+                }             
+                if (vnp_ResponseCode == "00") 
+                {
+                   
                     donation.Status = "Paid";
                     payment.Status = "Paid";
                     await _donationRepository.UpdateAsync(donation);
-                    await _paymentRepository.UpdateAsync(payment);
-
-                    // Điều hướng đến trang thành công
+                    await _paymentRepository.UpdateAsync(payment);                                  
                     return Ok(new
                     {
                         success = true,
@@ -112,14 +153,11 @@ namespace ChildrenVillageSOS_API.Controllers
                     });
                 }
                 else
-                {
-                    // Cập nhật trạng thái Donation và Payment thành "Cancelled"
+                {                  
                     donation.Status = "Cancelled";
                     payment.Status = "Cancelled";
                     await _donationRepository.UpdateAsync(donation);
-                    await _paymentRepository.UpdateAsync(payment);
-
-                    // Điều hướng đến trang đơn hàng
+                    await _paymentRepository.UpdateAsync(payment);                
                     return Ok(new
                     {
                         success = false,

@@ -193,27 +193,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
 
         public async Task<string> DonateEvent(int id, EventDonateDTO updateEvent)
-        {
-            // Step 1: Retrieve the event by ID
+        {          
             var editEvent = await _eventRepository.GetByIdAsync(id);
             if (editEvent == null)
             {
                 throw new Exception($"Event with ID {id} not found!");
-            }
-
-            // Step 2: Check if new donation will exceed the AmountLimit
+            }        
             var newTotalAmount = (editEvent.CurrentAmount ?? 0) + (updateEvent.Amount ?? 0);
             if (newTotalAmount > (editEvent.AmountLimit ?? 0))
             {
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
-            }
-
-            // Step 3: Update the CurrentAmount and ModifiedDate of the event
-            editEvent.CurrentAmount = newTotalAmount;
-            editEvent.ModifiedDate = DateTime.Now;
-            await _eventRepository.UpdateAsync(editEvent);
-
-            // Step 4: Create Donation
+            }          
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = updateEvent.UserAccountId,
@@ -224,15 +214,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = false,
                 Status = "Pending"
             };
-
-            var donation = await _donationService.CreateDonationPayment(donationDto);
-
-            // Step 5: Create VNPay URL for payment
+            var donation = await _donationService.CreateDonationPayment(donationDto);           
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];
             var vnp_HashSecret = _configuration["VNPay:HashSecret"];
-
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", "2.1.0");
             vnpay.AddRequestData("vnp_Command", "pay");
@@ -247,32 +233,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-
-            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-
-            // Step 6: Update the first wallet with an ID
-            if (editEvent.FacilitiesWalletId.HasValue)
-            {
-                await UpdateFacilitiesWalletBudget(editEvent.FacilitiesWalletId.Value, updateEvent.Amount ?? 0);
-            }
-            else if (editEvent.FoodStuffWalletId.HasValue)
-            {
-                await UpdateFoodStuffWalletBudget(editEvent.FoodStuffWalletId.Value, updateEvent.Amount ?? 0);
-            }
-            else if (editEvent.SystemWalletId.HasValue)
-            {
-                await UpdateSystemWalletBudget(editEvent.SystemWalletId.Value, updateEvent.Amount ?? 0);
-            }
-            else if (editEvent.HealthWalletId.HasValue)
-            {
-                await UpdateHealthWalletBudget(editEvent.HealthWalletId.Value, updateEvent.Amount ?? 0);
-            }
-            else if (editEvent.NecessitiesWalletId.HasValue)
-            {
-                await UpdateNecessitiesWalletBudget(editEvent.NecessitiesWalletId.Value, updateEvent.Amount ?? 0);
-            }
-
-            // Step 7: Create Transaction
+            vnpay.AddRequestData("eventId", id.ToString());
+            vnpay.AddRequestData("walletId", editEvent.FacilitiesWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editEvent.FoodStuffWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editEvent.SystemWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editEvent.HealthWalletId?.ToString() ?? string.Empty);
+            vnpay.AddRequestData("walletId", editEvent.NecessitiesWalletId?.ToString() ?? string.Empty);
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
             var income = new Income
             {
                 UserAccountId = updateEvent.UserAccountId,
@@ -283,12 +250,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = editEvent.NecessitiesWalletId,
                 Amount = updateEvent.Amount ?? 0,
                 Receiveday = DateTime.Now,
-                Status = "Completed",
+                Status = "Complete",
                 DonationId = donation.Id
             };
             await _incomeRepository.AddAsync(income);
 
-            // Step 8: Create Payment
             var payment = new Payment
             {
                 DonationId = donation.Id,
