@@ -55,18 +55,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         }
 
-        //public async Task<IEnumerable<Child>> GetAllChildren()
-        //{
-        //    return await _childRepository.GetAllAsync();
-        //}
-
         public async Task<IEnumerable<Child>> GetAllChildren()
         {
             return await _childRepository.GetAllNotDeletedAsync();
         }
         public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
         {
-            var childs = await _childRepository.GetAllAsync();
+            var childs = await _childRepository.GetAllNotDeletedAsync();
             
             var childResponseDTOs = childs.Select(x => new ChildResponseDTO
             {
@@ -95,10 +90,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         }
 
+        // GET ID
         public async Task<Child> GetChildById(string id)
         {
             return await _childRepository.GetByIdAsync(id);
         }
+
         public async Task<List<Child>> GetChildByHouseIdAsync(string houseId)
         {
             return await _childRepository.GetChildByHouseIdAsync(houseId);
@@ -108,6 +105,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _childRepository.GetChildByIdWithImg(childid);
         }
+
         public async Task<Child> CreateChild(CreateChildDTO createChild)
         {
             // Lấy toàn bộ danh sách ChildId hiện có
@@ -314,6 +312,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Child with ID {id} not found!");
             }
 
+            // Cập nhật các thuộc tính cơ bản
             existingChild.ChildName = updateChild.ChildName;
             existingChild.HealthStatus = updateChild.HealthStatus;
             existingChild.HouseId = updateChild.HouseId;
@@ -326,7 +325,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
             if (updateChild.Img != null && updateChild.Img.Any())
             {
-                // Lấy danh sách ảnh hiện tại của KoiFishy từ database
+                // Lấy danh sách ảnh hiện tại của CHild từ database Image
                 var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
 
                 // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
@@ -341,27 +340,28 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     // Xóa ảnh khỏi database
                     await _imageRepository.RemoveAsync(existingImage);
                 }
-
-                // Upload danh sách ảnh mới và lưu thông tin vào database
-                List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
-                foreach (var newImageUrl in newImageUrls)
-                {
-                    var newImage = new Image
-                    {
-                        UrlPath = newImageUrl,
-                        ChildId = existingChild.Id,
-                        ModifiedDate = DateTime.Now,
-                        IsDeleted = false,
-                    };
-                    await _imageRepository.AddAsync(newImage);
-                }
             }
 
+            // Upload danh sách ảnh mới và lưu thông tin vào database
+            List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
+            foreach (var newImageUrl in newImageUrls)
+            {
+                var newImage = new Image
+                {
+                    UrlPath = newImageUrl,
+                    ChildId = existingChild.Id,
+                    ModifiedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(newImage);
+            }
+
+            // Lưu thay đổi
             await _childRepository.UpdateAsync(existingChild);
             return existingChild;
         }
 
-        public async Task<Child> DeleteChild(string id)
+    public async Task<Child> DeleteChild(string id)
         {
             var child = await _childRepository.GetByIdAsync(id);
             if (child == null)
