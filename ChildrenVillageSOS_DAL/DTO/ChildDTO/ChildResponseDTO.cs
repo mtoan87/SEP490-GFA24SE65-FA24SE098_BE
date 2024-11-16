@@ -37,7 +37,9 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public DateTime Dob { get; set; }
 
         public string Status { get; set; }
+
         public DateTime? CreatedDate { get; set; }
+
         public string[] ImageUrls { get; set; } = new string[0];
     }
 }
