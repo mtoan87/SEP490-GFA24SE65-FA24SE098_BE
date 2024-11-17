@@ -28,6 +28,14 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             return await _dbContext.Images
                 .Where(img => img.EventId == eventId && img.IsDeleted == false)
+                .Select(img => new Image
+                {
+                    Id = img.Id,
+                    UrlPath = img.UrlPath ?? string.Empty, // Handle potential null
+                    EventId = img.EventId,
+                    ModifiedDate = img.ModifiedDate,
+                    IsDeleted = img.IsDeleted,
+                })
                 .ToListAsync();
         }
 

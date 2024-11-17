@@ -72,10 +72,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser)
         {
-            var updaUser = await _userAccountRepository.GetUserWithImagesByIdAsync(id);
+            var updaUser = await _userAccountRepository.GetByIdAsync(id);
             if (updaUser == null)
             {
-                throw new Exception($"Expense with ID{id} not found!");
+                throw new Exception($"User with ID{id} not found!");
             }
             updaUser.UserName = updateUser.UserName;
             updaUser.UserEmail = updateUser.UserEmail;
@@ -99,7 +99,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 foreach (var existingImage in existingImages)
                 {
                     // Xóa ảnh trên Cloudinary
-                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "UserImages");
+                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "UserAccountImages");
                     if (!isDeleted)
                     {
                         throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
