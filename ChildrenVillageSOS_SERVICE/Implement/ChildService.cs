@@ -211,9 +211,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             );
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
-            //string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
-            //vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
-            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+            string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
+            vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
+            //vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
             //vnpay.AddRequestData("childId", id);
             //vnpay.AddRequestData("walletId", editChild.FacilitiesWalletId?.ToString() ?? string.Empty);
