@@ -176,7 +176,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = updateChild.Amount ?? 0,
                 Description = $"Donation for Child: {editChild.ChildName}",
                 IsDeleted = false,
-                Status = "Pending"
+                Status = "Pending",
+                ChildId = id
+
             };
 
             var donation = await _donationService.CreateDonationPayment(donationDto);

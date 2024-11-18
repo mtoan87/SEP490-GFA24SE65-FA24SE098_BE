@@ -212,7 +212,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = updateEvent.Amount ?? 0,
                 Description = $"Donation for Event: {editEvent.Name}",
                 IsDeleted = false,
-                Status = "Pending"
+                Status = "Pending",
+                EventId = id
             };
             var donation = await _donationService.CreateDonationPayment(donationDto);           
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];

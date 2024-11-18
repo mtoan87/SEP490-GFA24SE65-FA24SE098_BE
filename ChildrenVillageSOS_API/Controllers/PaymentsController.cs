@@ -102,6 +102,17 @@ namespace ChildrenVillageSOS_API.Controllers
                 {
                     return NotFound($"Donate with Id:{vnp_TxnRef} not found!");
                 }
+                if (donation.Status == "Paid")
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "This donation has already been paid.",
+                        donationId = donation.Id,
+                        amount = donation.Amount,
+                        status = "Paid"
+                    });
+                }
                 var payment = await _paymentService.GetPaymentByDonationIdAsync(donation.Id);
                 if (payment == null)
                 {

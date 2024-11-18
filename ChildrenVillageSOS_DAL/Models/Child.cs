@@ -62,4 +62,8 @@ public partial class Child
     public virtual NecessitiesWallet NecessitiesWallet { get; set; }
 
     public virtual SystemWallet SystemWallet { get; set; }
+
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+
+    
 }

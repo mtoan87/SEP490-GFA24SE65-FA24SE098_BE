@@ -14,7 +14,7 @@ namespace ChildrenVillageSOS_DAL.DTO.BookingDTO
 
         public int? BookingSlotId { get; set; }
 
-        public DateTime Visitday { get; set; }
+        public DateOnly Visitday { get; set; }
 
         public string Status { get; set; } = null!;
     }

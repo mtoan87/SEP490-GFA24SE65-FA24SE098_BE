@@ -48,6 +48,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
                 IsDeleted = false,
+                ChildId = createDonation.ChildId,
+                EventId = createDonation.EventId,
                 Status = createDonation.Status,
                 CreatedDate= DateTime.Now
             };

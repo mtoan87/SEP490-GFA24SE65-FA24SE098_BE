@@ -12,7 +12,9 @@ public partial class Donation
     public string DonationType { get; set; }
 
     public DateTime DateTime { get; set; }
+    public int? EventId { get; set; }
 
+    public string? ChildId { get; set; }
     public decimal Amount { get; set; }
 
     public string Description { get; set; }
@@ -24,7 +26,10 @@ public partial class Donation
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+    public virtual Child Child { get; set; }
 
+    public virtual Event Event { get; set; }
+    
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

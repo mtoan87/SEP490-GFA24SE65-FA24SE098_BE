@@ -54,4 +54,5 @@ public partial class Event
     public virtual SystemWallet SystemWallet { get; set; }
 
     public virtual Village Village { get; set; }
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 }
