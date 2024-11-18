@@ -29,6 +29,8 @@ namespace ChildrenVillageSOS_API.Controllers
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
         private readonly ISystemWalletRepository _systemWalletRepository;
         private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IIncomeService _incomeService;
+        private readonly IIncomeRepository _incomeRepository;
         public PaymentsController(
             IPaymentService paymentService,
             IPaymentRepository paymentRepository,
@@ -41,7 +43,9 @@ namespace ChildrenVillageSOS_API.Controllers
             IFoodStuffWalletRepository foodStuffWalletRepository,
             INecessitiesWalletRepository necessitiesWalletRepository,
             ISystemWalletRepository systemWalletRepository,
-            IHealthWalletRepository healthWalletRepository)
+            IHealthWalletRepository healthWalletRepository,
+            IIncomeService incomeService,
+            IIncomeRepository incomeRepository)
         {
             _paymentService = paymentService;
             _paymentRepository = paymentRepository;
@@ -55,6 +59,8 @@ namespace ChildrenVillageSOS_API.Controllers
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _systemWalletRepository = systemWalletRepository;
             _healthWalletRepository = healthWalletRepository;
+            _incomeService = incomeService;
+            _incomeRepository = incomeRepository;   
         }
         [HttpGet]
         public async Task<IActionResult> GetAllPayments()
@@ -99,7 +105,12 @@ namespace ChildrenVillageSOS_API.Controllers
                 var payment = await _paymentService.GetPaymentByDonationIdAsync(donation.Id);
                 if (payment == null)
                 {
-                    return NotFound($"Payment with Id:{eventId} not found!");
+                    return NotFound($"Payment with Donate Id:{donation.Id} not found!");
+                }
+                var income = await _incomeService.GetIncomeByDonationIdAsync(donation.Id);
+                if (income == null)
+                {
+                    return NotFound($"Income with Donate Id:{donation.Id} not found!");
                 }
                
                 if (eventId.HasValue) 
@@ -208,6 +219,8 @@ namespace ChildrenVillageSOS_API.Controllers
                    
                     donation.Status = "Paid";
                     payment.Status = "Paid";
+                    income.Status = "Completed";
+                    await _incomeRepository.UpdateAsync(income);
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);
                     return Ok(new
@@ -224,6 +237,8 @@ namespace ChildrenVillageSOS_API.Controllers
                 {                  
                     donation.Status = "Cancelled";
                     payment.Status = "Cancelled";
+                    income.Status = "Cancelled";
+                    await _incomeRepository.UpdateAsync(income);
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);                
                     return Ok(new

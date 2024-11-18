@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         Task<IEnumerable<Income>> GetAllIncomes();
         Task<Income> GetIncomeById(int id);
+        Task<Income> GetIncomeByDonationIdAsync(int donationId);
         Task<Income> CreateIncome(CreateIncomeDTO createIncome);
         Task<Income> UpdateIncome(int id, UpdateIncomeDTO updateIncome);
         Task<Income> DeleteIncome(int id);

@@ -164,7 +164,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Completed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -240,7 +240,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Completed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -360,7 +360,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Completed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -436,7 +436,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Completed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -512,7 +512,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Completed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };

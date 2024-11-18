@@ -29,6 +29,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _incomeRepository.GetByIdAsync(id);
         }
+
+        public async Task<Income> GetIncomeByDonationIdAsync(int donationId)
+        {
+            return await _incomeRepository.GetIncomeByDonationIdAsync(donationId);
+        }
         public async Task<Income> CreateIncome(CreateIncomeDTO createIncome)
         {
            
