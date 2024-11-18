@@ -38,5 +38,17 @@ namespace ChildrenVillageSOS_REPO.Implement
                 }).ToListAsync();
             return donationDetails;
         }
+
+        public async Task<List<Village>> GetDonatedVillageByUserId(string userAccountId)
+        {
+            return await _context.Donations
+                .Where(d => d.UserAccountId == userAccountId && d.IsDeleted != true)
+                .Include(d => d.Event)
+                .ThenInclude(e => e.Village)
+                .Where(d => d.Event != null && d.Event.Village != null)
+                .Select(d => d.Event.Village)
+                .Distinct()
+                .ToListAsync();
+        }
     }
 }

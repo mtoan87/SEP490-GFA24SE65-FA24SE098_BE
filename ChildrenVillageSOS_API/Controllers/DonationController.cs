@@ -24,6 +24,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetAllDonations();
             return Ok(donation);
         }
+        [HttpGet("GetDonatedVillageByUserId")]
+        public async Task<IActionResult> getDonatedVillageByUserId(string userId)
+        {
+            var rs = await _donationService.GetDonatedVillageByUserId(userId);
+            return Ok(rs);
+        }
         [HttpGet("GetDonationByUserId/{Id}")]
         public async Task<IActionResult> GetDonationsByUserIdAsync(string Id)
         {

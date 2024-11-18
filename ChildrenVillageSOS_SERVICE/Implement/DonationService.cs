@@ -23,6 +23,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _donationRepository.GetDonationsByUserId(userId);
         }
+
+        public async Task<List<Village>> GetDonatedVillageByUserId(string userAccountId)
+        {
+            return await _donationRepository.GetDonatedVillageByUserId(userAccountId);
+        }
         public async Task<Donation> CreateDonation(CreateDonationDTO createDonation)
         {
             var donation = new Donation
