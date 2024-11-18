@@ -302,6 +302,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 await _systemWalletRepository.UpdateAsync(wallet);
             }
         }
+
         public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
         {
             var existingChild = await _childRepository.GetByIdAsync(id);
@@ -310,48 +311,52 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Child with ID {id} not found!");
             }
 
-            // Cập nhật các thuộc tính cơ bản
             existingChild.ChildName = updateChild.ChildName;
             existingChild.HealthStatus = updateChild.HealthStatus;
             existingChild.HouseId = updateChild.HouseId;
             existingChild.Gender = updateChild.Gender;
             existingChild.Dob = updateChild.Dob;
             existingChild.Status = updateChild.Status;
-            existingChild.IsDeleted =false;
+            existingChild.IsDeleted = false;
             existingChild.ModifiedDate = DateTime.Now;
 
-            // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
-            if (updateChild.Img != null && updateChild.Img.Any())
-            {
-                // Lấy danh sách ảnh hiện tại của CHild từ database Image
-                var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
+            var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
 
-                // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
-                foreach (var existingImage in existingImages)
+            if (updateChild.ImgToDelete != null && updateChild.ImgToDelete.Any())
+            {
+                foreach (var imageIdToDelete in updateChild.ImgToDelete)
                 {
-                    // Xóa ảnh trên Cloudinary
-                    bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "ChildImages");
-                    if (!isDeleted)
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.Id.ToString() == imageIdToDelete);
+                    if (imageToDelete != null)
                     {
-                        throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
+                        // Xóa ảnh trên Cloudinary
+                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "ChildImages");
+                        if (!isDeleted)
+                        {
+                            throw new Exception($"Không thể xóa ảnh {imageToDelete.UrlPath} trên Cloudinary");
+                        }
+                        // Xóa ảnh khỏi database
+                        await _imageRepository.RemoveAsync(imageToDelete);
                     }
-                    // Xóa ảnh khỏi database
-                    await _imageRepository.RemoveAsync(existingImage);
                 }
             }
 
-            // Upload danh sách ảnh mới và lưu thông tin vào database
-            List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
-            foreach (var newImageUrl in newImageUrls)
+            // Nếu có ảnh mới cần thêm
+            if (updateChild.Img != null && updateChild.Img.Any())
             {
-                var newImage = new Image
+                // Upload danh sách ảnh mới và lưu thông tin vào database
+                List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
+                foreach (var newImageUrl in newImageUrls)
                 {
-                    UrlPath = newImageUrl,
-                    ChildId = existingChild.Id,
-                    ModifiedDate = DateTime.Now,
-                    IsDeleted = false,
-                };
-                await _imageRepository.AddAsync(newImage);
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        ChildId = existingChild.Id,
+                        ModifiedDate = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _imageRepository.AddAsync(newImage);
+                }
             }
 
             // Lưu thay đổi
@@ -359,7 +364,65 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return existingChild;
         }
 
-    public async Task<Child> DeleteChild(string id)
+
+        //public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
+        //{
+        //    var existingChild = await _childRepository.GetByIdAsync(id);
+        //    if (existingChild == null)
+        //    {
+        //        throw new Exception($"Child with ID {id} not found!");
+        //    }
+
+        //    // Cập nhật các thuộc tính cơ bản
+        //    existingChild.ChildName = updateChild.ChildName;
+        //    existingChild.HealthStatus = updateChild.HealthStatus;
+        //    existingChild.HouseId = updateChild.HouseId;
+        //    existingChild.Gender = updateChild.Gender;
+        //    existingChild.Dob = updateChild.Dob;
+        //    existingChild.Status = updateChild.Status;
+        //    existingChild.IsDeleted =false;
+        //    existingChild.ModifiedDate = DateTime.Now;
+
+        //    // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
+        //    if (updateChild.Img != null && updateChild.Img.Any())
+        //    {
+        //        // Lấy danh sách ảnh hiện tại của CHild từ database Image
+        //        var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
+
+        //        // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
+        //        foreach (var existingImage in existingImages)
+        //        {
+        //            // Xóa ảnh trên Cloudinary
+        //            bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "ChildImages");
+        //            if (!isDeleted)
+        //            {
+        //                throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
+        //            }
+        //            // Xóa ảnh khỏi database
+        //            await _imageRepository.RemoveAsync(existingImage);
+        //        }
+        //    }
+
+        //    // Upload danh sách ảnh mới và lưu thông tin vào database
+        //    List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
+        //    foreach (var newImageUrl in newImageUrls)
+        //    {
+        //        var newImage = new Image
+        //        {
+        //            UrlPath = newImageUrl,
+        //            ChildId = existingChild.Id,
+        //            ModifiedDate = DateTime.Now,
+        //            IsDeleted = false,
+        //        };
+        //        await _imageRepository.AddAsync(newImage);
+        //    }
+
+        //    // Lưu thay đổi
+        //    await _childRepository.UpdateAsync(existingChild);
+        //    return existingChild;
+        //}
+
+        public async Task<Child> DeleteChild(string id)
         {
             var child = await _childRepository.GetByIdAsync(id);
             if (child == null)
