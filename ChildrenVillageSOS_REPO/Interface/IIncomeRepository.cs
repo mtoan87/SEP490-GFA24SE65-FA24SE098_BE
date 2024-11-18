@@ -9,5 +9,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IIncomeRepository : IRepositoryGeneric<Income>
     {
+        Task<Income> GetIncomeByDonationIdAsync(int donationId);
     }
 }

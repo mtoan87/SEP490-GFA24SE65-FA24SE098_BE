@@ -24,8 +24,24 @@ namespace ChildrenVillageSOS_API.Controllers
         private readonly IWalletRepository _walletRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IChildRepository _childRepository;
-        
-        public PaymentsController(IPaymentService paymentService, IPaymentRepository paymentRepository, IDonationRepository donationRepository, IConfiguration configuration, IWalletRepository walletRepository, IEventRepository eventRepository, IChildRepository childRepository)
+        private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly ISystemWalletRepository _systemWalletRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        public PaymentsController(
+            IPaymentService paymentService,
+            IPaymentRepository paymentRepository,
+            IDonationRepository donationRepository,
+            IConfiguration configuration,
+            IWalletRepository walletRepository,
+            IEventRepository eventRepository,
+            IChildRepository childRepository,
+            IFacilitiesWalletRepository failitiesWalletRepository,
+            IFoodStuffWalletRepository foodStuffWalletRepository,
+            INecessitiesWalletRepository necessitiesWalletRepository,
+            ISystemWalletRepository systemWalletRepository,
+            IHealthWalletRepository healthWalletRepository)
         {
             _paymentService = paymentService;
             _paymentRepository = paymentRepository;
@@ -34,6 +50,11 @@ namespace ChildrenVillageSOS_API.Controllers
             _walletRepository = walletRepository;
             _eventRepository = eventRepository;
             _childRepository = childRepository;
+            _failitiesWalletRepository = failitiesWalletRepository;
+            _foodStuffWalletRepository = foodStuffWalletRepository;
+            _necessitiesWalletRepository = necessitiesWalletRepository;
+            _systemWalletRepository = systemWalletRepository;
+            _healthWalletRepository = healthWalletRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllPayments()
@@ -56,7 +77,17 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { url = paymentUrl });
         }
         [HttpGet("return")]
-        public async Task<IActionResult> Return([FromQuery] int vnp_TxnRef, [FromQuery] string vnp_ResponseCode,[FromQuery] int? eventId, [FromQuery] int walletId, [FromQuery] string? childId)
+        public async Task<IActionResult> Return(
+            [FromQuery] int vnp_TxnRef,
+            [FromQuery] string vnp_ResponseCode,
+            [FromQuery] int? eventId,
+            [FromQuery] int walletId,
+            [FromQuery] string? childId,
+            [FromQuery] int? facilitiesWalletId,
+            [FromQuery] int? necessitiesWalletId,
+            [FromQuery] int? foodStuffWalletId,
+            [FromQuery] int? systemWalletId,
+            [FromQuery] int? healthWalletId)
         {
             try
             {                                                                    
@@ -70,6 +101,7 @@ namespace ChildrenVillageSOS_API.Controllers
                 {
                     return NotFound($"Payment with Id:{eventId} not found!");
                 }
+               
                 if (eventId.HasValue) 
                 {
                     var editEvent = await _eventRepository.GetByIdAsync(eventId.Value);
@@ -84,7 +116,7 @@ namespace ChildrenVillageSOS_API.Controllers
                     }
                     if (editEvent.FacilitiesWalletId == walletId)
                     {
-                        await _walletRepository.UpdateFacilitiesWalletBudget(walletId, donationAmount);
+                        await _walletRepository.UpdateFacilitiesWalletBudget(1, donationAmount);
                     }
                     else if (editEvent.FoodStuffWalletId == walletId)
                     {
@@ -134,7 +166,43 @@ namespace ChildrenVillageSOS_API.Controllers
                     {
                         return BadRequest(new { success = false, message = "Invalid wallet ID." });
                     }
-                }             
+                }
+                if (facilitiesWalletId.HasValue)
+                {
+                    var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(facilitiesWalletId.Value);
+                    facilitiesWallet.Budget += donation.Amount;
+                    await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+                }
+                if (foodStuffWalletId.HasValue)
+                {
+                    var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(foodStuffWalletId.Value);
+                    foodStuffWallet.Budget += donation.Amount;
+                    await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+                }
+                if (necessitiesWalletId.HasValue)
+                {
+                    var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(necessitiesWalletId.Value);
+                    necessitiesWallet.Budget += donation.Amount;
+                    await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+                }
+                if (systemWalletId.HasValue)
+                {
+                    var systemWallet = await _systemWalletRepository.GetByIdAsync(systemWalletId.Value);
+                    systemWallet.Budget += donation.Amount;
+                    await _systemWalletRepository.UpdateAsync(systemWallet);
+                }
+                if (systemWalletId.HasValue)
+                {
+                    var systemWallet = await _systemWalletRepository.GetByIdAsync(systemWalletId.Value);
+                    systemWallet.Budget += donation.Amount;
+                    await _systemWalletRepository.UpdateAsync(systemWallet);
+                }
+                if (healthWalletId.HasValue)
+                {
+                    var healthWallet = await _healthWalletRepository.GetByIdAsync(healthWalletId.Value);
+                    healthWallet.Budget += donation.Amount;
+                    await _healthWalletRepository.UpdateAsync(healthWallet);
+                }
                 if (vnp_ResponseCode == "00") 
                 {
                    
@@ -142,9 +210,6 @@ namespace ChildrenVillageSOS_API.Controllers
                     payment.Status = "Paid";
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);
-
-
-
                     return Ok(new
                     {
                         success = true,

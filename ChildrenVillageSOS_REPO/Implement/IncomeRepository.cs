@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace ChildrenVillageSOS_REPO.Implement
         public IncomeRepository(SoschildrenVillageDbContext context) : base(context)
         {
             
+        }
+        public async Task<Income> GetIncomeByDonationIdAsync(int donationId)
+        {
+            return await _context.Incomes
+                .FirstOrDefaultAsync(p => p.DonationId == donationId);
         }
     }
 }

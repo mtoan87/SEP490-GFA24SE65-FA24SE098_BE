@@ -125,7 +125,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             var donation = await _donationService.CreateDonationPayment(donationDto);
-
+            var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -141,7 +141,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, facilitiesWalletId {facilitiesWallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
@@ -150,12 +150,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 3: Update FacilitiesWallet Budget
-            var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
-            if (facilitiesWallet != null)
-            {
-                facilitiesWallet.Budget += paymentRequest.Amount;
-                await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
-            }
+           
+            //if (facilitiesWallet != null)
+            //{
+            //    facilitiesWallet.Budget += paymentRequest.Amount;
+            //    await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+            //}
 
             // Step 4: Create Transaction
             var income = new Income
@@ -201,7 +201,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             var donation = await _donationService.CreateDonationPayment(donationDto);
-
+            var foodWallet = await _foodStuffWalletRepository.GetWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -217,7 +217,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, foodStuffWalletId {foodWallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
@@ -226,12 +226,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 3: Update FacilitiesWallet Budget
-            var foodWallet = await _foodStuffWalletRepository.GetWalletByUserIdAsync("UA001");
-            if (foodWallet != null)
-            {
-                foodWallet.Budget += paymentRequest.Amount;
-                await _foodStuffWalletRepository.UpdateAsync(foodWallet);
-            }
+            
+            //if (foodWallet != null)
+            //{
+            //    foodWallet.Budget += paymentRequest.Amount;
+            //    await _foodStuffWalletRepository.UpdateAsync(foodWallet);
+            //}
 
             // Step 4: Create Transaction
             var income = new Income
@@ -327,7 +327,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];
             var vnp_HashSecret = _configuration["VNPay:HashSecret"];
-
+            var wallet = await _healthWalletRepository.GetHealthWalletByUserIdAsync("UA001");
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", "2.1.0");
             vnpay.AddRequestData("vnp_Command", "pay");
@@ -337,7 +337,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, healthWalletId {wallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
@@ -346,12 +346,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 3: Update FacilitiesWallet Budget
-            var wallet = await _healthWalletRepository.GetHealthWalletByUserIdAsync("UA001");
-            if (wallet != null)
-            {
-                wallet.Budget += paymentRequest.Amount;
-                await _healthWalletRepository.UpdateAsync(wallet);
-            }
+            
+            //if (wallet != null)
+            //{
+            //    wallet.Budget += paymentRequest.Amount;
+            //    await _healthWalletRepository.UpdateAsync(wallet);
+            //}
 
             // Step 4: Create Transaction
             var income = new Income
@@ -397,7 +397,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             var donation = await _donationService.CreateDonationPayment(donationDto);
-
+            var wallet = await _systemWalletRepository.GetWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -413,7 +413,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, systemWalletId {wallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
@@ -422,12 +422,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 3: Update FacilitiesWallet Budget
-            var wallet = await _systemWalletRepository.GetWalletByUserIdAsync("UA001");
-            if (wallet != null)
-            {
-                wallet.Budget += paymentRequest.Amount;
-                await _systemWalletRepository.UpdateAsync(wallet);
-            }
+           
+            //if (wallet != null)
+            //{
+            //    wallet.Budget += paymentRequest.Amount;
+            //    await _systemWalletRepository.UpdateAsync(wallet);
+            //}
 
             // Step 4: Create Income
             var income = new Income
@@ -473,7 +473,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             var donation = await _donationService.CreateDonationPayment(donationDto);
-
+            var wallet = await _necessitiesWalletRepository.GetNecessitiesWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -489,7 +489,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, necessitiesWalletId {wallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
@@ -498,12 +498,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
             // Step 3: Update FacilitiesWallet Budget
-            var wallet = await _necessitiesWalletRepository.GetNecessitiesWalletByUserIdAsync("UA001");
-            if (wallet != null)
-            {
-                wallet.Budget += paymentRequest.Amount;
-                await _necessitiesWalletRepository.UpdateAsync(wallet);
-            }
+           
+            //if (wallet != null)
+            //{
+            //    wallet.Budget += paymentRequest.Amount;
+            //    await _necessitiesWalletRepository.UpdateAsync(wallet);
+            //}
 
             // Step 4: Create Transaction
             var income = new Income
