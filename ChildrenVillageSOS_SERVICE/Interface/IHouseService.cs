@@ -19,5 +19,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> RestoreHouse(string id);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
+
+        Task<string> GetHouseNameByIdAsync(string houseId);
     }
 }

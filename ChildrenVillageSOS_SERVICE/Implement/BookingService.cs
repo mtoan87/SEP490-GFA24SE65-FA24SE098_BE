@@ -15,12 +15,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
+        
 
         public BookingService(IBookingRepository bookingRepository)
         {
             _bookingRepository = bookingRepository;
         }
 
+        public async Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId)
+        {
+            return await _bookingRepository.GetBookingsWithSlotsByUserAsync(userAccountId);
+        }
         public async Task<bool> CreateBookingAsync(BookingRequest request)
         {
             

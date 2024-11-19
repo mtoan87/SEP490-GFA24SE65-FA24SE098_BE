@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,6 +25,28 @@ namespace ChildrenVillageSOS_REPO.Implement
                             && b.BookingSlotId == bookingSlotId
                             && b.Status == "Confirmed")
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId)
+        {
+            var result = await (from booking in _context.Bookings
+                                join slot in _context.BookingSlots
+                                on booking.BookingSlotId equals slot.Id
+                                where booking.UserAccountId == userAccountId
+                                      && booking.IsDeleted == false
+                                select new BookingResponse
+                                {
+                                    Id = booking.Id,
+                                    HouseId = booking.HouseId,      
+                                    HouseName = booking.House.HouseName,
+                                    Visitday = booking.Visitday,
+                                    BookingSlotId = booking.BookingSlotId,
+                                    SlotStartTime = slot.StartTime.HasValue ? slot.StartTime.Value.ToString("hh\\:mm") : null,
+                                    SlotEndTime = slot.EndTime.HasValue ? slot.EndTime.Value.ToString("hh\\:mm") : null,
+                                    Status = booking.Status
+                                }).ToListAsync();
+
+            return result;
         }
     }
 }

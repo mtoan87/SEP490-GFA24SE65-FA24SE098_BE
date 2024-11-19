@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Booking> UpdateBooking(int id, UpdateBookingDTO updateBooking);
         Task<Booking> DeleteBooking(int id);
         Task<Booking> RestoreBooking(int id);
+        Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId);
     }
 }

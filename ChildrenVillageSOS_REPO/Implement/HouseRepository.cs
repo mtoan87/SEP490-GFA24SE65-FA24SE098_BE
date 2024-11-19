@@ -49,5 +49,21 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync();  // Convert the result to an array asynchronously
         }
+
+        public async Task<string> GetHouseNameByIdAsync(string houseId)
+        {
+            if (string.IsNullOrEmpty(houseId))
+                throw new ArgumentException("House ID cannot be null or empty.", nameof(houseId));
+
+            var houseName = await _context.Houses
+                .Where(h => h.Id == houseId && h.IsDeleted == false)
+                .Select(h => h.HouseName)
+                .FirstOrDefaultAsync();
+
+            if (houseName == null)
+                throw new KeyNotFoundException($"No house found with ID: {houseId}");
+
+            return houseName;
+        }
     }
 }

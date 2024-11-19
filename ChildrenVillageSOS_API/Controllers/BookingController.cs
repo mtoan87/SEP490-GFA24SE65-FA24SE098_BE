@@ -30,6 +30,27 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(booking);
         }
 
+        [HttpGet("GetBookingsWithSlotsByUserAccountId/{userAccountId}")]
+        public async Task<IActionResult> GetBookingsWithSlots(string userAccountId)
+        {
+            var bookings = await _bookingService.GetBookingsWithSlotsByUserAsync(userAccountId);
+
+            if (bookings == null || !bookings.Any())
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "No bookings found for this user."
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                data = bookings
+            });
+        }
+
         [HttpPost("CreateBooking")]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
         {
