@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.House;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> DeleteHouse(string id);
         Task<House> RestoreHouse(string id);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
-        Task<List<House>> getHouseByVillageId(string villageId);
+        Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
     }
 }

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildrenVillageSOS_DAL.DTO.House
+namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 {
-    public class CreateHouseDTO
+    public class HouseResponseDTO
     {
+        public string HouseId { get; set; }
         public string HouseName { get; set; }
 
         public int? HouseNumber { get; set; }
@@ -28,6 +29,6 @@ namespace ChildrenVillageSOS_DAL.DTO.House
         public string VillageId { get; set; }
 
         public bool? IsDeleted { get; set; }
-        public List<IFormFile> Img { get; set; }
+        public string[] ImageUrls { get; set; } = new string[0];
     }
 }

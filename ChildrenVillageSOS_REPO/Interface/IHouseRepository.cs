@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface IHouseRepository : IRepositoryGeneric<House>
     {
         Task<string?> GetUserAccountIdByHouseId(string houseId);
-        Task<List<House>> GetHouseByVillageIdAsync(string villageId);
+        Task<HouseResponseDTO[]> GetHouseByVillageIdAsync(string villageId);
 
     }
 }

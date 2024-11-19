@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.House;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -81,10 +82,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newHouse;
         }
-        public async Task<List<House>> getHouseByVillageId(string villageId)
+        public async Task<HouseResponseDTO[]> getHouseByVillageId(string villageId)
         {
-            return await _houseRepository.GetHouseByVillageIdAsync(villageId);
+            return await _houseRepository.GetHouseByVillageIdAsync(villageId); // Await the async call
         }
+
         public async Task<string?> GetUserAccountIdByHouseId(string houseId)
         {
             return await _houseRepository.GetUserAccountIdByHouseId(houseId);
