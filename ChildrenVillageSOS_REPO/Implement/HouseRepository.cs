@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,11 +25,29 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return house;
         }
-        public async Task<List<House>> GetHouseByVillageIdAsync(string villageId)
+        public async Task<HouseResponseDTO[]> GetHouseByVillageIdAsync(string villageId)
         {
             return await _context.Houses
-                .Where(h => h.VillageId == villageId && (h.IsDeleted == null || h.IsDeleted == false))
-                .ToListAsync();
+                .Where(h => h.VillageId == villageId && (h.IsDeleted == null || h.IsDeleted == false)) // Ensure the house is not deleted
+                .Select(h => new HouseResponseDTO
+                {
+                    HouseId = h.Id,
+                    HouseName = h.HouseName,
+                    HouseNumber = h.HouseNumber,
+                    Location = h.Location,
+                    Description = h.Description,
+                    HouseMember = h.HouseMember,
+                    HouseOwner = h.HouseOwner,
+                    Status = h.Status,
+                    UserAccountId = h.UserAccountId,
+                    VillageId = h.VillageId,
+                    IsDeleted = h.IsDeleted,
+                    ImageUrls = h.Images
+                        .Where(i => !i.IsDeleted)  // Exclude deleted images
+                        .Select(i => i.UrlPath)    // Select image URLs
+                        .ToArray()                 // Convert to array
+                })
+                .ToArrayAsync();  // Convert the result to an array asynchronously
         }
     }
 }

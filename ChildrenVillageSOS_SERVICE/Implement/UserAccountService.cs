@@ -126,6 +126,34 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _userAccountRepository.UpdateAsync(updaUser);
             return updaUser;
         }
+        public async Task ChangePassword(string id, ChangePassUserDTO changePassUserDTO)
+        {
+            // Tìm kiếm người dùng theo ID
+            var user = await _userAccountRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new Exception($"User with ID {id} not found!");
+            }
+
+            // Xác minh mật khẩu hiện tại
+            if (user.Password != changePassUserDTO.Password)
+            {
+                throw new Exception("Current password is incorrect!");
+            }
+
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+            if (changePassUserDTO.NewPassword != changePassUserDTO.ConfirmPassword)
+            {
+                throw new Exception("New password and confirm password do not match!");
+            }
+
+            // Cập nhật mật khẩu mới
+            user.Password = changePassUserDTO.NewPassword;
+            user.ModifiedDate = DateTime.Now;
+
+            await _userAccountRepository.UpdateAsync(user);
+        }
+
         public async Task<UserAccount> DeleteUser(string id)
         {
             var user = await _userAccountRepository.GetByIdAsync(id);

@@ -41,6 +41,20 @@ namespace ChildrenVillageSOS_API.Controllers
             var user = await _userAccountService.UpdateUser(id, updaUserDTO);
             return Ok(user);
         }
+        [HttpPut("ChangePassword/{Id}")]
+        public async Task<IActionResult> ChangePassword(string Id, [FromBody] ChangePassUserDTO changePassUserDTO)
+        {
+            try
+            {
+                await _userAccountService.ChangePassword(Id, changePassUserDTO);
+                return Ok(new { message = "Password updated successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<IActionResult> DeleteUser(string id)

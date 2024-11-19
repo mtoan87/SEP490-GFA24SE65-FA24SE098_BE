@@ -107,6 +107,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
                 Amount = createEvent.Amount,
+                CurrentAmount = createEvent.Amount,
                 AmountLimit = createEvent.AmountLimit, 
                 VillageId = createEvent.VillageId,
                
