@@ -53,6 +53,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<INecessitiesWalletService, NecessitiesWalletService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IDashboardService, DashboardService>();
             return services;
         }
     }
