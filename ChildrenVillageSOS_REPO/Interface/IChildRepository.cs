@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<IEnumerable<Child>> GetAllAsync();
         ChildResponseDTO GetChildByIdWithImg(string childId);
         Task<List<Child>> GetChildByHouseIdAsync(string houseId);
+        Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync(); //Dashboard
     }
 }

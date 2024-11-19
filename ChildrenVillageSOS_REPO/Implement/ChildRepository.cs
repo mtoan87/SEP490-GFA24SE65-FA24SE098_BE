@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
@@ -60,6 +61,40 @@ namespace ChildrenVillageSOS_REPO.Implement
             return await _context.Children
                 .Where(c => c.HouseId == houseId && (c.IsDeleted == null || c.IsDeleted == false))
                 .ToListAsync();
+        }
+
+        //Dashboard phần tính Active children trong hệ thống
+        public async Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync()
+        {
+            var today = DateTime.Today;
+            var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
+
+            // Đếm tổng số trẻ em đang active
+            var totalActive = await _context.Children
+                .Where(c => c.Status == "Active" && !c.IsDeleted)
+                .CountAsync();
+
+            // Tính số trẻ em được thêm mới trong tháng này
+            var addedThisMonth = await _context.Children
+                .Where(c => c.Status == "Active"
+                        && !c.IsDeleted
+                        && c.CreatedDate >= firstDayOfMonth)
+                .CountAsync();
+
+            // Tính số trẻ em bị xóa hoặc chuyển sang inactive trong tháng này
+            var removedThisMonth = await _context.Children
+                .Where(c => (c.Status != "Active" || c.IsDeleted)
+                        && c.ModifiedDate >= firstDayOfMonth)
+                .CountAsync();
+
+            // Tính sự thay đổi ròng
+            var netChange = addedThisMonth - removedThisMonth;
+
+            return new ActiveChildrenStatDTO
+            {
+                TotalActiveChildren = totalActive,
+                ChangeThisMonth = netChange
+            };
         }
     }
 }

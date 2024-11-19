@@ -324,19 +324,36 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             if (updateChild.ImgToDelete != null && updateChild.ImgToDelete.Any())
             {
+                // Có thể xóa được ảnh đang tòn tại trong khi đang update
                 foreach (var imageIdToDelete in updateChild.ImgToDelete)
                 {
-                    var imageToDelete = existingImages.FirstOrDefault(img => img.Id.ToString() == imageIdToDelete);
-                    if (imageToDelete != null)
+                    try
                     {
-                        // Xóa ảnh trên Cloudinary
-                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "ChildImages");
-                        if (!isDeleted)
+                        // Tìm ảnh cần xóa
+                        var imageToDelete = existingImages.FirstOrDefault(img => img.Id.ToString() == imageIdToDelete);
+                        if (imageToDelete != null)
                         {
-                            throw new Exception($"Không thể xóa ảnh {imageToDelete.UrlPath} trên Cloudinary");
+                            // Đánh dấu ảnh đã xóa trong database trước
+                            imageToDelete.IsDeleted = true;
+                            imageToDelete.ModifiedDate = DateTime.Now;
+                            await _imageRepository.UpdateAsync(imageToDelete);
+
+                            // Xóa ảnh trên Cloudinary
+                            bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "ChildImages");
+                            if (isDeleted)
+                            {
+                                // Nếu xóa thành công trên Cloudinary thì xóa luôn trong database
+                                await _imageRepository.RemoveAsync(imageToDelete);
+                            }
+                            else
+                            {
+                                throw new Exception($"Không thể xóa ảnh {imageToDelete.UrlPath} trên Cloudinary");
+                            }
                         }
-                        // Xóa ảnh khỏi database
-                        await _imageRepository.RemoveAsync(imageToDelete);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Lỗi khi xóa ảnh: {ex.Message}");
                     }
                 }
             }
