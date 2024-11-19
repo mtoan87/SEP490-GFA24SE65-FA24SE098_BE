@@ -20,6 +20,30 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             _bookingRepository = bookingRepository;
         }
+
+        public async Task<bool> CreateBookingAsync(BookingRequest request)
+        {
+            
+            var existingBooking = await _bookingRepository.GetBookingBySlotAsync(request.HouseId, request.Visitday, request.BookingSlotId);
+            if (existingBooking != null)
+            {
+                throw new InvalidOperationException($"Slot {request.BookingSlotId} for {request.Visitday:yyyy-MM-dd} in house {request.HouseId} is already booked.");
+            }
+
+            var newBooking = new Booking
+            {
+                HouseId = request.HouseId,
+                Visitday = request.Visitday,
+                BookingSlotId = request.BookingSlotId,
+                UserAccountId = request.UserAccountId,
+                Status = "Confirmed",
+                CreatedDate = DateTime.Now
+            };
+
+            await _bookingRepository.AddAsync(newBooking);
+            return true;
+        }
+
         public async Task<Booking> CreateBooking(CreateBookingDTO createBooking)
         {
             var newBooking = new Booking
@@ -28,7 +52,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserAccountId = createBooking.UserAccountId,
                 BookingSlotId = createBooking.BookingSlotId,
                 Visitday = createBooking.Visitday,
-                Status = createBooking.Status,
+                Status = "Pending",
                 CreatedDate = DateTime.Now
             };
             await _bookingRepository.AddAsync(newBooking);
@@ -85,6 +109,20 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             booking.BookingSlotId = updateBooking.BookingSlotId;
             booking.Visitday = updateBooking.Visitday;
             booking.Status = updateBooking.Status;
+            booking.ModifiedDate = DateTime.Now;
+            await _bookingRepository.UpdateAsync(booking);
+            return booking;
+        }
+        public async Task<Booking> ConfirmBooking(int id)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+            {
+                throw new Exception($"Booking with ID{id} is not found");
+            }
+
+            
+            booking.Status = "Approve";
             booking.ModifiedDate = DateTime.Now;
             await _bookingRepository.UpdateAsync(booking);
             return booking;

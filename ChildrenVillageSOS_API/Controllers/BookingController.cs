@@ -30,8 +30,38 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(booking);
         }
 
+        [HttpPost("CreateBooking")]
+        public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
+        {
+            try
+            {
+                var result = await _bookingService.CreateBookingAsync(request);
+                if (result)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = "Booking created successfully."
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Failed to create booking."
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
         [HttpPost]
-        public async Task<ActionResult<Booking>> CreateBooking(CreateBookingDTO createBookingDTO)
+        public async Task<ActionResult<Booking>> CreateBooking([FromForm]CreateBookingDTO createBookingDTO)
         {
             var booking = await _bookingService.CreateBooking(createBookingDTO);
             return Ok(booking);

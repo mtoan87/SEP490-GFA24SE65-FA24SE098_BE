@@ -10,6 +10,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IBookingService
     {
+        Task<bool> CreateBookingAsync(BookingRequest request);
         Task<IEnumerable<Booking>> GetAllBookings();
         Task<Booking> GetBookingById(int id);
         Task<Booking> CreateBooking(CreateBookingDTO createBooking);
