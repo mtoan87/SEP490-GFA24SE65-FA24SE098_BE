@@ -62,7 +62,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createExepense.Description,
                 Expenseday = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                Status = "Approved",
+                Status = "Pending",
                 HouseId = createExepense.HouseId,
                 IsDeleted = false,
                 FacilitiesWalletId = createExepense.FacilitiesWalletId,
@@ -154,14 +154,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Expense> SoftDelete(int id)
         {
-            var income = await _expenseRepository.GetByIdAsync(id);
-            if (income == null)
+            var exp = await _expenseRepository.GetByIdAsync(id);
+            if (exp == null)
             {
                 throw new Exception($"Expense with ID{id} not found!");
             }
-            income.IsDeleted = true;
-            await _expenseRepository.UpdateAsync(income);
-            return income;
+            exp.IsDeleted = true;
+            await _expenseRepository.UpdateAsync(exp);
+            return exp;
+        }
+
+        public async Task<Expense> ConfirmExpense(int id)
+        {
+            var exp = await _expenseRepository.GetByIdAsync(id);
+            if (exp == null)
+            {
+                throw new Exception($"Expense with ID{id} is not found");
+            }
+
+
+            exp.Status = "Approved";
+            exp.ModifiedDate = DateTime.Now;
+            await _expenseRepository.UpdateAsync(exp);
+            return exp;
         }
     }
 }

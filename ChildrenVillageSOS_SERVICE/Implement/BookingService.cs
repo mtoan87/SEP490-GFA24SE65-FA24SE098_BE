@@ -21,8 +21,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             _bookingRepository = bookingRepository;
         }
-
-        public async Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId)
+        public async Task<BookingResponse[]> GetAllBookingsAsync()
+        {
+            return await _bookingRepository.GetAllBookingsAsync();
+        }
+        public async Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId)
         {
             return await _bookingRepository.GetBookingsWithSlotsByUserAsync(userAccountId);
         }
@@ -41,7 +44,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Visitday = request.Visitday,
                 BookingSlotId = request.BookingSlotId,
                 UserAccountId = request.UserAccountId,
-                Status = "Confirmed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now
             };
 
@@ -127,7 +130,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             
-            booking.Status = "Approve";
+            booking.Status = "Confirmed";
             booking.ModifiedDate = DateTime.Now;
             await _bookingRepository.UpdateAsync(booking);
             return booking;

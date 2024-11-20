@@ -10,6 +10,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IBookingService
     {
+        Task<Booking> ConfirmBooking(int id);
         Task<bool> CreateBookingAsync(BookingRequest request);
         Task<IEnumerable<Booking>> GetAllBookings();
         Task<Booking> GetBookingById(int id);
@@ -17,6 +18,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Booking> UpdateBooking(int id, UpdateBookingDTO updateBooking);
         Task<Booking> DeleteBooking(int id);
         Task<Booking> RestoreBooking(int id);
-        Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId);
+        Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId);
+
+        Task<BookingResponse[]> GetAllBookingsAsync();
     }
 }

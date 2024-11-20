@@ -128,6 +128,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     await _imageRepository.AddAsync(newImage);
                 }
             }
+            else
+            {
+            }
 
             // Lưu thông tin cập nhật
             await _villageRepository.UpdateAsync(updaVillage);

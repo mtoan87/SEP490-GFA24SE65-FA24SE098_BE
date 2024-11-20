@@ -16,6 +16,12 @@ namespace ChildrenVillageSOS_API.Controllers
             _bookingService = bookingService;
         }
 
+        [HttpGet("GetAllBookingsWithSlotsInformation")]
+        public async Task<IActionResult> GetAllBookingsWithSlotsInformation()
+        {
+            var booking = await _bookingService.GetAllBookingsAsync();
+            return Ok(booking);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllBookings()
         {
@@ -30,10 +36,10 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(booking);
         }
 
-        [HttpGet("GetBookingsWithSlotsByUserAccountId/{userAccountId}")]
-        public async Task<IActionResult> GetBookingsWithSlots(string userAccountId)
+        [HttpGet("GetBookingsWithSlotsByUserAccountId")]
+        public async Task<IActionResult> GetBookingsWithSlots(string userId)
         {
-            var bookings = await _bookingService.GetBookingsWithSlotsByUserAsync(userAccountId);
+            var bookings = await _bookingService.GetBookingsWithSlotsByUserAsync(userId);
 
             if (bookings == null || !bookings.Any())
             {
@@ -106,6 +112,12 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> DeleteBooking(int Id)
         {
             var booking = await _bookingService.DeleteBooking(Id);
+            return Ok(booking);
+        }
+        [HttpPut("ConfirmBooking")]
+        public async Task<IActionResult> ConfirmBooking(int Id)
+        {
+            var booking = await _bookingService.ConfirmBooking(Id);
             return Ok(booking);
         }
     }

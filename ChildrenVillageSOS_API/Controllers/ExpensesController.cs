@@ -41,6 +41,13 @@ namespace ChildrenVillageSOS_API.Controllers
             var rs = await _expenseService.UpdateExpense(id, updateExp);
             return Ok(rs);
         }
+        [HttpPut]
+        [Route("ConfirmExpense")]
+        public async Task<IActionResult> UpdateExpense(int id)
+        {
+            var rs = await _expenseService.ConfirmExpense(id);
+            return Ok(rs);
+        }
         [HttpDelete]
         [Route("DeleteExpense")]
         public async Task<IActionResult> DeleteExpense(int id)

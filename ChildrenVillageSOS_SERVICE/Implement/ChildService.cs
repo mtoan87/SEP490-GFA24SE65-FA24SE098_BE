@@ -233,12 +233,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             //vnpay.AddRequestData("walletId", editChild.SystemWalletId?.ToString() ?? string.Empty);
             //vnpay.AddRequestData("walletId", editChild.HealthWalletId?.ToString() ?? string.Empty);
             //vnpay.AddRequestData("walletId", editChild.NecessitiesWalletId?.ToString() ?? string.Empty);
-            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-
-            
-            
-
-            
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);                                 
             var income = new Income
             {
                 UserAccountId = updateChild.UserAccountId,
