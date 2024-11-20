@@ -27,8 +27,6 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public string VillageId { get; set; }
 
-        public bool? IsDeleted { get; set; }
-
         public List<IFormFile>? Img { get; set; }
 
         public List<string>? ImgToDelete { get; set; }
