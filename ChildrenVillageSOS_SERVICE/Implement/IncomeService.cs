@@ -25,6 +25,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _incomeRepository.GetAllAsync();
         }
+        public IncomeResponseDTO[] GetFormatedIncome()
+        {
+            return _incomeRepository.GetAllIncome();
+        }
         public async Task<Income> GetIncomeById(int id)
         {
             return await _incomeRepository.GetByIdAsync(id);

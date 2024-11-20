@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     public interface IIncomeService
     {
         Task<IEnumerable<Income>> GetAllIncomes();
+        IncomeResponseDTO[] GetFormatedIncome();
         Task<Income> GetIncomeById(int id);
         Task<Income> GetIncomeByDonationIdAsync(int donationId);
         Task<Income> CreateIncome(CreateIncomeDTO createIncome);

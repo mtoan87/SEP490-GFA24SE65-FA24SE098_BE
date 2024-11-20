@@ -27,7 +27,7 @@ public partial class Income
 
     public string UserAccountId { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

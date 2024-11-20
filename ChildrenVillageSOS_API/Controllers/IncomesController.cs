@@ -23,6 +23,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _incomeService.GetAllIncomes();
             return Ok(exp);
         }
+        [HttpGet("FormatedIncome")]
+        public  IActionResult GetFormatedIncome()
+        {
+            var exp =  _incomeService.GetFormatedIncome();
+            return Ok(exp);
+        }
         [HttpGet("GetIncomeById/{Id}")]
         public async Task<IActionResult> GetIncomeById(int Id)
         {

@@ -55,7 +55,6 @@ namespace ChildrenVillageSOS_REPO.Implement
             var result = (from booking in _context.Bookings
                           join slot in _context.BookingSlots
                           on booking.BookingSlotId equals slot.Id
-                          where booking.IsDeleted == false
                           select new BookingResponse
                           {
                               Id = booking.Id,
