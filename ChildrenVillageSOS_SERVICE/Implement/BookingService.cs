@@ -45,6 +45,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 BookingSlotId = request.BookingSlotId,
                 UserAccountId = request.UserAccountId,
                 Status = "Pending",
+                IsDeleted = false,
                 CreatedDate = DateTime.Now
             };
 

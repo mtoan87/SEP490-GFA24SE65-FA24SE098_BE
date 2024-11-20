@@ -23,7 +23,8 @@ namespace ChildrenVillageSOS_REPO.Implement
                             && b.Visitday.HasValue
                             && b.Visitday.Value == visitDay
                             && b.BookingSlotId == bookingSlotId
-                            && b.Status == "Confirmed")
+                            && (b.IsDeleted == false) // Explicitly check for non-deleted bookings
+                            && (b.Status == "Confirmed" || b.Status == "Pending")) // Check for valid statuses
                 .FirstOrDefaultAsync();
         }
 

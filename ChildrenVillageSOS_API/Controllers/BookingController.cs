@@ -108,7 +108,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{Id}")]
+        [HttpPut("SoftDelete")]
         public async Task<IActionResult> DeleteBooking(int Id)
         {
             var booking = await _bookingService.DeleteBooking(Id);
