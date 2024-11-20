@@ -11,6 +11,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface IBookingRepository : IRepositoryGeneric<Booking>
     {
         Task<Booking?> GetBookingBySlotAsync(string houseId, DateOnly visitDay, int bookingSlotId);
-        Task<List<BookingResponse>> GetBookingsWithSlotsByUserAsync(string userAccountId);
+        Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId);
     }
 }

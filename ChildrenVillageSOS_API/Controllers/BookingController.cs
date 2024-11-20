@@ -30,10 +30,10 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(booking);
         }
 
-        [HttpGet("GetBookingsWithSlotsByUserAccountId/{userAccountId}")]
-        public async Task<IActionResult> GetBookingsWithSlots(string userAccountId)
+        [HttpGet("GetBookingsWithSlotsByUserAccountId")]
+        public async Task<IActionResult> GetBookingsWithSlots(string userId)
         {
-            var bookings = await _bookingService.GetBookingsWithSlotsByUserAsync(userAccountId);
+            var bookings = await _bookingService.GetBookingsWithSlotsByUserAsync(userId);
 
             if (bookings == null || !bookings.Any())
             {
