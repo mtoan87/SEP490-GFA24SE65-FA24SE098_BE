@@ -108,7 +108,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
-            existingHouse.IsDeleted = updateHouse.IsDeleted;
             existingHouse.ModifiedDate = DateTime.Now;
 
             var existingImages = await _imageRepository.GetByHouseIdAsync(existingHouse.Id);
