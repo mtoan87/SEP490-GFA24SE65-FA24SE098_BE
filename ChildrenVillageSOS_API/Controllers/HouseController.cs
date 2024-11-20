@@ -16,6 +16,12 @@ namespace ChildrenVillageSOS_API.Controllers
             _houseService = houseService;
         }
 
+        [HttpGet("FormatedHouse")]
+        public async Task<IActionResult> GetAllHouseAsync()
+        {
+            var houses = await _houseService.GetAllHouseAsync();
+            return Ok(houses);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllHouses()
         {

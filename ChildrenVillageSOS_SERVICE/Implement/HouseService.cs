@@ -196,6 +196,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return house;
         }
+        public Task<HouseResponseDTO[]> GetAllHouseAsync()
+        {
+            return _houseRepository.GetAllHouseAsync();
+        }
 
         public async Task<string> GetHouseNameByIdAsync(string houseId)
         {
