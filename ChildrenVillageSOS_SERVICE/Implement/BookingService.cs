@@ -41,7 +41,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Visitday = request.Visitday,
                 BookingSlotId = request.BookingSlotId,
                 UserAccountId = request.UserAccountId,
-                Status = "Confirmed",
+                Status = "Pending",
                 CreatedDate = DateTime.Now
             };
 
@@ -127,7 +127,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             
-            booking.Status = "Approve";
+            booking.Status = "Confirmed";
             booking.ModifiedDate = DateTime.Now;
             await _bookingRepository.UpdateAsync(booking);
             return booking;

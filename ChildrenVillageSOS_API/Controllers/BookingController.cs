@@ -108,5 +108,11 @@ namespace ChildrenVillageSOS_API.Controllers
             var booking = await _bookingService.DeleteBooking(Id);
             return Ok(booking);
         }
+        [HttpPut("ConfirmBooking")]
+        public async Task<IActionResult> ConfirmBooking(int Id)
+        {
+            var booking = await _bookingService.ConfirmBooking(Id);
+            return Ok(booking);
+        }
     }
 }
