@@ -48,5 +48,26 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return result;
         }
+
+        public async Task<BookingResponse[]> GetAllBookingsAsync()
+        {
+            var result = (from booking in _context.Bookings
+                          join slot in _context.BookingSlots
+                          on booking.BookingSlotId equals slot.Id
+                          where booking.IsDeleted == false
+                          select new BookingResponse
+                          {
+                              Id = booking.Id,
+                              HouseId = booking.HouseId,
+                              HouseName = booking.House.HouseName,
+                              Visitday = booking.Visitday,
+                              BookingSlotId = booking.BookingSlotId,
+                              SlotStartTime = slot.StartTime.HasValue ? slot.StartTime.Value.ToString("hh\\:mm") : null,
+                              SlotEndTime = slot.EndTime.HasValue ? slot.EndTime.Value.ToString("hh\\:mm") : null,
+                              Status = booking.Status
+                          }).ToArray();
+
+            return result;
+        }
     }
 }

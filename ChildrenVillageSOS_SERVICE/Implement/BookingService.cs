@@ -21,7 +21,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             _bookingRepository = bookingRepository;
         }
-
+        public async Task<BookingResponse[]> GetAllBookingsAsync()
+        {
+            return await _bookingRepository.GetAllBookingsAsync();
+        }
         public async Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId)
         {
             return await _bookingRepository.GetBookingsWithSlotsByUserAsync(userAccountId);

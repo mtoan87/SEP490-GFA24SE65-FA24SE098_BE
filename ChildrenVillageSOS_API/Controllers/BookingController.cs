@@ -16,6 +16,12 @@ namespace ChildrenVillageSOS_API.Controllers
             _bookingService = bookingService;
         }
 
+        [HttpGet("GetAllBookingsWithSlotsInformation")]
+        public async Task<IActionResult> GetAllBookingsWithSlotsInformation()
+        {
+            var booking = await _bookingService.GetAllBookingsAsync();
+            return Ok(booking);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllBookings()
         {

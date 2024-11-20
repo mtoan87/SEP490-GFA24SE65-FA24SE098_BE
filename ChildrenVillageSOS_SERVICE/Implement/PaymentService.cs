@@ -119,7 +119,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation for SOS Children's Village",
+                Description = "Donate facilities for SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -195,7 +195,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation for SOS Children's Village",
+                Description = "Donate food to SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -315,7 +315,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation for SOS Children's Village",
+                Description = "Donate to health issues for SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -391,7 +391,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation for SOS Children's Village",
+                Description = "Donation to the SOS Children's Village System",
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -467,7 +467,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation for SOS Children's Village",
+                Description = "Donate necessities to SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };

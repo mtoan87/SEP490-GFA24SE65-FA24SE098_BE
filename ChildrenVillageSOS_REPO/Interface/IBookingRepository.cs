@@ -12,5 +12,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<Booking?> GetBookingBySlotAsync(string houseId, DateOnly visitDay, int bookingSlotId);
         Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId);
+
+        Task<BookingResponse[]> GetAllBookingsAsync();
     }
 }
