@@ -336,26 +336,31 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 {
                     try
                     {
-                        // Tìm ảnh cần xóa
-                        var imageToDelete = existingImages.FirstOrDefault(img => img.Id.ToString() == imageIdToDelete);
+                        Console.WriteLine($"Attempting to delete image with ID: {imageIdToDelete}");
+
+                        // Tìm ảnh theo URLPath để xóa
+                        var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageIdToDelete);
+
                         if (imageToDelete != null)
                         {
-                            // Đánh dấu ảnh đã xóa trong database trước
+                            Console.WriteLine($"Found image to delete: {imageToDelete.UrlPath}");
+
                             imageToDelete.IsDeleted = true;
                             imageToDelete.ModifiedDate = DateTime.Now;
                             await _imageRepository.UpdateAsync(imageToDelete);
 
-                            // Xóa ảnh trên Cloudinary
                             bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "ChildImages");
+                            Console.WriteLine($"Image deletion from Cloudinary: {isDeleted}");
+
                             if (isDeleted)
                             {
-                                // Nếu xóa thành công trên Cloudinary thì xóa luôn trong database
                                 await _imageRepository.RemoveAsync(imageToDelete);
+                                Console.WriteLine("Image removed from database");
                             }
-                            else
-                            {
-                                throw new Exception($"Không thể xóa ảnh {imageToDelete.UrlPath} trên Cloudinary");
-                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Image with URL {imageIdToDelete} not found in existingImages");
                         }
                     }
                     catch (Exception ex)

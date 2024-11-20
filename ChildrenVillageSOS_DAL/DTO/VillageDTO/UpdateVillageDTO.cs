@@ -16,9 +16,11 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
         public string? Description { get; set; } = null!;
 
         public string? Status { get; set; }
-
+      
         public string? UserAccountId { get; set; }
+
         public List<IFormFile>? Img { get; set; }
 
+        public List<string>? ImgToDelete { get; set; }
     }
 }
