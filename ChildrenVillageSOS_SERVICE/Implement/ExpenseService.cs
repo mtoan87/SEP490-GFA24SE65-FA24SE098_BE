@@ -31,6 +31,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _transactionRepository  = transactionRepository;
         }
 
+        public ExpenseResponseDTO[] GetFormatedExpenses()
+        {
+            return _expenseRepository.GetAllExpenses();
+        }
         public async Task<IEnumerable<Expense>> GetAllExpenses()
         {
             return await _expenseRepository.GetAllAsync();

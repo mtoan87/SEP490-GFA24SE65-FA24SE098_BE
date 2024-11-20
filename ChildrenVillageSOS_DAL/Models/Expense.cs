@@ -27,7 +27,7 @@ public partial class Expense
 
     public string HouseId { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

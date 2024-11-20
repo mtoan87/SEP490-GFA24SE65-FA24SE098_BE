@@ -15,6 +15,12 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             _expenseService = expenseService;
         }
+        [HttpGet("FormatedExpenses")]
+        public  IActionResult GetFormatedExpenses()
+        {
+            var exp =  _expenseService.GetFormatedExpenses();
+            return Ok(exp);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllExpenses()
         {
