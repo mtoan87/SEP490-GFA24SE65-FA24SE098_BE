@@ -30,9 +30,13 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public bool IsDeleted { get; set; }
 
         public decimal? CurrentAmount { get; set; }
+
         public decimal? Amount { get; set; }
+
         public decimal? AmountLimit { get; set; }
        
-        public List<IFormFile> Img { get; set; }
+        public List<IFormFile>? Img { get; set; }
+
+        public List<string>? ImgToDelete { get; set; }
     }
 }

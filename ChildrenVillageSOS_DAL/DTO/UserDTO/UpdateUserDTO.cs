@@ -28,6 +28,9 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
         public string? Status { get; set; } = null!;
 
         public int? RoleId { get; set; }
-        public List<IFormFile> Img { get; set; }
+
+        public List<IFormFile>? Img { get; set; }
+
+        public List<string>? ImgToDelete { get; set; }
     }
 }
