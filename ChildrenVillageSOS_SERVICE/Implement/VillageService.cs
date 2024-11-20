@@ -118,6 +118,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     await _imageRepository.AddAsync(newImage);
                 }
             }
+            else
+            {
+            }
 
             await _villageRepository.UpdateAsync(updaVillage);
             return updaVillage;
