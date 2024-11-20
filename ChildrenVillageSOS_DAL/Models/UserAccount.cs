@@ -27,7 +27,7 @@ public partial class UserAccount
 
     public int? RoleId { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

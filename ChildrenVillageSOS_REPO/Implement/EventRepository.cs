@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,25 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .FirstOrDefault();  // Get the first (or default) result
 
             return eventDetails;
+        }
+
+        public async Task<TotalEventsStatDTO> GetTotalEventsStatAsync()
+        {
+            // Tổng số sự kiện trong hệ thống (không bị xóa)
+            var totalEvents = await _context.Events
+                .Where(e => !e.IsDeleted)
+                .CountAsync();
+
+            // Số sự kiện đang active
+            var onGoingEvents = await _context.Events
+                .Where(e => !e.IsDeleted && e.Status == "Scheduled")
+                .CountAsync();
+
+            return new TotalEventsStatDTO
+            {
+                TotalEvents = totalEvents,
+                OnGoingEvents = onGoingEvents
+            };
         }
 
     }

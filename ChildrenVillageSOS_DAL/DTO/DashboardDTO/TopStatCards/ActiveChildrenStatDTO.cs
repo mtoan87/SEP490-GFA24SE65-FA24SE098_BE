@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChildrenVillageSOS_DAL.DTO.DashboardDTO
+namespace ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards
 {
     public class ActiveChildrenStatDTO
     {

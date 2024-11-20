@@ -1,4 +1,4 @@
-﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +11,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         //TopStatCards
         Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync();
+        Task<TotalUsersStatDTO> GetTotalUsersStatAsync();
+        Task<TotalEventsStatDTO> GetTotalEventsStatAsync();
     }
 }

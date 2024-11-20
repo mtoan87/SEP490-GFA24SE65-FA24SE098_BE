@@ -85,11 +85,25 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { Year = year, TotalDonations = totalDonations });
         }
 
-        // Dashboard
+        // Dashboard Top statistic card
         [HttpGet("active-children")]
         public async Task<IActionResult> GetActiveChildrenStat()
         {
             var stat = await _dashboardService.GetActiveChildrenStatAsync();
+            return Ok(stat);
+        }
+
+        [HttpGet("total-users")]
+        public async Task<IActionResult> GetTotalUsersStatAsync()
+        {
+            var stat = await _dashboardService.GetTotalUsersStatAsync();
+            return Ok(stat);
+        }
+
+        [HttpGet("total-events")]
+        public async Task<IActionResult> GetTotalEventsStatAsync()
+        {
+            var stat = await _dashboardService.GetTotalEventsStatAsync();
             return Ok(stat);
         }
     }
