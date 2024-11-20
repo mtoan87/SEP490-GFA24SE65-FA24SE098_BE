@@ -1,5 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
-using ChildrenVillageSOS_DAL.DTO.DashboardDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;

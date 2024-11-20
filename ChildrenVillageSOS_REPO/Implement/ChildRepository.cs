@@ -1,5 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
-using ChildrenVillageSOS_DAL.DTO.DashboardDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
@@ -87,7 +87,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                         && c.ModifiedDate >= firstDayOfMonth)
                 .CountAsync();
 
-            // Tính sự thay đổi ròng
+            // Tính tăng giảm theo tháng
             var netChange = addedThisMonth - removedThisMonth;
 
             return new ActiveChildrenStatDTO
