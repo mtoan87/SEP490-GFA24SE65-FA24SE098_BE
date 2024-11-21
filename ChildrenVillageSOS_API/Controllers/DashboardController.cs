@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_SERVICE.Interface;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -105,6 +106,14 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var stat = await _dashboardService.GetTotalEventsStatAsync();
             return Ok(stat);
+        }
+
+        //Charts
+        [HttpGet("village-house-distribution")]
+        public async Task<ActionResult<IEnumerable<VillageHouseDistributionDTO>>> GetVillageHouseDistribution()
+        {
+            var result = await _dashboardService.GetVillageHouseDistribution();
+            return Ok(result);
         }
     }
 }
