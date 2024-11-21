@@ -21,5 +21,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
         Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<string> GetHouseNameByIdAsync(string houseId);
+        Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg();
+        Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId);
     }
 }

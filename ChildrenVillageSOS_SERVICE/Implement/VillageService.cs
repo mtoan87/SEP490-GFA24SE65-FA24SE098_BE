@@ -1,4 +1,6 @@
-﻿using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -29,14 +31,46 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return   _villageRepository.GetVillagesDonatedByUser(userAccountId);
         }
+
         public async Task<IEnumerable<Village>> GetAllVillage()
         {
             return await _villageRepository.GetAllAsync();
         }
+
+        public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
+        {
+            // Lấy tất cả các village không bị xóa từ repository
+            var villages = await _villageRepository.GetAllNotDeletedAsync();
+
+            // Chuyển đổi danh sách village sang DTO
+            var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
+            {
+                Id = village.Id,
+                VillageName = village.VillageName,
+                Location = village.Location,
+                Description = village.Description,
+                Status = village.Status,
+                UserAccountId = village.UserAccountId,
+                CreatedDate = village.CreatedDate,
+                ModifiedDate = village.ModifiedDate,
+                ImageUrls = village.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh không bị xóa
+                                          .Select(img => img.UrlPath)  // Lấy đường dẫn URL của hình ảnh
+                                          .ToArray()                  // Chuyển thành mảng
+            }).ToArray();
+
+            return villageResponseDTOs;
+        }
+
         public async Task<Village> GetVillageById(string villageId)
         {
             return await _villageRepository.GetByIdAsync(villageId);
         }
+
+        public async Task<VillageResponseDTO> GetVillageByIdWithImg(string villageId)
+        {
+            return _villageRepository.GetVillageByIdWithImg(villageId);
+        }
+
         public async Task<Village> CreateVillage(CreateVillageDTO createVillage)
         {
             var allVillageId = await _villageRepository.Entities().Select(v => v.Id).ToListAsync();

@@ -22,12 +22,14 @@ namespace ChildrenVillageSOS_API.Controllers
             var children = await _childService.GetAllChildren();
             return Ok(children);
         }
+
         [HttpGet("GetAllChildWithImg")]
         public async Task<IActionResult> GetAllChildrenImage()
         {
             var children = await _childService.GetAllChildrenWithImg();
             return Ok(children);
         }
+
         [HttpGet("GetChildWithImg/{Id}")]
         public async Task<IActionResult> GetChildWithImg(string Id)
         {
@@ -41,12 +43,14 @@ namespace ChildrenVillageSOS_API.Controllers
             var child = await _childService.GetChildById(Id);
             return Ok(child);
         }
+
         [HttpGet("GetChildByHouseId/{Id}")]
         public async Task<IActionResult> GetChildByHouseIdAsync(string Id)
         {
             var child = await _childService.GetChildByHouseIdAsync(Id);
             return Ok(child);
         }
+
         [HttpPost]
         [Route("CreateChild")]
         public async Task<ActionResult<Child>> CreateChild([FromForm] CreateChildDTO createChildDTO)

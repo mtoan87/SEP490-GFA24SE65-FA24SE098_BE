@@ -16,6 +16,43 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
 
         }
+
+        public async Task<IEnumerable<House>> GetAllNotDeletedAsync()
+        {
+            // Sử dụng Include để lấy các hình ảnh liên quan đến Event
+            return await _context.Houses
+                                 .Include(e => e.Images)  // Dùng Include để lấy các hình ảnh liên quan
+                                 .Where(e => !e.IsDeleted) // Nếu cần, lọc các sự kiện không bị xóa
+                                 .ToListAsync();
+        }
+
+        public HouseResponseDTO GetHouseByIdWithImg(string houseId)
+        {
+            var houseDetails = _context.Houses
+                .Where(house => house.Id == houseId && !house.IsDeleted) // Kiểm tra không bị xóa
+                .Select(house => new HouseResponseDTO
+                {
+                    HouseId = house.Id,
+                    HouseName = house.HouseName,
+                    HouseNumber = house.HouseNumber,
+                    Location = house.Location,
+                    Description = house.Description,
+                    HouseMember = house.HouseMember,
+                    HouseOwner = house.HouseOwner,
+                    Status = house.Status,
+                    UserAccountId = house.UserAccountId,
+                    VillageId = house.VillageId,
+                    CreatedDate = house.CreatedDate,
+                    ModifiedDate = house.ModifiedDate,
+                    ImageUrls = house.Images.Where(img => !img.IsDeleted) // Lọc các ảnh không bị xóa
+                                            .Select(img => img.UrlPath) // Lấy URL của ảnh
+                                            .ToArray()                 // Chuyển thành mảng
+                })
+                .FirstOrDefault(); // Lấy kết quả đầu tiên (hoặc null nếu không có)
+
+            return houseDetails;
+        }
+
         public async Task<string?> GetUserAccountIdByHouseId(string houseId)
         {
             var house = await _context.Houses

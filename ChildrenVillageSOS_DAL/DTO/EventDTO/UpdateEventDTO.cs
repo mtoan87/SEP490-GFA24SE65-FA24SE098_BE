@@ -21,6 +21,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public int? HealthWalletId { get; set; }
 
         public int? NecessitiesWalletId { get; set; }
+
         public DateTime? StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }

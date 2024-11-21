@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="DTO\DashboardDTO\KPIStatCards\" />
-    <Folder Include="DTO\DashboardDTO\Charts\" />
     <Folder Include="Enum\" />
   </ItemGroup>
 

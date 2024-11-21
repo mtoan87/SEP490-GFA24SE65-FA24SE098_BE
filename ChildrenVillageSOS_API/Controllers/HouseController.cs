@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.House;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,12 +30,27 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(houses);
         }
 
+        [HttpGet("GetAllHousesWithImg")]
+        public async Task<IActionResult> GetAllHousesWithImg()
+        {
+            var house = await _houseService.GetAllHousesWithImg();
+            return Ok(house);
+        }
+
         [HttpGet("GetHouseById/{id}")]
         public async Task<IActionResult> GetHouseById(string id)
         {
             var house = await _houseService.GetHouseById(id);
             return Ok(house);
         }
+
+        [HttpGet("GetHouseByIdWithImg/{id}")]
+        public async Task<IActionResult> GetHouseByIdWithImg(string id)
+        {
+            var house = await _houseService.GetHouseByIdWithImg(id);
+            return Ok(house);
+        }
+
         [HttpGet("GetHouseByVillageId/{id}")]
         public async Task<IActionResult> getHouseByVillageId(string id)
         {
