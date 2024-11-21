@@ -34,6 +34,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 UserAccountId = createDonation.UserAccountId,
                 DonationType = createDonation.DonationType,
+                FacilitiesWalletId = createDonation.FacilitiesWalletId,
+                NecessitiesWalletId = createDonation.FacilitiesWalletId,
+                SystemWalletId   = createDonation.SystemWalletId,
+                HealthWalletId = createDonation.HealthWalletId,
+                FoodStuffWalletId = createDonation.FoodStuffWalletId,
                 DateTime =DateTime.Now,
                 IsDeleted = false,
                 Amount = createDonation.Amount,

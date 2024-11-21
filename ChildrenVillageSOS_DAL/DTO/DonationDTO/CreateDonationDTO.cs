@@ -15,6 +15,15 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
         public string DonationType { get; set; }
 
         public DateTime DateTime { get; set; }
+        public int? FacilitiesWalletId { get; set; }
+
+        public int? SystemWalletId { get; set; }
+
+        public int? FoodStuffWalletId { get; set; }
+
+        public int? HealthWalletId { get; set; }
+
+        public int? NecessitiesWalletId { get; set; }
         public int? EventId { get; set; }
 
         public string? ChildId { get; set; }

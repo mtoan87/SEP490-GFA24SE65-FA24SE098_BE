@@ -9,7 +9,13 @@ public partial class HealthReport
 
     public string ChildId { get; set; }
 
+    public string NutritionalStatus { get; set; }
+
+    public string MedicalHistory { get; set; }
+
     public string HealthCertificate { get; set; }
+
+    public string VaccinationStatus { get; set; }
 
     public string Weight { get; set; }
 

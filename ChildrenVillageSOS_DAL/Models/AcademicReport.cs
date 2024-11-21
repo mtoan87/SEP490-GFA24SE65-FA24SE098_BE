@@ -11,6 +11,8 @@ public partial class AcademicReport
 
     public string ChildId { get; set; }
 
+    public decimal? Gpa { get; set; }
+
     public string SchoolReport { get; set; }
 
     public virtual Child Child { get; set; }
