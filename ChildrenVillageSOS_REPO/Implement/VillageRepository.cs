@@ -72,5 +72,14 @@ namespace ChildrenVillageSOS_REPO.Implement
                 return villages;
             }
         }
+
+        //Dashboard cho 1 lang co bao nhieu nha
+        public async Task<IEnumerable<Village>> GetVillagesWithHouses()
+        {
+            return await _context.Villages
+                .Include(v => v.Houses)
+                .Where(v => !v.IsDeleted)
+                .ToListAsync();
+        }
     }
 }

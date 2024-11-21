@@ -12,5 +12,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         List<Village> GetVillagesDonatedByUser(string userAccountId);
         VillageResponseDTO GetVillageByIdWithImg(string villageId);
+        //Dashboard:
+        Task<IEnumerable<Village>> GetVillagesWithHouses();
     }
 }

@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync();
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync();
         Task<TotalEventsStatDTO> GetTotalEventsStatAsync();
+        //KPI
+        //Charts
+        Task<IEnumerable<VillageHouseDistributionDTO>> GetVillageHouseDistribution();
     }
 }
