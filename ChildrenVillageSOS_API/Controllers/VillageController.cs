@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,24 +15,42 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             _villageService = villageService;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllVillage()
         {
             var vil = await _villageService.GetAllVillage();
             return Ok(vil);
         }
+
+        [HttpGet("GetAllVillageWithImg")]
+        public async Task<IActionResult> GetAllVillageWithImg()
+        {
+            var vil = await _villageService.GetAllVillageWithImg();
+            return Ok(vil);
+        }
+
         [HttpGet("GetVillageById/{Id}")]
         public async Task<IActionResult> GetVillageById(string villageId)
         {
             var vil = await _villageService.GetVillageById(villageId);
             return Ok(vil);
         }
+
+        [HttpGet("GetVillageWithImg/{Id}")]
+        public async Task<IActionResult> GetVillageByIdWithImg(string Id)
+        {
+            var vil = await _villageService.GetVillageByIdWithImg(Id);
+            return Ok(vil);
+        }
+
         [HttpGet("GetVillagesDonatedByUser")]
         public IActionResult GetVillagesDonatedByUser(string userId)
         {
             var vil =  _villageService.GetVillagesDonatedByUser(userId);
             return Ok(vil);
         }
+
         [HttpGet("GetVillagesByUser/{userAccountId}")]
         public IActionResult GetVillagesByUser(string userAccountId)
         {
@@ -50,6 +69,7 @@ namespace ChildrenVillageSOS_API.Controllers
                 v.Description
             }));
         }
+
         [HttpPost]
         [Route("CreateVillage")]
         public async Task<ActionResult<Village>> CreateVillage([FromForm] CreateVillageDTO crevilDTO)
@@ -57,6 +77,7 @@ namespace ChildrenVillageSOS_API.Controllers
             var createVil = await _villageService.CreateVillage(crevilDTO);
             return Ok(createVil);
         }
+
         [HttpPut]
         [Route("UpdateVillage")]
         public async Task<IActionResult> UpdateVillage(string villageId, [FromForm] UpdateVillageDTO updavilDTO)
@@ -64,6 +85,7 @@ namespace ChildrenVillageSOS_API.Controllers
             var vil = await _villageService.UpdateVillage(villageId, updavilDTO);
             return Ok(vil);
         }
+
         [HttpDelete]
         [Route("DeleteVillage")]
         public async Task<IActionResult> DeleteVillage(string villageId)

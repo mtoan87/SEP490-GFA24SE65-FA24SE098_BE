@@ -47,6 +47,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     Gender = x.Gender,
                     Dob = x.Dob,
                     CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate,
                     Status = x.Status,
                     ImageUrls = x.Images.Where(img => !img.IsDeleted)
                                      .Select(img => img.UrlPath)
@@ -56,6 +57,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return childDetails;
         }
+
         public async Task<List<Child>> GetChildByHouseIdAsync(string houseId)
         {
             return await _context.Children
