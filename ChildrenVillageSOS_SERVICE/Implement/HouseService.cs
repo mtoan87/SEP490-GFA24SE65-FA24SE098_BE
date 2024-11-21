@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.House;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.House;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -33,9 +34,43 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _houseRepository.GetAllNotDeletedAsync();
         }
 
+        public async Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg()
+        {
+            // Lấy tất cả các House không bị xóa
+            var houses = await _houseRepository.GetAllNotDeletedAsync();
+
+            // Chuyển đổi dữ liệu thành HouseResponseDTO
+            var houseResponseDTOs = houses.Select(house => new HouseResponseDTO
+            {
+                HouseId = house.Id,
+                HouseName = house.HouseName,
+                HouseNumber = house.HouseNumber,
+                Location = house.Location,
+                Description = house.Description,
+                HouseMember = house.HouseMember,
+                HouseOwner = house.HouseOwner,
+                Status = house.Status,
+                UserAccountId = house.UserAccountId,
+                VillageId = house.VillageId,
+                IsDeleted = house.IsDeleted,
+                CreatedDate = house.CreatedDate,
+                ModifiedDate = house.ModifiedDate,
+                ImageUrls = house.Images.Where(img => !img.IsDeleted)  // Lọc các hình ảnh không bị xóa
+                                        .Select(img => img.UrlPath)  // Lấy đường dẫn hình ảnh
+                                        .ToArray()                  // Chuyển thành mảng
+            }).ToArray();
+
+            return houseResponseDTOs;
+        }
+
         public async Task<House> GetHouseById(string id)
         {
             return await _houseRepository.GetByIdAsync(id);
+        }
+
+        public async Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId)
+        {
+            return _houseRepository.GetHouseByIdWithImg(houseId);
         }
 
         public async Task<House> CreateHouse(CreateHouseDTO createHouse)
@@ -60,7 +95,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = createHouse.Status,
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
-                IsDeleted = createHouse.IsDeleted,
+                IsDeleted = false,
                 CreatedDate = DateTime.Now
             };
             await _houseRepository.AddAsync(newHouse);

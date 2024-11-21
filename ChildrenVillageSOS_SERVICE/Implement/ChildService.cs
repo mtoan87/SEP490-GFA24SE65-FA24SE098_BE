@@ -63,6 +63,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _childRepository.GetAllNotDeletedAsync();
         }
+
         public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
         {
             var childs = await _childRepository.GetAllNotDeletedAsync();
@@ -85,6 +86,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Dob = x.Dob,
                 Status = x.Status,
                 CreatedDate = x.CreatedDate,
+                ModifiedDate = x.ModifiedDate,
                 ImageUrls = x.Images.Where(img => !img.IsDeleted)  
                                      .Select(img => img.UrlPath)  
                                      .ToArray()
