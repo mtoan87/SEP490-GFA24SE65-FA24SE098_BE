@@ -12,7 +12,7 @@ public partial class FacilitiesWallet
     public string UserAccountId { get; set; }
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
-
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
 
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();

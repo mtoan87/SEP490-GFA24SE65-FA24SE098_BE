@@ -10,6 +10,7 @@ public partial class SystemWallet
     public decimal Budget { get; set; }
 
     public string UserAccountId { get; set; }
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
 

@@ -34,10 +34,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 UserAccountId = createDonation.UserAccountId,
                 DonationType = createDonation.DonationType,
-                DateTime = createDonation.DateTime,
+                DateTime =DateTime.Now,
+                IsDeleted = false,
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
-                Status = createDonation.Status,
+                Status = "Pending",
                 CreatedDate = DateTime.Now
             };
             await _donationRepository.AddAsync(donation);
