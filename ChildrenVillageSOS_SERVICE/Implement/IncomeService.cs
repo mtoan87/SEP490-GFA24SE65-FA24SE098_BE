@@ -69,7 +69,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
               
                 Amount = donate.Amount,
                 DonationId = createIncome.DonationId,
-                UserAccountId = donate.UserAccountId,
+                UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
                 Status = "Approved",
                 IsDeleted = false,

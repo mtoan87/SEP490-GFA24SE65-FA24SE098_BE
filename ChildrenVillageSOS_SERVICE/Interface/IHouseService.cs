@@ -16,15 +16,12 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> CreateHouse(CreateHouseDTO createHouse);
         Task<House> UpdateHouse(string id, UpdateHouseDTO updateHouse);
         Task<House> DeleteHouse(string id);
+        Task<House> RestoreHouse(string id);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
         Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<string> GetHouseNameByIdAsync(string houseId);
         Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg();
-        Task<House> SoftDelete(string id);
-        Task<House> RestoreHouse(string id);
-        Task<House> SoftRestoreHouse(string id);
-        Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync();
         Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId);
     }
 }
