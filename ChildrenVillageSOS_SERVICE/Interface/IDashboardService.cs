@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         //KPI
         //Charts
         Task<IEnumerable<VillageHouseDistributionDTO>> GetVillageHouseDistribution();
+        Task<List<ChildrenDemographicsDTO>> GetChildrenDemographics();
     }
 }

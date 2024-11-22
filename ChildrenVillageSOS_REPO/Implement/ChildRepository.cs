@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,6 +66,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .ToListAsync();
         }
 
+
         //Dashboard phần tính Active children trong hệ thống
         public async Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync()
         {
@@ -97,6 +99,20 @@ namespace ChildrenVillageSOS_REPO.Implement
                 TotalActiveChildren = totalActive,
                 ChangeThisMonth = netChange
             };
+        }
+
+        // Dashboard phần Children For Demographics
+        public async Task<IEnumerable<Child>> GetChildrenForDemographics()
+        {
+            return await _context.Children
+                .Where(x => !x.IsDeleted && x.Status == "Active")
+                .Select(x => new Child
+                {
+                    Dob = x.Dob,
+                    Gender = x.Gender
+                })
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }
