@@ -19,23 +19,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IDonationService _donationService;
-        private readonly IDonationRepository _donationRepository;
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly IHealthWalletRepository _healthWalletRepository;
         private readonly ISystemWalletRepository _systemWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
         private readonly IIncomeRepository _incomeRepository;
         private readonly IConfiguration _configuration;
-        public PaymentService(IPaymentRepository paymentRepository,IDonationService donationService, IConfiguration configuration, IDonationRepository donationRepository, IFacilitiesWalletRepository failitiesWalletRepository, ITransactionRepository transactionRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IIncomeRepository incomeRepository)
+        public PaymentService(IPaymentRepository paymentRepository,
+            IDonationService donationService,
+            IConfiguration configuration,        
+            IFacilitiesWalletRepository failitiesWalletRepository,
+            IFoodStuffWalletRepository foodStuffWalletRepository,
+            IHealthWalletRepository healthWalletRepository,          
+            ISystemWalletRepository systemWalletRepository,
+            INecessitiesWalletRepository necessitiesWalletRepository,
+            IIncomeRepository incomeRepository)
         {
             _paymentRepository = paymentRepository;
             _donationService = donationService;
             _configuration = configuration;
-            _donationRepository = donationRepository;
             _failitiesWalletRepository = failitiesWalletRepository;
-            _transactionRepository = transactionRepository;
             _foodStuffWalletRepository = foodStuffWalletRepository;
             _healthWalletRepository = healthWalletRepository;
             _systemWalletRepository = systemWalletRepository;

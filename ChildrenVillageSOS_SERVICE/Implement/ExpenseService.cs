@@ -18,17 +18,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IHealthWalletService _healthWalletService;
         private readonly IFacilitiesWalletService _facilitiesWalletService;
         private readonly IFoodStuffWalletService _foodStuffWalletService;   
-        private readonly IHouseRepository _houseRepository;
-        private readonly ITransactionRepository _transactionRepository;
-        public ExpenseService(IExpenseRepository expenseRepository, INecessitiesWalletService necessitiesWalletService, IHealthWalletService  healthWalletService, IFoodStuffWalletService foodStuffWalletService, IFacilitiesWalletService facilitiesWalletService, IHouseRepository houseRepository, ITransactionRepository transactionRepository )
+        public ExpenseService(IExpenseRepository expenseRepository,
+            INecessitiesWalletService necessitiesWalletService,
+            IHealthWalletService  healthWalletService,
+            IFoodStuffWalletService foodStuffWalletService,
+            IFacilitiesWalletService facilitiesWalletService )
         {
             _expenseRepository = expenseRepository;
             _necessitiesWalletService = necessitiesWalletService;
             _healthWalletService = healthWalletService;
             _facilitiesWalletService = facilitiesWalletService;
             _foodStuffWalletService = foodStuffWalletService;
-            _houseRepository    = houseRepository;
-            _transactionRepository  = transactionRepository;
+            
         }
 
         public ExpenseResponseDTO[] GetFormatedExpenses()
@@ -77,23 +78,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                      
             await _expenseRepository.AddAsync(newExpense);                     
             return newExpense;
-        }
-
-
-        public async Task<Expense> RemoveSoftExpense(int id, UpdateExpenseDTO updateExpense)
-        {
-            var updExpense = await _expenseRepository.GetByIdAsync(id);
-            if (updExpense == null)
-            {
-                throw new Exception($"Expense with ID{id} not found!");
-            }
-            
-            
-            
-            updExpense.IsDeleted = updateExpense.IsDeleted;
-            await _expenseRepository.UpdateAsync(updExpense);
-            return updExpense;
-
         }
         public async Task<Expense> DeleteExpense(int id)
         {

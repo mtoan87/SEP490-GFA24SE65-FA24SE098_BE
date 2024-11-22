@@ -19,14 +19,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ChildService : IChildService
     {
         private readonly IChildRepository _childRepository;
-        private readonly IDonationRepository _donationRepository;
+
         private readonly IPaymentRepository _paymentRepository;
-        private readonly ITransactionRepository _transactionRepository;
+
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
         private readonly IConfiguration _configuration;
         private readonly IDonationService _donationService;
-        private readonly IPaymentService _paymentService;
+
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
@@ -35,22 +35,28 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IIncomeRepository _incomeRepository;
 
 
-        public ChildService(IChildRepository childRepository, IImageService imageService, IImageRepository imageRepository, 
-            IDonationRepository donationRepository, IPaymentRepository paymentRepository, ITransactionRepository transactionRepository, 
-            IConfiguration configuration, IDonationService donationService, IFacilitiesWalletRepository facilitiesWalletRepository, 
-            IPaymentService paymentService, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, 
-            IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository, IIncomeRepository incomeRepository)
+        public ChildService(IChildRepository childRepository,
+            IImageService imageService,
+            IImageRepository imageRepository,         
+           
+            IPaymentRepository paymentRepository,
+            ITransactionRepository transactionRepository,          
+            IConfiguration configuration,
+            IDonationService donationService,
+            IFacilitiesWalletRepository facilitiesWalletRepository,           
+            ISystemWalletRepository systemWalletRepository,
+            INecessitiesWalletRepository necessitiesWalletRepository,            
+            IFoodStuffWalletRepository foodStuffWalletRepository,
+            IHealthWalletRepository healthWalletRepository,
+            IIncomeRepository incomeRepository)
         {
             _childRepository = childRepository;
             _imageService = imageService;
-            _imageRepository = imageRepository;
-            _donationRepository = donationRepository;
-            _paymentRepository = paymentRepository;
-            _transactionRepository = transactionRepository;
+            _imageRepository = imageRepository;         
+            _paymentRepository = paymentRepository;           
             _configuration = configuration;
             _donationService = donationService;
-            _failitiesWalletRepository = facilitiesWalletRepository;
-            _paymentService = paymentService;
+            _failitiesWalletRepository = facilitiesWalletRepository;          
             _systemWalletRepository = systemWalletRepository;
             _foodStuffWalletRepository = foodStuffWalletRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
