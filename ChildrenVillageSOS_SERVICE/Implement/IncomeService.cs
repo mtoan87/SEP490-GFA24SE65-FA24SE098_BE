@@ -120,15 +120,80 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var updIncome = await _incomeRepository.GetByIdAsync(id);
             if (updIncome == null)
             {
-                throw new Exception($"Income with ID{id} not found!");
+                throw new Exception($"Income with ID {id} not found!");
             }
-            updIncome.UserAccountId = updateIncome.UserAccountId;
-            updIncome.ModifiedDate = DateTime.Now;
-            updIncome.IsDeleted = updateIncome.IsDeleted;
-            await _incomeRepository.UpdateAsync(updIncome);
-            return updIncome;
 
+            // Store the old income amount for later adjustment
+            decimal oldIncomeAmount = updIncome.Amount ?? 0;
+            updIncome.Amount = updateIncome.Amount;  // Update the new income amount
+            updIncome.ModifiedDate = DateTime.Now;
+
+            // Update the relevant wallet's balance (based on the income's wallet)
+            if (updIncome.FacilitiesWalletId.HasValue)
+            {
+                var wallet = await _failitiesWalletRepository.GetByIdAsync(updIncome.FacilitiesWalletId.Value);
+                if (wallet != null)
+                {
+                    // Revert the old income from the wallet
+                    wallet.Budget -= oldIncomeAmount;
+
+                    // Add the new income to the wallet
+                    wallet.Budget += updateIncome.Amount ?? 0;
+
+                    // Update the wallet balance
+                    await _failitiesWalletRepository.UpdateAsync(wallet);
+                }
+            }
+
+            if (updIncome.FoodStuffWalletId.HasValue)
+            {
+                var wallet = await _foodStuffWalletRepository.GetByIdAsync(updIncome.FoodStuffWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget -= oldIncomeAmount;
+                    wallet.Budget += updateIncome.Amount ?? 0;
+                    await _foodStuffWalletRepository.UpdateAsync(wallet);
+                }
+            }
+
+            if (updIncome.HealthWalletId.HasValue)
+            {
+                var wallet = await _healthWalletRepository.GetByIdAsync(updIncome.HealthWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget -= oldIncomeAmount;
+                    wallet.Budget += updateIncome.Amount ?? 0;
+                    await _healthWalletRepository.UpdateAsync(wallet);
+                }
+            }
+
+            if (updIncome.SystemWalletId.HasValue)
+            {
+                var wallet = await _systemWalletRepository.GetByIdAsync(updIncome.SystemWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget -= oldIncomeAmount;
+                    wallet.Budget += updateIncome.Amount ?? 0;
+                    await _systemWalletRepository.UpdateAsync(wallet);
+                }
+            }
+
+            if (updIncome.NecessitiesWalletId.HasValue)
+            {
+                var wallet = await _necessitiesWalletRepository.GetByIdAsync(updIncome.NecessitiesWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget -= oldIncomeAmount;
+                    wallet.Budget += updateIncome.Amount ?? 0;
+                    await _necessitiesWalletRepository.UpdateAsync(wallet);
+                }
+            }
+
+            await _incomeRepository.UpdateAsync(updIncome);
+
+            return updIncome;
         }
+
         public async Task<Income> DeleteIncome(int id)
         {
             var inc = await _incomeRepository.GetByIdAsync(id);

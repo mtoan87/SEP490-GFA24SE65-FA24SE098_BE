@@ -12,10 +12,8 @@ namespace ChildrenVillageSOS_DAL.DTO.ExpenseDTO
 
         public string Description { get; set; }
 
-
-
         public string HouseId { get; set; }
 
-        public bool IsDeleted { get; set; }
+       
     }
 }

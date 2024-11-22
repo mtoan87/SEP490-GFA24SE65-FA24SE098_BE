@@ -14,22 +14,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ExpenseService : IExpenseService
     {
         private readonly IExpenseRepository _expenseRepository;
-        private readonly INecessitiesWalletService _necessitiesWalletService;
-        private readonly IHealthWalletService _healthWalletService;
-        private readonly IFacilitiesWalletService _facilitiesWalletService;
-        private readonly IFoodStuffWalletService _foodStuffWalletService;   
+        private readonly INecessitiesWalletRepository _necessitiesWalletService;
+        private readonly IHealthWalletRepository _healthWalletService;
+        private readonly IFacilitiesWalletRepository _facilitiesWalletService;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletService;   
+        private readonly ISystemWalletRepository _systemWalletService;
         public ExpenseService(IExpenseRepository expenseRepository,
-            INecessitiesWalletService necessitiesWalletService,
-            IHealthWalletService  healthWalletService,
-            IFoodStuffWalletService foodStuffWalletService,
-            IFacilitiesWalletService facilitiesWalletService )
+            INecessitiesWalletRepository necessitiesWalletService,
+            IHealthWalletRepository healthWalletService,
+            IFoodStuffWalletRepository foodStuffWalletService,
+            IFacilitiesWalletRepository facilitiesWalletService,
+            IWalletRepository walletRepository,
+            ISystemWalletRepository systemWalletService)
         {
             _expenseRepository = expenseRepository;
             _necessitiesWalletService = necessitiesWalletService;
             _healthWalletService = healthWalletService;
             _facilitiesWalletService = facilitiesWalletService;
-            _foodStuffWalletService = foodStuffWalletService;
-            
+            _foodStuffWalletService = foodStuffWalletService;          
+            _systemWalletService = systemWalletService;
         }
 
         public ExpenseResponseDTO[] GetFormatedExpenses()
@@ -49,15 +52,76 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var updExpense = await _expenseRepository.GetByIdAsync(id);
             if (updExpense == null)
             {
-                throw new Exception($"Expense with ID{id} not found!");
+                throw new Exception($"Expense with ID {id} not found!");
             }
+
+            decimal oldExpenseAmount = updExpense.ExpenseAmount;
             updExpense.ExpenseAmount = updateExpense.ExpenseAmount;
             updExpense.Description = updateExpense.Description;
+            updExpense.ModifiedDate = DateTime.Now;
             updExpense.HouseId = updateExpense.HouseId;
-            updExpense.IsDeleted = updateExpense.IsDeleted;
+
+            // Determine which wallet to update based on the expense's wallet
+            if (updExpense.FacilitiesWalletId.HasValue)
+            {
+                var wallet = await _facilitiesWalletService.GetByIdAsync(updExpense.FacilitiesWalletId.Value);
+                if (wallet != null)
+                {
+                    // Adjust the wallet's balance (subtract old expense, add new expense)
+                    wallet.Budget += oldExpenseAmount;  // Revert the old expense
+                    wallet.Budget -= updateExpense.ExpenseAmount;  // Subtract the new expense
+                    await _facilitiesWalletService.UpdateAsync(wallet);
+                }
+            }
+
+            // Repeat for other wallets like FoodStuffWallet, HealthWallet, etc.
+            if (updExpense.FoodStuffWalletId.HasValue)
+            {
+                var wallet = await _foodStuffWalletService.GetByIdAsync(updExpense.FoodStuffWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget += oldExpenseAmount;
+                    wallet.Budget -= updateExpense.ExpenseAmount;
+                    await _foodStuffWalletService.UpdateAsync(wallet);
+                }
+            }
+
+            if (updExpense.HealthWalletId.HasValue)
+            {
+                var wallet = await _healthWalletService.GetByIdAsync(updExpense.HealthWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget += oldExpenseAmount;
+                    wallet.Budget -= updateExpense.ExpenseAmount;
+                    await _healthWalletService.UpdateAsync(wallet);
+                }
+            }
+
+            if (updExpense.SystemWalletId.HasValue)
+            {
+                var wallet = await _systemWalletService.GetByIdAsync(updExpense.SystemWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget += oldExpenseAmount;
+                    wallet.Budget -= updateExpense.ExpenseAmount;
+                    await _systemWalletService.UpdateAsync(wallet);
+                }
+            }
+
+            if (updExpense.NecessitiesWalletId.HasValue)
+            {
+                var wallet = await _necessitiesWalletService.GetByIdAsync(updExpense.NecessitiesWalletId.Value);
+                if (wallet != null)
+                {
+                    wallet.Budget += oldExpenseAmount;
+                    wallet.Budget -= updateExpense.ExpenseAmount;
+                    await _necessitiesWalletService.UpdateAsync(wallet);
+                }
+            }
+
+            // Update the Expense record
             await _expenseRepository.UpdateAsync(updExpense);
             return updExpense;
-
         }
         public async Task<Expense> CreateExpense(CreateExepenseDTO createExepense)
         {
@@ -113,7 +177,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _expenseRepository.UpdateAsync(exp);
             if (exp.FacilitiesWalletId.HasValue)
             {
-                var facilitiesWallet = await _facilitiesWalletService.GetFacilitiesWalletById(exp.FacilitiesWalletId.Value);
+                var facilitiesWallet = await _facilitiesWalletService.GetByIdAsync(exp.FacilitiesWalletId.Value);
                 if (facilitiesWallet != null)
                 {
                     facilitiesWallet.Budget -= exp.ExpenseAmount;
@@ -125,7 +189,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             if (exp.FoodStuffWalletId.HasValue)
             {
-                var foodStuffWallet = await _foodStuffWalletService.GetFoodWalletById(exp.FoodStuffWalletId.Value);
+                var foodStuffWallet = await _foodStuffWalletService.GetByIdAsync(exp.FoodStuffWalletId.Value);
                 if (foodStuffWallet != null)
                 {
                     foodStuffWallet.Budget -= exp.ExpenseAmount;
@@ -135,7 +199,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             if (exp.HealthWalletId.HasValue)
             {
-                var healthWallet = await _healthWalletService.GetHealthWalletById(exp.HealthWalletId.Value);
+                var healthWallet = await _healthWalletService.GetByIdAsync(exp.HealthWalletId.Value);
                 if (healthWallet != null)
                 {
                     healthWallet.Budget -= exp.ExpenseAmount;
@@ -145,7 +209,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             if (exp.NecessitiesWalletId.HasValue)
             {
-                var necessitiesWallet = await _necessitiesWalletService.GetNecessitiesWalletById(exp.NecessitiesWalletId.Value);
+                var necessitiesWallet = await _necessitiesWalletService.GetByIdAsync(exp.NecessitiesWalletId.Value);
                 if (necessitiesWallet != null)
                 {
                     necessitiesWallet.Budget -= exp.ExpenseAmount;
