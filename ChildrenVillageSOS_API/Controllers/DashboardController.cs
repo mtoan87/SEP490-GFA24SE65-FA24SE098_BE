@@ -122,5 +122,38 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _dashboardService.GetChildrenDemographics();
             return Ok(result);
         }
+
+        [HttpGet("payment-methods")]
+        public async Task<ActionResult<object>> GetPaymentMethodStatistics()
+        {
+            var statistics = await _dashboardService.GetPaymentMethodStatistics();
+            return Ok(new
+            {
+                totalTransactions = statistics.Sum(x => x.NumberOfUses),
+                totalAmount = statistics.Sum(x => x.TotalAmount),
+                statistics = statistics
+            });
+        }
+
+       // [HttpGet("payment-statistics/date-range")]
+       // public async Task<ActionResult<object>> GetPaymentMethodStatisticsByDateRange(
+       //[FromQuery] DateTime startDate,
+       //[FromQuery] DateTime endDate)
+       // {
+       //     try
+       //     {
+       //         var statistics = await _dashboardService.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
+       //         return Ok(new
+       //         {
+       //             totalTransactions = statistics.Sum(x => x.NumberOfUses),
+       //             totalAmount = statistics.Sum(x => x.TotalAmount),
+       //             statistics = statistics
+       //         });
+       //     }
+       //     catch (Exception ex)
+       //     {
+       //         return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+       //     }
+       // }
     }
 }
