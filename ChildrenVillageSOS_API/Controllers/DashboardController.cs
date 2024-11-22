@@ -35,8 +35,7 @@ namespace ChildrenVillageSOS_API.Controllers
             _necessitiesWalletService = necessitiesWalletService;
             _dashboardService = dashboardService;
         }
-
-        // Các endpoints hiện tại
+       
         [HttpGet("TotalFacilitiesWalletBudget")]
         public async Task<IActionResult> TotalFacilitiesWalletBudget()
         {

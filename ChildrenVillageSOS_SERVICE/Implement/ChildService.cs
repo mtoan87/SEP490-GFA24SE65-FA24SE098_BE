@@ -19,14 +19,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ChildService : IChildService
     {
         private readonly IChildRepository _childRepository;
-
         private readonly IPaymentRepository _paymentRepository;
-
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
         private readonly IConfiguration _configuration;
         private readonly IDonationService _donationService;
-
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
@@ -37,10 +34,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public ChildService(IChildRepository childRepository,
             IImageService imageService,
-            IImageRepository imageRepository,         
-           
-            IPaymentRepository paymentRepository,
-            ITransactionRepository transactionRepository,          
+            IImageRepository imageRepository,                   
+            IPaymentRepository paymentRepository,              
             IConfiguration configuration,
             IDonationService donationService,
             IFacilitiesWalletRepository facilitiesWalletRepository,           

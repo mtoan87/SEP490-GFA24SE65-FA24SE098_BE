@@ -16,11 +16,9 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IChildRepository, ChildRepository>();
             services.AddScoped<IHouseRepository, HouseRepository>();
-            services.AddScoped<IDonationRepository, DonationRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IDonationRepository, DonationRepository>();           
             services.AddScoped<IVillageRepository, VillageRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ISystemWalletRepository, SystemWalletRepository>();
             services.AddScoped<IHealthWalletRepository, HealthWalletRepository>();
             services.AddScoped<IFoodStuffWalletRepository, FoodStuffWalletRepository>();
@@ -34,8 +32,7 @@ namespace ChildrenVillageSOS_API.Configuration
 
         public static IServiceCollection AddService(this IServiceCollection services)
         {
-            services.AddScoped<ISystemWalletService, SystemWalletService>();
-            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<ISystemWalletService, SystemWalletService>();          
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<IIncomeService, IncomeService>();
@@ -43,8 +40,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IBookingSlotService, BookingSlotService>();
             services.AddScoped<IChildService, ChildService>();
             services.AddScoped<IHouseService, HouseService>();
-            services.AddScoped<IDonationService, DonationService>();
-            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IDonationService, DonationService>();         
             services.AddScoped<IVillageService, VillageService>();
             services.AddScoped<IHealthWalletService, HealthWalletService>();
             services.AddScoped<IFoodStuffWalletService, FoodStuffWalletService>();
