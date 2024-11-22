@@ -21,8 +21,6 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public string HouseOwner { get; set; }
 
-        public string Status { get; set; }
-
         public string UserAccountId { get; set; }
 
         public string VillageId { get; set; }
