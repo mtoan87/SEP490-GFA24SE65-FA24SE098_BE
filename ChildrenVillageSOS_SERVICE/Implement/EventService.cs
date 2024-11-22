@@ -17,37 +17,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 {
     public class EventService : IEventService
     {
-        private readonly IEventRepository _eventRepository;
-        private readonly IDonationRepository _donationRepository;
-        private readonly IPaymentRepository _paymentRepository;
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly IEventRepository _eventRepository;        
+        private readonly IPaymentRepository _paymentRepository;       
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
         private readonly IConfiguration _configuration;
-        private readonly IDonationService _donationService;
-        private readonly IPaymentService _paymentService;  
-        private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
-        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
-        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
-        private readonly ISystemWalletRepository _systemWalletRepository;
-        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
-        public EventService(IEventRepository eventRepository, IImageService imageService, IImageRepository imageRepository, IDonationRepository donationRepository, IPaymentRepository paymentRepository, ITransactionRepository transactionRepository, IConfiguration configuration, IDonationService donationService, IFacilitiesWalletRepository facilitiesWalletRepository, IPaymentService paymentService, ISystemWalletRepository systemWalletRepository, INecessitiesWalletRepository necessitiesWalletRepository, IFoodStuffWalletRepository foodStuffWalletRepository, IHealthWalletRepository healthWalletRepository,IIncomeRepository incomeRepository)
+        public EventService(IEventRepository eventRepository,
+            IImageService imageService,
+            IImageRepository imageRepository,          
+            IPaymentRepository paymentRepository,          
+            IConfiguration configuration,
+            IDonationService donationService,           
+            IIncomeRepository incomeRepository)
         {
             _eventRepository = eventRepository;
             _imageService = imageService;
-            _imageRepository = imageRepository;
-            _donationRepository = donationRepository;
-            _paymentRepository = paymentRepository;
-            _transactionRepository = transactionRepository; 
+            _imageRepository = imageRepository;         
+            _paymentRepository = paymentRepository;    
             _configuration = configuration;
-            _donationService = donationService;
-            _failitiesWalletRepository = facilitiesWalletRepository;
-            _paymentService = paymentService;
-            _systemWalletRepository = systemWalletRepository;
-            _foodStuffWalletRepository = foodStuffWalletRepository;
-            _necessitiesWalletRepository = necessitiesWalletRepository;
-            _healthWalletRepository = healthWalletRepository;
+            _donationService = donationService;         
             _incomeRepository = incomeRepository;
 
         }
@@ -255,15 +245,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
             vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
-            //vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
-            //vnpay.AddRequestData("eventId", id.ToString());
-            //vnpay.AddRequestData("walletId", editEvent.FacilitiesWalletId?.ToString() ?? string.Empty);
-            //vnpay.AddRequestData("walletId", editEvent.FoodStuffWalletId?.ToString() ?? string.Empty);
-            //vnpay.AddRequestData("walletId", editEvent.SystemWalletId?.ToString() ?? string.Empty);
-            //vnpay.AddRequestData("walletId", editEvent.HealthWalletId?.ToString() ?? string.Empty);
-            //vnpay.AddRequestData("walletId", editEvent.NecessitiesWalletId?.ToString() ?? string.Empty);
-
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
             var income = new Income
             {
@@ -295,52 +277,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return paymentUrl;
         }
 
-        // Helper method to update a wallet's budget
-        private async Task UpdateFacilitiesWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _failitiesWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _failitiesWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateFoodStuffWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _foodStuffWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _foodStuffWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateNecessitiesWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _necessitiesWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _necessitiesWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateHealthWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _healthWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _healthWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateSystemWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _systemWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _systemWalletRepository.UpdateAsync(wallet);
-            }
-        }
+       
         public async Task<Event> DeleteEvent(int id)
         {
             var even = await _eventRepository.GetByIdAsync(id);

@@ -13,5 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task UpdateHealthWalletBudget(int walletId, decimal amount);
         Task UpdateNecessitiesWalletBudget(int walletId, decimal amount);
 
+        Task UpdateSystemWalletBudget(int walletId, decimal amount);
+
     }
 }

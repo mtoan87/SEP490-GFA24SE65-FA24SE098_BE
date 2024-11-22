@@ -29,8 +29,18 @@ namespace ChildrenVillageSOS_REPO.Implement
 
         }
         
-    
-        
+        public async Task UpdateSystemWalletBudget(int walletId, decimal amount)
+        {
+            var wallet = await _systemWalletRepository.GetByIdAsync(walletId);
+            if (wallet == null)
+            {
+                wallet.Budget += amount;
+                await _systemWalletRepository.UpdateAsync(wallet);
+            }
+        }
+
+
+
         public async Task UpdateHealthWalletBudget(int walletId, decimal amount)
         {
             var wallet = await _healthWalletRepository.GetByIdAsync(walletId);

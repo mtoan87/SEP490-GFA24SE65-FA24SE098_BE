@@ -16,8 +16,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     {
         private readonly IIncomeRepository _incomeRepository;
         private readonly IDonationRepository _donationRepository;
-        public IncomeService(IIncomeRepository incomeRepository, IDonationRepository donationRepository) 
-        { 
+        private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly ISystemWalletRepository _systemWalletRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IWalletRepository _walletRepository;
+        public IncomeService(IIncomeRepository incomeRepository,
+            IDonationRepository donationRepository,
+            IFacilitiesWalletRepository facilitiesWalletRepository,
+            ISystemWalletRepository systemWalletRepository,
+            INecessitiesWalletRepository necessitiesWalletRepository,
+            IFoodStuffWalletRepository foodStuffWalletRepository,
+            IHealthWalletRepository healthWalletRepository,
+            IWalletRepository walletRepository) 
+        {
+            _walletRepository = walletRepository;
+            _failitiesWalletRepository = facilitiesWalletRepository;
+            _systemWalletRepository = systemWalletRepository;
+            _foodStuffWalletRepository = foodStuffWalletRepository;
+            _necessitiesWalletRepository = necessitiesWalletRepository;
+            _healthWalletRepository = healthWalletRepository;
             _incomeRepository = incomeRepository;   
             _donationRepository = donationRepository;
         }
@@ -40,19 +59,61 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Income> CreateIncome(CreateIncomeDTO createIncome)
         {
-           
-            var newExpense = new Income
+            var donate = await _donationRepository.GetByIdAsync(createIncome.DonationId);
+            if (donate.Status.Equals("Paid", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("This Donation already paid!");
+            }
+            var newIncome = new Income
             {
               
-                Amount = createIncome.Amount,
+                Amount = donate.Amount,
                 DonationId = createIncome.DonationId,
                 UserAccountId = createIncome.UserAccountId,
                 Receiveday = DateTime.Now,
                 Status = "Approved",
-                IsDeleted = createIncome.IsDeleted,
-            };
-            await _incomeRepository.AddAsync(newExpense);
-            return newExpense;
+                IsDeleted = false,
+                CreatedDate = DateTime.Now,
+                FacilitiesWalletId = donate.FacilitiesWalletId,
+                NecessitiesWalletId = donate.NecessitiesWalletId,
+                HealthWalletId = donate.HealthWalletId,
+                SystemWalletId  = donate.SystemWalletId,
+                FoodStuffWalletId = donate.FoodStuffWalletId,
+
+            };           
+            if (donate.FacilitiesWalletId.HasValue)
+            {
+                decimal donationAmount = donate.Amount;
+                await _walletRepository.UpdateFacilitiesWalletBudget(donate.FacilitiesWalletId.Value, donationAmount);
+            }
+
+            if (donate.NecessitiesWalletId.HasValue)
+            {
+                decimal donationAmount = donate.Amount;
+                await _walletRepository.UpdateNecessitiesWalletBudget(donate.NecessitiesWalletId.Value, donationAmount);
+            }
+
+            if (donate.HealthWalletId.HasValue)
+            {
+                decimal donationAmount = donate.Amount;
+                await _walletRepository.UpdateHealthWalletBudget(donate.HealthWalletId.Value, donationAmount);
+            }
+
+            if (donate.SystemWalletId.HasValue)
+            {
+                decimal donationAmount = donate.Amount;
+                await _walletRepository.UpdateSystemWalletBudget(donate.SystemWalletId.Value, donationAmount);
+            }
+
+            if (donate.FoodStuffWalletId.HasValue)
+            {
+                decimal donationAmount = donate.Amount;
+                await _walletRepository.UpdateFoodStuffWalletBudget(donate.FoodStuffWalletId.Value, donationAmount);
+            }
+            donate.Status = "Paid";
+            await _donationRepository.UpdateAsync(donate);
+            await _incomeRepository.AddAsync(newIncome);
+            return newIncome;
         }
         public async Task<Income> UpdateIncome(int id, UpdateIncomeDTO updateIncome)
         {
