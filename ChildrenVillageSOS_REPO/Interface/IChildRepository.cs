@@ -4,6 +4,7 @@ using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<IEnumerable<Child>> GetAllAsync();
         ChildResponseDTO GetChildByIdWithImg(string childId);
         Task<List<Child>> GetChildByHouseIdAsync(string houseId);
-        Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync(); //Dashboard
+        //Dashboard
+        Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync();
+        Task<IEnumerable<Child>> GetChildrenForDemographics();
     }
 }

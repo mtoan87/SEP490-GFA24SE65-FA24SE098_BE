@@ -115,5 +115,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _dashboardService.GetVillageHouseDistribution();
             return Ok(result);
         }
+
+        [HttpGet("children-demographics")]
+        public async Task<IActionResult> GetChildrenDemographics()
+        {
+            var result = await _dashboardService.GetChildrenDemographics();
+            return Ok(result);
+        }
     }
 }
