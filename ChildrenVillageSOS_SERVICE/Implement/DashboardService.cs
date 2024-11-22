@@ -4,6 +4,7 @@ using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IVillageRepository _villageRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
         public DashboardService(IChildRepository childRepository, IUserAccountRepository userAccountRepository, IEventRepository eventRepository, 
-            IVillageRepository villageRepository)
+            IVillageRepository villageRepository, IPaymentRepository paymentRepository)
         {
             _childRepository = childRepository;
             _userAccountRepository = userAccountRepository;
             _eventRepository = eventRepository;
             _villageRepository = villageRepository;
+            _paymentRepository = paymentRepository;
         }
 
         //TopStatCards
@@ -64,7 +67,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<List<ChildrenDemographicsDTO>> GetChildrenDemographics()
         {
-            // Sử dụng method specific
             var children = await _childRepository.GetChildrenForDemographics();
             // Hoặc sử dụng method generic
             // var children = await _childRepository.GetAllAsync(x => !x.IsDeleted && x.Status == "Active");
@@ -86,5 +88,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return demographics;
         }
+
+        public async Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatistics()
+        {
+            return await _paymentRepository.GetPaymentMethodStatistics();
+        }
+
+        //public async Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatisticsByDateRange(DateTime startDate, DateTime endDate)
+        //{
+        //    return await _paymentRepository.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
+        //}
     }
 }
