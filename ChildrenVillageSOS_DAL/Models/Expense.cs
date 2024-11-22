@@ -7,7 +7,7 @@ public partial class Expense
 {
     public int Id { get; set; }
 
-    public decimal? ExpenseAmount { get; set; }
+    public decimal ExpenseAmount { get; set; }
 
     public string Description { get; set; }
 
