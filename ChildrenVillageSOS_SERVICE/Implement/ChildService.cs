@@ -491,5 +491,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return child;
         }
+
+        public Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync()
+        {
+            return _childRepository.GetAllChildIsDeleteAsync();
+        }
+
     }
 }

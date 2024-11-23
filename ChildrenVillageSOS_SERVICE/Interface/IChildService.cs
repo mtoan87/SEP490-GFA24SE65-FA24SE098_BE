@@ -20,5 +20,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Child> RestoreChild(string id);
         Task<string> DonateChild(string id, ChildDonateDTO updateChild);
         Task<List<Child>> GetChildByHouseIdAsync(string houseId);
+        Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync();
     }
 }

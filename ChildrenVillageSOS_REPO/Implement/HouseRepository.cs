@@ -62,30 +62,30 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return house;
         }
-        public async Task<HouseResponseDTO[]> GetAllHouseAsync()
-        {
-            return await _context.Houses
-                .Where(h => !h.IsDeleted)
-                .Select(h => new HouseResponseDTO
-                {
-                    HouseId = h.Id,
-                    HouseName = h.HouseName,
-                    HouseNumber = h.HouseNumber,
-                    Location = h.Location,
-                    Description = h.Description,
-                    HouseMember = h.HouseMember,
-                    HouseOwner = h.HouseOwner,
-                    Status = h.Status,
-                    UserAccountId = h.UserAccountId,
-                    VillageId = h.VillageId,
-                    IsDeleted = h.IsDeleted,
-                    ImageUrls = h.Images
-                        .Where(i => !i.IsDeleted)  // Exclude deleted images
-                        .Select(i => i.UrlPath)    // Select image URLs
-                        .ToArray()                 // Convert to array
-                })
-                .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
-        }
+        //public async Task<HouseResponseDTO[]> GetAllHouseAsync()
+        //{
+        //    return await _context.Houses
+        //        .Where(h => !h.IsDeleted)
+        //        .Select(h => new HouseResponseDTO
+        //        {
+        //            HouseId = h.Id,
+        //            HouseName = h.HouseName,
+        //            HouseNumber = h.HouseNumber,
+        //            Location = h.Location,
+        //            Description = h.Description,
+        //            HouseMember = h.HouseMember,
+        //            HouseOwner = h.HouseOwner,
+        //            Status = h.Status,
+        //            UserAccountId = h.UserAccountId,
+        //            VillageId = h.VillageId,
+        //            IsDeleted = h.IsDeleted,
+        //            ImageUrls = h.Images
+        //                .Where(i => !i.IsDeleted)  // Exclude deleted images
+        //                .Select(i => i.UrlPath)    // Select image URLs
+        //                .ToArray()                 // Convert to array
+        //        })
+        //        .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
+        //}
         public async Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync()
         {
             return await _context.Houses
