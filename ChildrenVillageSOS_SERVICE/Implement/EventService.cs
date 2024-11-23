@@ -43,7 +43,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()
         {
-            var events = await _eventRepository.GetAllAsync();
+            var events = await _eventRepository.GetAllNotDeletedAsync();
 
             // Sử dụng Include để tải hình ảnh liên quan đến mỗi Event
             var eventResponseDTOs = events.Select(e => new EventResponseDTO
@@ -277,15 +277,42 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return paymentUrl;
         }
 
-       
+
         public async Task<Event> DeleteEvent(int id)
         {
             var even = await _eventRepository.GetByIdAsync(id);
-            if(even == null)
+            if (even == null)
             {
-                throw new Exception($"Event with ID{id} not found");
+                throw new Exception($"Event with ID {id} not found");
             }
-            await _eventRepository.RemoveAsync(even);
+
+            if (even.IsDeleted == true)
+            {
+                // Hard delete nếu đã bị soft delete
+                await _eventRepository.RemoveAsync(even);
+            }
+            else
+            {
+                // Soft delete: đặt IsDeleted = true
+                even.IsDeleted = true;
+                await _eventRepository.UpdateAsync(even);
+            }
+            return even;
+        }
+
+        public async Task<Event> RestoreEvent(int id)
+        {
+            var even = await _eventRepository.GetByIdAsync(id);
+            if (even == null)
+            {
+                throw new Exception($"Event with ID {id} not found");
+            }
+
+            if (even.IsDeleted == true) // Nếu đã bị soft delete
+            {
+                even.IsDeleted = false; // Khôi phục bằng cách đặt IsDeleted = false
+                await _eventRepository.UpdateAsync(even);
+            }
             return even;
         }
     }

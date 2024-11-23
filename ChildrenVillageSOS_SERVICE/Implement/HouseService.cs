@@ -192,28 +192,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _houseRepository.UpdateAsync(existingHouse);
             return existingHouse;
         }
-        public async Task<House> SoftDelete(string id)
-        {
-            var house = await _houseRepository.GetByIdAsync(id);
-            if (house == null)
-            {
-                throw new Exception($"House with ID{id} not found!");
-            }
-            house.IsDeleted = true;
-            await _houseRepository.UpdateAsync(house);
-            return house;
-        }
-        public async Task<House> SoftRestoreHouse(string id)
-        {
-            var house = await _houseRepository.GetByIdAsync(id);
-            if (house == null)
-            {
-                throw new Exception($"House with ID{id} not found!");
-            }
-            house.IsDeleted = false;
-            await _houseRepository.UpdateAsync(house);
-            return house;
-        }
+        //public async Task<House> SoftDelete(string id)
+        //{
+        //    var house = await _houseRepository.GetByIdAsync(id);
+        //    if (house == null)
+        //    {
+        //        throw new Exception($"House with ID{id} not found!");
+        //    }
+        //    house.IsDeleted = true;
+        //    await _houseRepository.UpdateAsync(house);
+        //    return house;
+        //}
+        //public async Task<House> SoftRestoreHouse(string id)
+        //{
+        //    var house = await _houseRepository.GetByIdAsync(id);
+        //    if (house == null)
+        //    {
+        //        throw new Exception($"House with ID{id} not found!");
+        //    }
+        //    house.IsDeleted = false;
+        //    await _houseRepository.UpdateAsync(house);
+        //    return house;
+        //}
+
         public async Task<House> DeleteHouse(string id)
         {
             var house = await _houseRepository.GetByIdAsync(id);

@@ -62,5 +62,13 @@ namespace ChildrenVillageSOS_API.Controllers
             var user = await _userAccountService.DeleteUser(id);
             return Ok(user);
         }
+
+        [HttpPut]
+        [Route("RestoreUser")]
+        public async Task<IActionResult> RestoreUser(string id)
+        {
+            var user = await _userAccountService.RestoreUser(id);
+            return Ok(user);
+        }
     }
 }
