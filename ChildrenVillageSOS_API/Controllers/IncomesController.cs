@@ -29,6 +29,36 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp =  _incomeService.GetFormatedIncome();
             return Ok(exp);
         }
+        [HttpGet("GetIncomeByFacilitiesWallet")]
+        public IActionResult GetIncomeByFacilitiesWalletId(int Id)
+        {
+            var exp = _incomeService.GetIcomeByFaciWallet(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetIncomeByFoodWallet")]
+        public IActionResult GetIncomeByFoodWalletId(int Id)
+        {
+            var exp = _incomeService.GetIcomeByFoodWallet(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetIncomeByHealthWallet")]
+        public IActionResult GetIncomeByHealthWallet(int Id)
+        {
+            var exp = _incomeService.GetIcomeByHealthWallet(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetIncomeByNescilitiesWallet")]
+        public IActionResult GetIncomeByNescilitiesWallet(int Id)
+        {
+            var exp = _incomeService.GetIcomeByNesWallet(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetIncomeBySystemWallet")]
+        public IActionResult GetIncomeBySystemWallet(int Id)
+        {
+            var exp = _incomeService.GetIcomeBySystemWallet(Id);
+            return Ok(exp);
+        }
         [HttpGet("GetIncomeById/{Id}")]
         public async Task<IActionResult> GetIncomeById(int Id)
         {
@@ -37,14 +67,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("CreateIncome")]
-        public async Task<ActionResult<Income>> CreateIncome([FromForm] CreateIncomeDTO expDTO)
+        public async Task<ActionResult<Income>> CreateIncome([FromBody] CreateIncomeDTO expDTO)
         {
             var createExpense = await _incomeService.CreateIncome(expDTO);
             return Ok(createExpense);
         }
         [HttpPut]
         [Route("UpdateIncome")]
-        public async Task<IActionResult> UpdateIncome(int id, [FromForm] UpdateIncomeDTO updateExp)
+        public async Task<IActionResult> UpdateIncome(int id, [FromBody] UpdateIncomeDTO updateExp)
         {
             var rs = await _incomeService.UpdateIncome(id, updateExp);
             return Ok(rs);

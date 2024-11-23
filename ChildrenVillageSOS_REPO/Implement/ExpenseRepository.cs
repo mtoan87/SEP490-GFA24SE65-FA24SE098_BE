@@ -38,5 +38,36 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return expenses;
         }
+        public Expense[] GetExpenseByFacilitiesWalletId(int id)
+        {
+            return _context.Expenses
+                .Where(i => i.FacilitiesWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Expense[] GetExpenseByFoodWalletId(int id)
+        {
+            return _context.Expenses
+                .Where(i => i.FoodStuffWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Expense[] GetExpenseByHealthWalletId(int id)
+        {
+            return _context.Expenses
+                .Where(i => i.HealthWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Expense[] GetExpenseByNecessilitiesWalletId(int id)
+        {
+            return _context.Expenses
+                .Where(i => i.NecessitiesWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Expense[] GetExpenseBySystemWalletId(int id)
+        {
+            return _context.Expenses
+                .Where(i => i.SystemWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+
     }
 }

@@ -21,6 +21,29 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(d => d.UserAccountId == userId && (d.IsDeleted == null || d.IsDeleted == false))                
                 .ToListAsync();
         }
+        public FormatDonationResponseDTO[] GetDonationArray()
+        {
+            var donationDetails = _context.Donations
+                .Where(d => !d.IsDeleted)
+                .Select(d => new FormatDonationResponseDTO
+            {
+                Id = d.Id,
+                UserAccountId = d.UserAccountId,
+                DonationType = d.DonationType,
+                DateTime = d.DateTime,
+                Amount = d.Amount,
+                Description = d.Description,
+                SystemWalletId = d.SystemWalletId,
+                FacilitiesWalletId = d.FacilitiesWalletId,
+                FoodStuffWalletId = d.FoodStuffWalletId,
+                HealthWalletId = d.HealthWalletId,
+                NecessitiesWalletId = d.NecessitiesWalletId,
+                ChildId = d.ChildId,
+                EventId = d.EventId,
+                Status = d.Status,
+            }).ToArray();
+            return donationDetails;
+        }
         public Task<List<DonationResponseDTO>> GetDonationsByUserId(string userId)
         {
             var donationDetails = _context.Donations

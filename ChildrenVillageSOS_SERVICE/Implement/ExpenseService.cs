@@ -39,6 +39,26 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _expenseRepository.GetAllExpenses();
         }
+        public Expense[] GetExpenseByFacilitiesWalletId(int id)
+        {
+            return _expenseRepository.GetExpenseByFacilitiesWalletId(id);
+        }
+        public Expense[] GetExpenseByFoodWalletId(int id)
+        {
+            return _expenseRepository.GetExpenseByFoodWalletId(id);
+        }
+        public Expense[] GetExpenseByHealthWalletId(int id)
+        {
+            return _expenseRepository.GetExpenseByHealthWalletId(id);
+        }
+        public Expense[] GetExpenseByNesceWalletId(int id)
+        {
+            return _expenseRepository.GetExpenseByNecessilitiesWalletId(id);
+        }
+        public Expense[] GetExpenseBySysWalletId(int id)
+        {
+            return _expenseRepository.GetExpenseBySystemWalletId(id);
+        }
         public async Task<IEnumerable<Expense>> GetAllExpenses()
         {
             return await _expenseRepository.GetAllAsync();
@@ -134,6 +154,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = "Pending",
                 HouseId = createExepense.HouseId,
                 IsDeleted = false,
+                SystemWalletId = createExepense.SystemWalletId,
                 FacilitiesWalletId = createExepense.FacilitiesWalletId,
                 FoodStuffWalletId = createExepense.FoodStuffWalletId,
                 HealthWalletId = createExepense.HealthWalletId,

@@ -22,6 +22,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetAllAsync();
         }
+        public FacilitiesWalletResponseDTO[] GetFacilitiesWalletsArray()
+        {
+            return _repo.GetAllToArray();
+        }
         public async Task<FacilitiesWallet> GetFacilitiesWalletById(int id)
         {
             return await _repo.GetByIdAsync(id);

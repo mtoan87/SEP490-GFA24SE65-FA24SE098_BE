@@ -26,7 +26,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetByIdAsync(id);
         }
-
+        public HealthWallet[] GetHealthWalletArray()
+        {
+            return _repo.GetHealthWalletsArray();
+        }
         public async Task<decimal> GetTotalBudget()
         {
             var facilitiesWallets = await _repo.GetAllAsync();

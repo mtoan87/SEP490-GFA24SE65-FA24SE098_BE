@@ -27,7 +27,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetByIdAsync(id);
         }
-
+        public SystemWallet[] GetSystemWalletsToArray()
+        {
+            return _repo.GetSystemWalletsArray();
+        }
         public async Task<SystemWallet> CreateWallet(CreateSystemWalletDTO createPayment)
         {
             var newPayment = new SystemWallet

@@ -49,29 +49,29 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return villageDetails;
         }
-
         public List<Village> GetVillagesDonatedByUser(string userAccountId)
         {
             using (var dbContext = new SoschildrenVillageDbContext())
             {
                 var villageIds = dbContext.Donations
-                    .Where(d => d.UserAccountId == userAccountId && (!d.IsDeleted.HasValue || !d.IsDeleted.Value)) // Lọc Donation theo UserAccountId
+                    .Where(d => d.UserAccountId == userAccountId && (!d.IsDeleted)) // Kiểm tra IsDeleted
                     .Join(
                         dbContext.Events, // Tham gia với bảng Events
                         donation => donation.Id, // DonationId từ Donation
                         eventEntity => eventEntity.Id, // EventId từ Event
                         (donation, eventEntity) => eventEntity.VillageId // Lấy VillageId từ Event
                     )
-                     // Loại bỏ các giá trị trùng lặp của VillageId
+                    .Distinct() // Loại bỏ các giá trị trùng lặp của VillageId
                     .ToList(); // Lấy danh sách các VillageId mà người dùng đã donate
 
                 var villages = dbContext.Villages
-                     
+                    .Where(v => villageIds.Contains(v.Id)) // Chỉ lấy các làng có trong danh sách villageIds
                     .ToList(); // Trả về danh sách các làng
 
                 return villages;
             }
         }
+
 
         //Dashboard cho 1 lang co bao nhieu nha
         public async Task<IEnumerable<Village>> GetVillagesWithHouses()

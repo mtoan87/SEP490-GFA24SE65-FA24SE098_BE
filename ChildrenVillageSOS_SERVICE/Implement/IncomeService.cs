@@ -48,6 +48,26 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _incomeRepository.GetAllIncome();
         }
+        public Income[] GetIcomeByFaciWallet(int id)
+        {
+            return _incomeRepository.GetIncomeByFacilitiesWalletId(id);
+        }
+        public Income[] GetIcomeByFoodWallet(int id)
+        {
+            return _incomeRepository.GetIncomeByFoodWalletId(id);
+        }
+        public Income[] GetIcomeByHealthWallet(int id)
+        {
+            return _incomeRepository.GetIncomeByHealthWalletId(id);
+        }
+        public Income[] GetIcomeByNesWallet(int id)
+        {
+            return _incomeRepository.GetIncomeByNecessilitiesWalletId(id);
+        }
+        public Income[] GetIcomeBySystemWallet(int id)
+        {
+            return _incomeRepository.GetIncomeBySystemWalletId(id);
+        }
         public async Task<Income> GetIncomeById(int id)
         {
             return await _incomeRepository.GetByIdAsync(id);
@@ -60,7 +80,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<Income> CreateIncome(CreateIncomeDTO createIncome)
         {
             var donate = await _donationRepository.GetByIdAsync(createIncome.DonationId);
-            if (donate.Status.Equals("Paid", StringComparison.OrdinalIgnoreCase))
+            if (donate.Status == "Paid")
             {
                 throw new InvalidOperationException("This Donation already paid!");
             }

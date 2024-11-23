@@ -10,5 +10,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface ISystemWalletRepository : IRepositoryGeneric<SystemWallet>
     {
         Task<SystemWallet> GetWalletByUserIdAsync(string userAccountId);
+        SystemWallet[] GetSystemWalletsArray();
     }
 }

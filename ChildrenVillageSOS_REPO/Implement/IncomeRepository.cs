@@ -46,5 +46,35 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return incomes;
         }
+        public Income[] GetIncomeByFacilitiesWalletId(int id)
+        {
+            return _context.Incomes
+                .Where(i => i.FacilitiesWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Income[] GetIncomeByFoodWalletId(int id)
+        {
+            return _context.Incomes
+                .Where(i => i.FoodStuffWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Income[] GetIncomeByHealthWalletId(int id)
+        {
+            return _context.Incomes
+                .Where(i => i.HealthWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Income[] GetIncomeByNecessilitiesWalletId(int id)
+        {
+            return _context.Incomes
+                .Where(i => i.NecessitiesWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
+        public Income[] GetIncomeBySystemWalletId(int id)
+        {
+            return _context.Incomes
+                .Where(i => i.SystemWalletId == id && !i.IsDeleted)
+                .ToArray();
+        }
     }
 }

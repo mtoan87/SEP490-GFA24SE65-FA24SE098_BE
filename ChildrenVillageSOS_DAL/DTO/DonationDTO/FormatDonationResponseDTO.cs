@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
 {
-    public class CreateDonationDTO
+    public class FormatDonationResponseDTO
     {
-        public string? UserAccountId { get; set; }       
-
-        public string Description { get; set; } = null!;
-
-        public string DonationType { get; set; }
-
+        public int Id { get; set; }
         public int? FacilitiesWalletId { get; set; }
 
         public int? SystemWalletId { get; set; }
@@ -23,11 +18,19 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
         public int? HealthWalletId { get; set; }
 
         public int? NecessitiesWalletId { get; set; }
+        public string UserAccountId { get; set; }
+
+        public string DonationType { get; set; }
+
+        public DateTime DateTime { get; set; }
         public int? EventId { get; set; }
 
         public string? ChildId { get; set; }
         public decimal Amount { get; set; }
 
+        public string Description { get; set; }
+
+        public string Status { get; set; }
 
     }
 }

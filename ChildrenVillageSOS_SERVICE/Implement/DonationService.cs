@@ -23,6 +23,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _donationRepository.GetDonationsByUserId(userId);
         }
+        public FormatDonationResponseDTO[] GetAllDonationArray()
+        {
+            return _donationRepository.GetDonationArray();
+        }
 
         public async Task<List<Village>> GetDonatedVillageByUserId(string userAccountId)
         {
@@ -35,7 +39,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserAccountId = createDonation.UserAccountId,
                 DonationType = createDonation.DonationType,
                 FacilitiesWalletId = createDonation.FacilitiesWalletId,
-                NecessitiesWalletId = createDonation.FacilitiesWalletId,
+                NecessitiesWalletId = createDonation.NecessitiesWalletId,
                 SystemWalletId   = createDonation.SystemWalletId,
                 HealthWalletId = createDonation.HealthWalletId,
                 FoodStuffWalletId = createDonation.FoodStuffWalletId,
@@ -43,6 +47,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = false,
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
+                ChildId = createDonation.ChildId,
+                EventId = createDonation.EventId,
                 Status = "Pending",
                 CreatedDate = DateTime.Now
             };

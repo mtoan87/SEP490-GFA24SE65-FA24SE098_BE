@@ -27,6 +27,36 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _expenseService.GetAllExpenses();
             return Ok(exp);
         }
+        [HttpGet("GetExpenseByFacilitiesWalletId")]
+        public IActionResult GetExpenseByFacilitiesWalletId(int Id)
+        {
+            var exp = _expenseService.GetExpenseByFacilitiesWalletId(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetExpenseByFoodWalletId")]
+        public IActionResult GetExpenseByFoodWalletId(int Id)
+        {
+            var exp = _expenseService.GetExpenseByFoodWalletId(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetExpenseByHealthWalletId")]
+        public IActionResult GetExpenseByHealthWalletId(int Id)
+        {
+            var exp = _expenseService.GetExpenseByHealthWalletId(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetExpenseByNescilitiesWalletId")]
+        public IActionResult GetExpenseByNescilitiesWalletId(int Id)
+        {
+            var exp = _expenseService.GetExpenseByNesceWalletId(Id);
+            return Ok(exp);
+        }
+        [HttpGet("GetExpenseBySystemWalletId")]
+        public IActionResult GetExpenseBySystemWalletId(int Id)
+        {
+            var exp = _expenseService.GetExpenseBySysWalletId(Id);
+            return Ok(exp);
+        }
         [HttpGet("GetExpenseById/{Id}")]
         public async Task<IActionResult> GetExpenseById(int Id)
         {
@@ -35,14 +65,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("CreateExpense")]
-        public async Task<ActionResult<Expense>> CreateExoense([FromForm] CreateExepenseDTO expDTO)
+        public async Task<ActionResult<Expense>> CreateExoense([FromBody] CreateExepenseDTO expDTO)
         {
             var createExpense = await _expenseService.CreateExpense(expDTO);
             return Ok(createExpense);
         }
         [HttpPut]
         [Route("UpdateExpense")]
-        public async Task<IActionResult> UpdateExpense(int id, [FromForm] UpdateExpenseDTO updateExp)
+        public async Task<IActionResult> UpdateExpense(int id, [FromBody] UpdateExpenseDTO updateExp)
         {
             var rs = await _expenseService.UpdateExpense(id, updateExp);
             return Ok(rs);
