@@ -36,54 +36,55 @@ namespace ChildrenVillageSOS_API.Controllers
             _dashboardService = dashboardService;
         }
        
-        [HttpGet("TotalFacilitiesWalletBudget")]
-        public async Task<IActionResult> TotalFacilitiesWalletBudget()
-        {
-            var totalBudget = await _facilitiesWalletService.GetTotalBudget();
-            return Ok(new { TotalBudget = totalBudget });
-        }
+        //[HttpGet("TotalFacilitiesWalletBudget")]
+        //public async Task<IActionResult> TotalFacilitiesWalletBudget()
+        //{
+        //    var totalBudget = await _facilitiesWalletService.GetTotalBudget();
+        //    return Ok(new { TotalBudget = totalBudget });
+        //}
 
-        [HttpGet("TotalHealthWalletBudget")]
-        public async Task<IActionResult> TotalHealthWalletBudget()
-        {
-            var totalBudget = await _healthWalletService.GetTotalBudget();
-            return Ok(new { TotalBudget = totalBudget });
-        }
+        //[HttpGet("TotalHealthWalletBudget")]
+        //public async Task<IActionResult> TotalHealthWalletBudget()
+        //{
+        //    var totalBudget = await _healthWalletService.GetTotalBudget();
+        //    return Ok(new { TotalBudget = totalBudget });
+        //}
 
-        [HttpGet("TotalFoodStuffWalletBudget")]
-        public async Task<IActionResult> TotalFoodStuffWalletBudget()
-        {
-            var totalBudget = await _foodStuffWalletService.GetTotalBudget();
-            return Ok(new { TotalBudget = totalBudget });
-        }
+        //[HttpGet("TotalFoodStuffWalletBudget")]
+        //public async Task<IActionResult> TotalFoodStuffWalletBudget()
+        //{
+        //    var totalBudget = await _foodStuffWalletService.GetTotalBudget();
+        //    return Ok(new { TotalBudget = totalBudget });
+        //}
 
-        [HttpGet("TotalSystemWalletBudget")]
-        public async Task<IActionResult> TotalSystemWalletBudget()
-        {
-            var totalBudget = await _systemWalletService.GetTotalBudget();
-            return Ok(new { TotalBudget = totalBudget });
-        }
+        //[HttpGet("TotalSystemWalletBudget")]
+        //public async Task<IActionResult> TotalSystemWalletBudget()
+        //{
+        //    var totalBudget = await _systemWalletService.GetTotalBudget();
+        //    return Ok(new { TotalBudget = totalBudget });
+        //}
 
-        [HttpGet("TotalNecessitiesWalletBudget")]
-        public async Task<IActionResult> TotalNecessitiesWalletBudget()
-        {
-            var totalBudget = await _necessitiesWalletService.GetTotalBudget();
-            return Ok(new { TotalBudget = totalBudget });
-        }
+        //[HttpGet("TotalNecessitiesWalletBudget")]
+        //public async Task<IActionResult> TotalNecessitiesWalletBudget()
+        //{
+        //    var totalBudget = await _necessitiesWalletService.GetTotalBudget();
+        //    return Ok(new { TotalBudget = totalBudget });
+        //}
 
-        [HttpGet("MonthlyDonations")]
-        public async Task<IActionResult> GetMonthlyDonations()
-        {
-            var monthlyDonations = await _donationService.GetMonthlyDonations();
-            return Ok(monthlyDonations);
-        }
+        //[HttpGet("MonthlyDonations")]
+        //public async Task<IActionResult> GetMonthlyDonations()
+        //{
+        //    var monthlyDonations = await _donationService.GetMonthlyDonations();
+        //    return Ok(monthlyDonations);
+        //}
 
-        [HttpGet("TotalDonations/{year}")]
-        public async Task<IActionResult> GetTotalDonationsByYear(int year)
-        {
-            var totalDonations = await _donationService.GetTotalDonationsByYear(year);
-            return Ok(new { Year = year, TotalDonations = totalDonations });
-        }
+        //[HttpGet("TotalDonations/{year}")]
+        //public async Task<IActionResult> GetTotalDonationsByYear(int year)
+        //{
+        //    var totalDonations = await _donationService.GetTotalDonationsByYear(year);
+        //    return Ok(new { Year = year, TotalDonations = totalDonations });
+        //}
+
 
         // Dashboard Top statistic card
         [HttpGet("active-children")]

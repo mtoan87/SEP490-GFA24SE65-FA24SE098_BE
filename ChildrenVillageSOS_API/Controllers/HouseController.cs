@@ -79,20 +79,20 @@ namespace ChildrenVillageSOS_API.Controllers
             var updatedHouse = await _houseService.UpdateHouse(id, updateHouseDTO);
             return Ok(updatedHouse);
         }
-        [HttpPut]
-        [Route("SoftDeleteHouse")]
-        public async Task<IActionResult> SoftDeleteHouse(string id)
-        {
-            var deleteHouses = await _houseService.SoftDelete(id);
-            return Ok(deleteHouses);
-        }
-        [HttpPut]
-        [Route("SoftRestoreHouse")]
-        public async Task<IActionResult> SoftStoreHouse(string id)
-        {
-            var deleteHouses = await _houseService.SoftRestoreHouse(id);
-            return Ok(deleteHouses);
-        }
+        //[HttpPut]
+        //[Route("SoftDeleteHouse")]
+        //public async Task<IActionResult> SoftDeleteHouse(string id)
+        //{
+        //    var deleteHouses = await _houseService.SoftDelete(id);
+        //    return Ok(deleteHouses);
+        //}
+        //[HttpPut]
+        //[Route("SoftRestoreHouse")]
+        //public async Task<IActionResult> SoftStoreHouse(string id)
+        //{
+        //    var deleteHouses = await _houseService.SoftRestoreHouse(id);
+        //    return Ok(deleteHouses);
+        //}
 
         [HttpDelete]
         [Route("DeleteHouse")]
