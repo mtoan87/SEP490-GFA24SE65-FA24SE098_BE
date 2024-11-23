@@ -17,13 +17,13 @@ namespace ChildrenVillageSOS_API.Controllers
             _houseService = houseService;
         }
 
-        [HttpGet("FormatedHouse")]
-        public async Task<IActionResult> GetAllHouseAsync()
-        {
-            var houses = await _houseService.GetAllHouseAsync();
-            return Ok(houses);
-        }
-        [HttpGet("FormatedHouseIsDelete")]
+        //[HttpGet("FormatedHouse")]
+        //public async Task<IActionResult> GetAllHouseAsync()
+        //{
+        //    var houses = await _houseService.GetAllHouseAsync();
+        //    return Ok(houses);
+        //}
+        [HttpGet("GetAllHousesIsDelete")]
         public async Task<IActionResult> GetAllHouseIsDeleteAsync()
         {
             var houses = await _houseService.GetAllHouseIsDeleteAsync();
@@ -102,7 +102,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(deletedHouse);
         }
 
-        [HttpPut("{id}/restore")]
+        [HttpPut("RestoreHouse/{id}")]
         public async Task<IActionResult> RestoreHouse(string id)
         {
             var house = await _houseService.RestoreHouse(id);

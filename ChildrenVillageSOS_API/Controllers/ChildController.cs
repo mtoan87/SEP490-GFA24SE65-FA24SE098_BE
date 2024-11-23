@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,13 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> GetAllChildren()
         {
             var children = await _childService.GetAllChildren();
+            return Ok(children);
+        }
+
+        [HttpGet("GetAllChildIsDelete")]
+        public async Task<IActionResult> GetAllChildIsDeleteAsync()
+        {
+            var children = await _childService.GetAllChildIsDeleteAsync();
             return Ok(children);
         }
 

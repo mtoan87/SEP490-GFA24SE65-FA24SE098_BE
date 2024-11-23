@@ -18,7 +18,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> DeleteHouse(string id);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
-        Task<HouseResponseDTO[]> GetAllHouseAsync();
+        //Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<string> GetHouseNameByIdAsync(string houseId);
         Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg();
         //Task<House> SoftDelete(string id);
