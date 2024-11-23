@@ -16,7 +16,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<VillageResponseDTO> GetVillageByIdWithImg(string villageId);
         Task<Village> CreateVillage(CreateVillageDTO createVillage);
         Task<Village> UpdateVillage(string villageId, UpdateVillageDTO updateVillage);
-        Task<Village> DeleteVillage(string villageId);    
+        Task<Village> DeleteVillage(string villageId);
+        Task<Village> RestoreVillage(string villageId);
         List<Village> GetVillagesDonatedByUser(string userAccountId);
     }
 }

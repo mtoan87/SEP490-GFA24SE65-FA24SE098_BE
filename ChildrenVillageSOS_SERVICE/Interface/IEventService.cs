@@ -15,6 +15,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Event> CreateEvent(CreateEventDTO createEvent);
         Task<Event> UpdateEvent(int id, UpdateEventDTO updateEvent);
         Task<Event> DeleteEvent(int id);
+        Task<Event> RestoreEvent(int id);
         Task<string> DonateEvent(int id, EventDonateDTO updateEvent);
     }
 }

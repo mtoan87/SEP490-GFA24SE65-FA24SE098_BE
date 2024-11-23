@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,13 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var even = await _eventService.DeleteEvent(id);
             return Ok(even);
+        }
+
+        [HttpPut("RestoreEvent/{id}")]
+        public async Task<IActionResult> RestoreEvent(int id)
+        {
+            var restoredChild = await _eventService.RestoreEvent(id);
+            return Ok(restoredChild);
         }
     }
 }

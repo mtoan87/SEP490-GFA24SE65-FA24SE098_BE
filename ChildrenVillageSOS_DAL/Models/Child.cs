@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
-public partial class Child : ISoftDelete
+public partial class Child
 {
     public string Id { get; set; }
 

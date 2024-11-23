@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<Village>> GetAllVillage()
         {
-            return await _villageRepository.GetAllAsync();
+            return await _villageRepository.GetAllNotDeletedAsync();
         }
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
@@ -173,13 +173,40 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<Village> DeleteVillage(string villageId)
         {
-            var vil = await _villageRepository.GetByIdAsync(villageId);
-            if (vil == null)
+            var village = await _villageRepository.GetByIdAsync(villageId);
+            if (village == null)
             {
-                throw new Exception($"Village with ID{villageId} not found");
+                throw new Exception($"Village with ID {villageId} not found");
             }
-            await _villageRepository.RemoveAsync(vil);
-            return vil;
+
+            if (village.IsDeleted == true)
+            {
+                // Hard delete nếu đã bị soft delete
+                await _villageRepository.RemoveAsync(village);
+            }
+            else
+            {
+                // Soft delete: đặt IsDeleted = true
+                village.IsDeleted = true;
+                await _villageRepository.UpdateAsync(village);
+            }
+            return village;
+        }
+
+        public async Task<Village> RestoreVillage(string villageId)
+        {
+            var village = await _villageRepository.GetByIdAsync(villageId);
+            if (village == null)
+            {
+                throw new Exception($"Village with ID {villageId} not found");
+            }
+
+            if (village.IsDeleted == true) // Nếu đã bị soft delete
+            {
+                village.IsDeleted = false; // Khôi phục bằng cách đặt IsDeleted = false
+                await _villageRepository.UpdateAsync(village);
+            }
+            return village;
         }
     }
 }

@@ -23,10 +23,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageService = imageService;
             _imageRepository = imageRepository;
         }
+
         public async Task<IEnumerable<UserAccount>> GetAllUser()
         {
-            return await _userAccountRepository.GetAllAsync();
+            return await _userAccountRepository.GetAllNotDeletedAsync();
         }
+
         public async Task<UserAccount> GetUserById(string id)
         {
             return await _userAccountRepository.GetUserWithImagesByIdAsync(id);
@@ -171,13 +173,41 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<UserAccount> DeleteUser(string id)
         {
             var user = await _userAccountRepository.GetByIdAsync(id);
-            if(user == null)
+            if (user == null)
             {
-                throw new Exception($"User with ID{id} not found");
+                throw new Exception($"User with ID {id} not found");
             }
-            await _userAccountRepository.RemoveAsync(user);
-            return user;    
+
+            if (user.IsDeleted == true)
+            {
+                // Hard delete nếu đã bị soft delete
+                await _userAccountRepository.RemoveAsync(user);
+            }
+            else
+            {
+                // Soft delete: đặt IsDeleted = true
+                user.IsDeleted = true;
+                await _userAccountRepository.UpdateAsync(user);
+            }
+            return user;
         }
+
+        public async Task<UserAccount> RestoreUser(string id)
+        {
+            var user = await _userAccountRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new Exception($"User with ID {id} not found");
+            }
+
+            if (user.IsDeleted == true) // Nếu đã bị soft delete
+            {
+                user.IsDeleted = false; // Khôi phục bằng cách đặt IsDeleted = false
+                await _userAccountRepository.UpdateAsync(user);
+            }
+            return user;
+        }
+
         public async Task<UserAccount> Login(string email, string password)
         {
             var login = await _userAccountRepository.Login(email, password);
