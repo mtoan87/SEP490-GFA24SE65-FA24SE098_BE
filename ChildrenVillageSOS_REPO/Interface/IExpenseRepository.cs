@@ -11,5 +11,10 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface IExpenseRepository : IRepositoryGeneric<Expense>
     {
         ExpenseResponseDTO[] GetAllExpenses();
+        Expense[] GetExpenseByFacilitiesWalletId(int id);
+        Expense[] GetExpenseByFoodWalletId(int id);
+        Expense[] GetExpenseByHealthWalletId(int id);
+        Expense[] GetExpenseByNecessilitiesWalletId(int id);
+        Expense[] GetExpenseBySystemWalletId(int id);
     }
 }

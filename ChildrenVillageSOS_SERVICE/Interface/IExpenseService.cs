@@ -18,5 +18,10 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Expense> DeleteExpense(int id);
         Task<Expense> ConfirmExpense(int id);
         Task<Expense> SoftDelete(int id);
+        Expense[] GetExpenseByFacilitiesWalletId(int id);
+        Expense[] GetExpenseByFoodWalletId(int id);
+        Expense[] GetExpenseByHealthWalletId(int id);
+        Expense[] GetExpenseByNesceWalletId(int id);
+        Expense[] GetExpenseBySysWalletId(int id);
     }
 }

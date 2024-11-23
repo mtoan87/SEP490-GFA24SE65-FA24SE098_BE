@@ -26,6 +26,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetAllAsync();
         }
+        public FoodWalletReponseDTO[] GetFoodStuffWalletsToArray()
+        {
+            return _repo.GetAllToArray();
+        }
         public async Task<FoodStuffWallet> GetFoodWalletById(int id)
         {
             return await _repo.GetByIdAsync(id);

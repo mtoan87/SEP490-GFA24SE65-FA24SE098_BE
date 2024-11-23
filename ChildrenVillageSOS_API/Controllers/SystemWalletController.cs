@@ -23,6 +23,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _service.GetSystemWallets();
             return Ok(exp);
         }
+        [HttpGet("FormatSystemWallet")]
+        public IActionResult GetWalletArray()
+        {
+            var exp =  _service.GetSystemWalletsToArray();
+            return Ok(exp);
+        }
         [HttpGet("GetWalletById/{Id}")]
         public async Task<IActionResult> GetWalletById(int Id)
         {

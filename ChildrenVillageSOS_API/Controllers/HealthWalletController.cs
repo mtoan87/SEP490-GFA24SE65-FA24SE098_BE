@@ -22,6 +22,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _service.GetHealthWallets();
             return Ok(exp);
         }
+        [HttpGet("GetHealthWalletArray")]
+        public IActionResult GetHealthWalletArray()
+        {
+            var exp =  _service.GetHealthWalletArray();
+            return Ok(exp);
+        }
         [HttpGet("GetHealthWalletById/{Id}")]
         public async Task<IActionResult> GetHealthWalletById(int Id)
         {

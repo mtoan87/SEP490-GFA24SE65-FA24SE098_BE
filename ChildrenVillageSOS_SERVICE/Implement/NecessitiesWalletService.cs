@@ -22,6 +22,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _repo.GetAllAsync();
         }
+        public NecessitiesWallet[] GetNecessitiesWalletsArray()
+        {
+            return _repo.GetNecesWalletsArray();
+        }
         public async Task<NecessitiesWallet> GetNecessitiesWalletById(int id)
         {
             return await _repo.GetByIdAsync(id);

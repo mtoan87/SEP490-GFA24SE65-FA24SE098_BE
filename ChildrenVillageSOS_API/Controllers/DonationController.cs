@@ -24,6 +24,13 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetAllDonations();
             return Ok(donation);
         }
+
+        [HttpGet("FormatDonation")]
+        public IActionResult GetAllDonationsArray()
+        {
+            var donation = _donationService.GetAllDonationArray();
+            return Ok(donation);
+        }
         [HttpGet("GetDonatedVillageByUserId")]
         public async Task<IActionResult> getDonatedVillageByUserId(string userId)
         {
@@ -43,14 +50,14 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(donation);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Donation>> CreateDonation(CreateDonationDTO createDonationDTO)
+        [HttpPost("CreateDonate")]
+        public async Task<ActionResult<Donation>> CreateDonation([FromBody]CreateDonationDTO createDonationDTO)
         {
             var donation = await _donationService.CreateDonation(createDonationDTO);
             return Ok(donation);
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("UpdateDonate")]
         public async Task<IActionResult> UpdateDonation(int Id, UpdateDonationDTO updateDonationDTO)
         {
             var donation = await _donationService.UpdateDonation(Id, updateDonationDTO);

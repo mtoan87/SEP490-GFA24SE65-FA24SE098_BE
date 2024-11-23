@@ -13,5 +13,10 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<Income> GetIncomeByDonationIdAsync(int donationId);
 
         IncomeResponseDTO[] GetAllIncome();
+        Income[] GetIncomeByFacilitiesWalletId(int id);
+        Income[] GetIncomeByFoodWalletId(int id);
+        Income[] GetIncomeByHealthWalletId(int id);
+        Income[] GetIncomeByNecessilitiesWalletId(int id);
+        Income[] GetIncomeBySystemWalletId(int id);
     }
 }

@@ -18,5 +18,10 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Income> UpdateIncome(int id, UpdateIncomeDTO updateIncome);
         Task<Income> DeleteIncome(int id);
         Task<Income> SoftDelete(int id);
+        Income[] GetIcomeByFaciWallet(int id);
+        Income[] GetIcomeByFoodWallet(int id);
+        Income[] GetIcomeByHealthWallet(int id);
+        Income[] GetIcomeByNesWallet(int id);
+        Income[] GetIcomeBySystemWallet(int id);
     }
 }

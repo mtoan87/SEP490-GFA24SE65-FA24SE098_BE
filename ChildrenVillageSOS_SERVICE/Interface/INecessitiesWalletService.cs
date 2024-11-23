@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<decimal> GetTotalBudget();
         Task<NecessitiesWallet> GetNecessitiesWalletById(int id);
         Task<IEnumerable<NecessitiesWallet>> GetNecessitiesWallets();
+        NecessitiesWallet[] GetNecessitiesWalletsArray();
     }
 }

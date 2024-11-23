@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HealthWallet> UpdateHealthWalet(int id, UpdateHealthWalletDTO updatePayment);
         Task<HealthWallet> DeleteHealthWallet(int id);
         Task<decimal> GetTotalBudget();
+        HealthWallet[] GetHealthWalletArray();
     }
 }

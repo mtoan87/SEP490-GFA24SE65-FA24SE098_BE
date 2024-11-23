@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.FacilitiesWalletDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,6 +21,17 @@ namespace ChildrenVillageSOS_REPO.Implement
             return await _context.FacilitiesWallets
                 //.Include(fw => fw.Transactions) // Include related Transactions if needed
                 .FirstOrDefaultAsync(fw => fw.UserAccountId == userAccountId);
+        }
+        public FacilitiesWalletResponseDTO[] GetAllToArray()
+        {
+            var facwallet = _context.FacilitiesWallets
+                .Select(f => new FacilitiesWalletResponseDTO
+                {
+                    Id = f.Id,
+                    UserAccountId = f.UserAccountId,
+                    Budget = f.Budget,
+                }).ToArray();
+            return facwallet;
         }
     }
 }

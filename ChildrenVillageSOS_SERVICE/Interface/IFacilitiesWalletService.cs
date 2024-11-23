@@ -18,5 +18,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<FacilitiesWallet> DeleteFacilitiesWallet(int id);
         Task<FacilitiesWallet> GetFacilitiesWalletByUserIdAsync(string userAccountId);
         Task<decimal> GetTotalBudget();
+        FacilitiesWalletResponseDTO[] GetFacilitiesWalletsArray();
     }
 }

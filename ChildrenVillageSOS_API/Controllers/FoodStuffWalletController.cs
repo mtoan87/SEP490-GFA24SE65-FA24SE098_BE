@@ -22,6 +22,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _service.GetFoodWallets();
             return Ok(exp);
         }
+        [HttpGet("FormatFoodWallet")]
+        public IActionResult GetFoodWalletsToArray()
+        {
+            var exp = _service.GetFoodStuffWalletsToArray();
+            return Ok(exp);
+        }
         [HttpGet("GetFoodWalletById/{Id}")]
         public async Task<IActionResult> GetFoodWalletById(int Id)
         {

@@ -17,6 +17,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Donation> UpdateDonation(int id, UpdateDonationDTO updateDonation);
         Task<Donation> DeleteDonation(int id);
         Task<Donation> RestoreDonation(int id);
+        FormatDonationResponseDTO[] GetAllDonationArray();
         Task<Donation> CreateDonationPayment(CreateDonationPayment createDonation);
         Task<Dictionary<int, Dictionary<string, decimal>>> GetMonthlyDonations();
         Task<int> GetTotalDonationsByYear(int year);

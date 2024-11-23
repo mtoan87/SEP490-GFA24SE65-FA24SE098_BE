@@ -21,5 +21,9 @@ namespace ChildrenVillageSOS_REPO.Implement
                 //.Include(fw => fw.Transactions) // Include related Transactions if needed
                 .FirstOrDefaultAsync(fw => fw.UserAccountId == userAccountId);
         }
+        public SystemWallet[] GetSystemWalletsArray()
+        {
+            return _context.SystemWallets.ToArray();
+        }
     }
 }
