@@ -120,6 +120,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -196,6 +197,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                FoodStuffWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -240,7 +242,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Step 4: Create Transaction
             var income = new Income
             {
-                FacilitiesWalletId = foodWallet?.Id,
+                FoodStuffWalletId = foodWallet?.Id,
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
@@ -316,6 +318,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                HealthWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -360,7 +363,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Step 4: Create Transaction
             var income = new Income
             {
-                FacilitiesWalletId = wallet?.Id,
+                HealthWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
@@ -392,6 +395,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                SystemWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -436,7 +440,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Step 4: Create Income
             var income = new Income
             {
-                FacilitiesWalletId = wallet?.Id,
+                SystemWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
@@ -468,6 +472,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                NecessitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -512,7 +517,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Step 4: Create Transaction
             var income = new Income
             {
-                FacilitiesWalletId = wallet?.Id,
+                NecessitiesWalletId = wallet?.Id,
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,

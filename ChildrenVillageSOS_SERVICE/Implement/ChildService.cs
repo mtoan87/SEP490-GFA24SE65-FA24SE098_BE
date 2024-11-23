@@ -186,6 +186,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = updateChild.UserAccountId,
+                FacilitiesWalletId = editChild.FacilitiesWalletId,
+                FoodStuffWalletId = editChild.FoodStuffWalletId,
+                NecessitiesWalletId = editChild.NecessitiesWalletId,
+                SystemWalletId = editChild.SystemWalletId,
+                HealthWalletId = editChild.HealthWalletId,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = updateChild.Amount ?? 0,
