@@ -9,6 +9,7 @@ using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageService = imageService;
         }
 
+       public  DataTable getHouse()
+        {
+            return _houseRepository.getHouse();
+        }
         public async Task<IEnumerable<House>> GetAllHouses()
         {
             // Chỉ lấy những nhà chưa bị soft delete (IsDeleted = false)

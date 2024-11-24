@@ -3,6 +3,7 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,6 +68,31 @@ namespace ChildrenVillageSOS_REPO.Implement
             return _context.Expenses
                 .Where(i => i.SystemWalletId == id && !i.IsDeleted)
                 .ToArray();
+        }
+
+        public DataTable getExpense()
+        {
+            DataTable dt = new DataTable();
+            dt.TableName = "ExpenseData";
+            dt.Columns.Add("ExpenseID", typeof(int));
+            dt.Columns.Add("ExpenseAmount(VND)", typeof(decimal));
+            dt.Columns.Add("ExpenseDate(MM/DD/YYYY)", typeof(DateTime));
+            dt.Columns.Add("Status", typeof(string));
+            dt.Columns.Add("SystemWalletId", typeof(int));
+            dt.Columns.Add("FacilitiesWalletId", typeof(int));
+            dt.Columns.Add("FoodStuffWalletId", typeof(int));
+            dt.Columns.Add("HealthWalletId", typeof(int));
+            dt.Columns.Add("NecessitiesWalletId", typeof(int));
+            dt.Columns.Add("HouseId", typeof(string));
+            var _list = this._context.Expenses.ToList();
+            if(_list.Count > 0)
+            {
+                _list.ForEach(item =>
+                {
+                    dt.Rows.Add(item.Id,item.ExpenseAmount,item.Expenseday,item.Status,item.SystemWalletId,item.FacilitiesWalletId,item.FoodStuffWallet,item.HealthWalletId,item.NecessitiesWalletId,item.HouseId);
+                });
+            }
+            return dt;
         }
 
     }

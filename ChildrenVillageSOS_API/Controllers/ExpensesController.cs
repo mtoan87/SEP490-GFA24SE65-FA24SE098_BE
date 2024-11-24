@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,12 @@ namespace ChildrenVillageSOS_API.Controllers
     public class ExpensesController : ControllerBase
     {
         private readonly IExpenseService _expenseService;
-        public ExpensesController(IExpenseService expenseService)
+        private readonly IHouseService _houseService;
+
+        public ExpensesController(IExpenseService expenseService, IHouseService houseService)
         {
             _expenseService = expenseService;
+            _houseService = houseService;   
         }
         [HttpGet("FormatedExpenses")]
         public  IActionResult GetFormatedExpenses()
@@ -21,6 +25,23 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp =  _expenseService.GetFormatedExpenses();
             return Ok(exp);
         }
+        [HttpGet("ExportExcel")]
+        public ActionResult ExportExcel()
+        {
+            var _expenseData = _expenseService.getExpense();
+            var _houseData = _houseService.getHouse();
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.AddWorksheet(_expenseData, "Expense Records");
+                wb.AddWorksheet(_houseData);
+                using(MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExpenseRecords.xlsx");
+                }
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllExpenses()
         {

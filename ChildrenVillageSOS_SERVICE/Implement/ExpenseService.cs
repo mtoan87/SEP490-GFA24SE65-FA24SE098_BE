@@ -5,6 +5,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _systemWalletService = systemWalletService;
         }
 
+        public DataTable getExpense()
+        {
+            return _expenseRepository.getExpense();
+        }
         public ExpenseResponseDTO[] GetFormatedExpenses()
         {
             return _expenseRepository.GetAllExpenses();
