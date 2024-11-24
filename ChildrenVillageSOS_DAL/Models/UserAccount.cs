@@ -5,7 +5,7 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class UserAccount
 {
-    public string? Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public string? UserName { get; set; }
 
@@ -35,6 +35,8 @@ public partial class UserAccount
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
+    public virtual Cart? Cart { get; set; }
+
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual ICollection<FacilitiesWallet> FacilitiesWallets { get; set; } = new List<FacilitiesWallet>();
@@ -45,13 +47,17 @@ public partial class UserAccount
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
-    public virtual ICollection<Image>? Images { get; set; } = new List<Image>();
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual ICollection<Income> Incomes { get; set; } = new List<Income>();
 
     public virtual ICollection<NecessitiesWallet> NecessitiesWallets { get; set; } = new List<NecessitiesWallet>();
 
-    public virtual Role Role { get; set; }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public virtual Role? Role { get; set; }
 
     public virtual ICollection<SystemWallet> SystemWallets { get; set; } = new List<SystemWallet>();
 
