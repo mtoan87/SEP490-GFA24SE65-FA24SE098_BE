@@ -10,6 +10,7 @@ using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _villageRepository = villageRepository;
             _imageRepository = imageRepository;
             _imageService = imageService;
+
+        }
+
+        public DataTable getVillage()
+        {
+            return _villageRepository.getVillage();
         }
         public  List<Village> GetVillagesDonatedByUser(string userAccountId)
         {

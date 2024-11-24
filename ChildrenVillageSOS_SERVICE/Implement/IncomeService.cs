@@ -6,6 +6,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _healthWalletRepository = healthWalletRepository;
             _incomeRepository = incomeRepository;   
             _donationRepository = donationRepository;
+        }
+        public DataTable getIncome()
+        {
+            return _incomeRepository.getIncome();
         }
         public async Task<IEnumerable<Income>> GetAllIncomes()
         {

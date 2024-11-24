@@ -13,11 +13,15 @@ namespace ChildrenVillageSOS_API.Controllers
     {
         private readonly IExpenseService _expenseService;
         private readonly IHouseService _houseService;
+        private readonly IUserAccountService _userAccountService;
+        private readonly IVillageService _villageService;
 
-        public ExpensesController(IExpenseService expenseService, IHouseService houseService)
+        public ExpensesController(IExpenseService expenseService, IHouseService houseService, IUserAccountService userAccountService,IVillageService villageService )
         {
             _expenseService = expenseService;
             _houseService = houseService;   
+            _userAccountService = userAccountService;
+            _villageService = villageService;
         }
         [HttpGet("FormatedExpenses")]
         public  IActionResult GetFormatedExpenses()
@@ -30,10 +34,14 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var _expenseData = _expenseService.getExpense();
             var _houseData = _houseService.getHouse();
+            var _userdata = _userAccountService.getUser();
+            var _villagedata = _villageService.getVillage();
             using (XLWorkbook wb = new XLWorkbook())
             {
                 wb.AddWorksheet(_expenseData, "Expense Records");
+                wb.AddWorksheet(_userdata);
                 wb.AddWorksheet(_houseData);
+                wb.AddWorksheet(_villagedata);
                 using(MemoryStream ms = new MemoryStream())
                 {
                     wb.SaveAs(ms);

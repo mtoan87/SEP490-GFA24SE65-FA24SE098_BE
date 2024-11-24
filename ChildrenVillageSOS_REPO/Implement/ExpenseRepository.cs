@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -78,20 +79,43 @@ namespace ChildrenVillageSOS_REPO.Implement
             dt.Columns.Add("ExpenseAmount(VND)", typeof(decimal));
             dt.Columns.Add("ExpenseDate(MM/DD/YYYY)", typeof(DateTime));
             dt.Columns.Add("Status", typeof(string));
-            dt.Columns.Add("SystemWalletId", typeof(int));
-            dt.Columns.Add("FacilitiesWalletId", typeof(int));
-            dt.Columns.Add("FoodStuffWalletId", typeof(int));
-            dt.Columns.Add("HealthWalletId", typeof(int));
-            dt.Columns.Add("NecessitiesWalletId", typeof(int));
-            dt.Columns.Add("HouseId", typeof(string));
-            var _list = this._context.Expenses.ToList();
-            if(_list.Count > 0)
+            dt.Columns.Add("Wallet", typeof(string));
+            dt.Columns.Add("ExpenseOwner", typeof(string));// Cột để hiển thị tên ví
+            dt.Columns.Add("HouseName", typeof(string));
+
+
+            // Truy vấn danh sách Expense
+            var _list = this._context.Expenses.Include(h => h.House).ToList();
+
+            if (_list.Count > 0)
             {
                 _list.ForEach(item =>
                 {
-                    dt.Rows.Add(item.Id,item.ExpenseAmount,item.Expenseday,item.Status,item.SystemWalletId,item.FacilitiesWalletId,item.FoodStuffWallet,item.HealthWalletId,item.NecessitiesWalletId,item.HouseId);
+                    // Kiểm tra ví nào có giá trị khác null và gán tên tương ứng
+                    string walletName = string.Empty;
+                    if (item.FacilitiesWalletId.HasValue)
+                        walletName = "FacilitiesWallet";
+                    else if (item.SystemWalletId.HasValue)
+                        walletName = "SystemWallet";
+                    else if (item.FoodStuffWalletId.HasValue)
+                        walletName = "FoodStuffWallet";
+                    else if (item.HealthWalletId.HasValue)
+                        walletName = "HealthWallet";
+                    else if (item.NecessitiesWalletId.HasValue)
+                        walletName = "NecessitiesWallet";
+
+                    dt.Rows.Add(
+                        item.Id,
+                        item.ExpenseAmount,
+                        item.Expenseday,
+                        item.Status,
+                        walletName,
+                        item.House.HouseOwner,
+                        item.House.HouseName
+                    );
                 });
             }
+
             return dt;
         }
 

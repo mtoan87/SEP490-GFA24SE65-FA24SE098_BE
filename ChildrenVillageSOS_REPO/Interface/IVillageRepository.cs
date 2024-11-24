@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         VillageResponseDTO GetVillageByIdWithImg(string villageId);
         //Dashboard:
         Task<IEnumerable<Village>> GetVillagesWithHouses();
+        DataTable getVillage();
     }
 }
