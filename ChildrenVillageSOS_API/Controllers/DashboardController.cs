@@ -135,25 +135,32 @@ namespace ChildrenVillageSOS_API.Controllers
             });
         }
 
-       // [HttpGet("payment-statistics/date-range")]
-       // public async Task<ActionResult<object>> GetPaymentMethodStatisticsByDateRange(
-       //[FromQuery] DateTime startDate,
-       //[FromQuery] DateTime endDate)
-       // {
-       //     try
-       //     {
-       //         var statistics = await _dashboardService.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
-       //         return Ok(new
-       //         {
-       //             totalTransactions = statistics.Sum(x => x.NumberOfUses),
-       //             totalAmount = statistics.Sum(x => x.TotalAmount),
-       //             statistics = statistics
-       //         });
-       //     }
-       //     catch (Exception ex)
-       //     {
-       //         return StatusCode(500, new { message = "Internal server error", error = ex.Message });
-       //     }
-       // }
+        // [HttpGet("payment-statistics/date-range")]
+        // public async Task<ActionResult<object>> GetPaymentMethodStatisticsByDateRange(
+        //[FromQuery] DateTime startDate,
+        //[FromQuery] DateTime endDate)
+        // {
+        //     try
+        //     {
+        //         var statistics = await _dashboardService.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
+        //         return Ok(new
+        //         {
+        //             totalTransactions = statistics.Sum(x => x.NumberOfUses),
+        //             totalAmount = statistics.Sum(x => x.TotalAmount),
+        //             statistics = statistics
+        //         });
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+        //     }
+        // }
+
+        [HttpGet("academic-performance-distribution")]
+        public async Task<IActionResult> GetAcademicPerformanceDistribution()
+        {
+            var result = await _dashboardService.GetAcademicPerformanceDistribution();
+            return Ok(result);
+        }
     }
 }

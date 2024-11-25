@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Helpers;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -20,15 +21,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IEventRepository _eventRepository;
         private readonly IVillageRepository _villageRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IAcademicReportRepository _academicReportRepository;
 
         public DashboardService(IChildRepository childRepository, IUserAccountRepository userAccountRepository, IEventRepository eventRepository, 
-            IVillageRepository villageRepository, IPaymentRepository paymentRepository)
+            IVillageRepository villageRepository, IPaymentRepository paymentRepository, IAcademicReportRepository academicReportRepository)
         {
             _childRepository = childRepository;
             _userAccountRepository = userAccountRepository;
             _eventRepository = eventRepository;
             _villageRepository = villageRepository;
             _paymentRepository = paymentRepository;
+            _academicReportRepository = academicReportRepository;
         }
 
         //TopStatCards
@@ -98,5 +101,60 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         //{
         //    return await _paymentRepository.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
         //}
+
+        // Academic Performance Distribution Dashboard
+        public async Task<List<AcademicPerformanceDistributionDTO>> GetAcademicPerformanceDistribution()
+        {
+            var reports = await _academicReportRepository.GetAcademicPerformanceDistribution();
+
+            var primaryReports = reports.Where(r => r.Diploma == "Primary School").ToList();
+            var secondaryReports = reports.Where(r => r.Diploma == "Secondary School").ToList();
+            var highSchoolReports = reports.Where(r => r.Diploma == "High School").ToList();
+
+            var result = new List<AcademicPerformanceDistributionDTO>
+        {
+            CalculateDistribution(primaryReports, "Primary School"),
+            CalculateDistribution(secondaryReports, "Secondary School"),
+            CalculateDistribution(highSchoolReports, "High School")
+        };
+
+            return result;
+        }
+
+        private AcademicPerformanceDistributionDTO CalculateDistribution(List<AcademicReport> reports, string diploma)
+        {
+            int total = reports.Count;
+            if (total == 0) return new AcademicPerformanceDistributionDTO
+            {
+                Diploma = diploma,
+                ExcellentCount = 0,
+                GoodCount = 0,
+                AverageCount = 0,
+                BelowAverageCount = 0,
+                ExcellentPercentage = 0,
+                GoodPercentage = 0,
+                AveragePercentage = 0,
+                BelowAveragePercentage = 0
+            };
+
+            var excellent = reports.Count(r => r.SchoolReport == "Excellent");
+            var veryGood = reports.Count(r => r.SchoolReport == "Very Good");
+            var good = reports.Count(r => r.SchoolReport == "Good");
+            var average = reports.Count(r => r.SchoolReport == "Average");
+            var belowAverage = reports.Count(r => r.SchoolReport == "Below Average");
+
+            return new AcademicPerformanceDistributionDTO
+            {
+                Diploma = diploma,
+                ExcellentCount = excellent,
+                GoodCount = good,
+                AverageCount = average,
+                BelowAverageCount = belowAverage,
+                ExcellentPercentage = Math.Round((double)excellent / total * 100, 2),
+                GoodPercentage = Math.Round((double)good / total * 100, 2),
+                AveragePercentage = Math.Round((double)average / total * 100, 2),
+                BelowAveragePercentage = Math.Round((double)belowAverage / total * 100, 2)
+            };
+        }
     }
 }
