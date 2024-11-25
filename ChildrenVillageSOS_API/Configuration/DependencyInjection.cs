@@ -1,7 +1,9 @@
-﻿using ChildrenVillageSOS_REPO.Implement;
+﻿using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChildrenVillageSOS_API.Configuration
 {
@@ -51,6 +53,12 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDashboardService, DashboardService>();
             return services;
+        }
+
+        public static void AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<SoschildrenVillageDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionStringDB")));
         }
     }
 }

@@ -1,6 +1,7 @@
 using ChildrenVillageSOS_API.Configuration;
 using ChildrenVillageSOS_DAL.Models;
 using CloudinaryDotNet;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -13,14 +14,9 @@ var cloudinarySettings = new CloudinaryDotNet.Account(
 );
 builder.Services.AddSingleton(new Cloudinary(cloudinarySettings));
 
-builder.Services.AddDbContext<SoschildrenVillageDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionStringDB");
-    options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
-});
-
 builder.Services.AddRepository();
 builder.Services.AddService();
+builder.Services.AddDataAccessServices(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 
@@ -50,11 +46,13 @@ builder.Services.AddControllers()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+});
+
 
 // Ensure CORS is configured before authentication and authorization
 app.UseCors("AllowAllOrigins");
