@@ -20,5 +20,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<List<ChildrenDemographicsDTO>> GetChildrenDemographics();
         Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatistics();
         //Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatisticsByDateRange(DateTime startDate, DateTime endDate);
+        Task<List<AcademicPerformanceDistributionDTO>> GetAcademicPerformanceDistribution();
     }
 }

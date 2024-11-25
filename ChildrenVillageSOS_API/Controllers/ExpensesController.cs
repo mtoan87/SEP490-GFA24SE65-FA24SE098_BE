@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,16 @@ namespace ChildrenVillageSOS_API.Controllers
     public class ExpensesController : ControllerBase
     {
         private readonly IExpenseService _expenseService;
-        public ExpensesController(IExpenseService expenseService)
+        private readonly IHouseService _houseService;
+        private readonly IUserAccountService _userAccountService;
+        private readonly IVillageService _villageService;
+
+        public ExpensesController(IExpenseService expenseService, IHouseService houseService, IUserAccountService userAccountService,IVillageService villageService )
         {
             _expenseService = expenseService;
+            _houseService = houseService;   
+            _userAccountService = userAccountService;
+            _villageService = villageService;
         }
         [HttpGet("FormatedExpenses")]
         public  IActionResult GetFormatedExpenses()
@@ -21,6 +29,27 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp =  _expenseService.GetFormatedExpenses();
             return Ok(exp);
         }
+        [HttpGet("ExportExcel")]
+        public ActionResult ExportExcel()
+        {
+            var _expenseData = _expenseService.getExpense();
+            var _houseData = _houseService.getHouse();
+            var _userdata = _userAccountService.getUser();
+            var _villagedata = _villageService.getVillage();
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.AddWorksheet(_expenseData, "Expense Records");
+                wb.AddWorksheet(_userdata);
+                wb.AddWorksheet(_houseData);
+                wb.AddWorksheet(_villagedata);
+                using(MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExpenseRecords.xlsx");
+                }
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllExpenses()
         {

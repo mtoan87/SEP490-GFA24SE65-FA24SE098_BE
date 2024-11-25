@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Expense[] GetExpenseByHealthWalletId(int id);
         Expense[] GetExpenseByNecessilitiesWalletId(int id);
         Expense[] GetExpenseBySystemWalletId(int id);
+        DataTable getExpense();
     }
 }

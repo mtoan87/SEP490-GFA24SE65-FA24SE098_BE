@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_API.Configuration
     {
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
+            services.AddScoped<IAcademicReportRepository, AcademicReportRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IIncomeRepository, IncomeRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -29,11 +30,13 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<IHealthReportRepository, HealthReportRepository>();
             return services;
         }
 
         public static IServiceCollection AddService(this IServiceCollection services)
         {
+            services.AddScoped<IAcademicReportService, AcademicReportService>();
             services.AddScoped<ISystemWalletService, SystemWalletService>();          
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IExpenseService, ExpenseService>();
@@ -52,6 +55,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IHealthReportService, HealthReportService>();
             return services;
         }
 

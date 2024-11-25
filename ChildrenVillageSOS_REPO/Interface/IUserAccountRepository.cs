@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<UserAccount> GetHighestIdUser();
         Task<UserAccount> GetUserWithImagesByIdAsync(string id);
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync(); //Dashboard
+        DataTable getUser();
     }
 }

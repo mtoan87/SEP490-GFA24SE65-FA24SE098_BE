@@ -3,6 +3,7 @@ using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,5 +27,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         //Task<House> SoftRestoreHouse(string id);
         Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync();
         Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId);
+        DataTable getHouse();
     }
 }

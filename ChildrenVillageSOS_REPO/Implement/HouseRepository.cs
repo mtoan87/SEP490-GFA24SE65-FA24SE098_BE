@@ -4,6 +4,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,40 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
 
         }
-
+        public DataTable getHouse()
+        {
+            DataTable dt = new DataTable();
+            dt.TableName = "HouseData";
+            dt.Columns.Add("HouseId", typeof(string));
+            dt.Columns.Add("HouseName", typeof(string));
+            dt.Columns.Add("HouseNumber", typeof(int));
+            dt.Columns.Add("Location", typeof(string));
+            dt.Columns.Add("Description", typeof(string));
+            dt.Columns.Add("HouseMember", typeof(int));
+            dt.Columns.Add("HouseOwner", typeof(string));
+            dt.Columns.Add("Status", typeof(string));
+            dt.Columns.Add("HouserMotherId", typeof(string));
+            dt.Columns.Add("VillageId", typeof(string));
+            var _list = this._context.Houses.ToList();
+            if (_list.Count > 0)
+            {
+                _list.ForEach(item =>
+                {
+                    dt.Rows.Add(
+                        item.Id,
+                        item.HouseName,
+                        item.HouseNumber,                     
+                        item.Location,
+                        item.Description,
+                        item.HouseMember,
+                        item.HouseOwner,
+                        item.Status,
+                        item.UserAccountId,
+                        item.VillageId);
+                });
+            }
+            return dt;
+        }
         public async Task<IEnumerable<House>> GetAllNotDeletedAsync()
         {
             // Sử dụng Include để lấy các hình ảnh liên quan đến Event

@@ -6,6 +6,7 @@ using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageRepository = imageRepository;
         }
 
+        public DataTable getUser()
+        {
+            return _userAccountRepository.getUser();
+        }
         public async Task<IEnumerable<UserAccount>> GetAllUser()
         {
             return await _userAccountRepository.GetAllNotDeletedAsync();

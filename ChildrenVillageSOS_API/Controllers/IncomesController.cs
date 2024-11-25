@@ -3,6 +3,7 @@ using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,15 +14,41 @@ namespace ChildrenVillageSOS_API.Controllers
     public class IncomesController : ControllerBase
     {
         private readonly IIncomeService _incomeService;
-        public IncomesController(IIncomeService incomeService )
+        private readonly IHouseService _houseService;
+        private readonly IUserAccountService _userAccountService;
+        private readonly IVillageService _villageService;
+        public IncomesController(IIncomeService incomeService,IHouseService houseService, IUserAccountService userAccountService, IVillageService villageService )
         {
             _incomeService = incomeService;
+            _houseService = houseService;
+            _userAccountService = userAccountService;
+            _villageService = villageService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllIncomes()
         {
             var exp = await _incomeService.GetAllIncomes();
             return Ok(exp);
+        }
+        [HttpGet("ExportExcel")]
+        public ActionResult ExportExcel()
+        {
+            var _incomeData = _incomeService.getIncome();
+            var _houseData = _houseService.getHouse();
+            var _userData = _userAccountService.getUser();
+            var _villageData = _villageService.getVillage();
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.AddWorksheet(_incomeData, "Income Records");
+                wb.AddWorksheet(_userData);
+                wb.AddWorksheet(_houseData);
+                wb.AddWorksheet(_villageData);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "IncomeRecords.xlsx");
+                }
+            }
         }
         [HttpGet("FormatedIncome")]
         public  IActionResult GetFormatedIncome()

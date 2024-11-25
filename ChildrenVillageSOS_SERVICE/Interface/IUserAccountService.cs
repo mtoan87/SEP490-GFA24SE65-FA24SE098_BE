@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IUserAccountService
     {
+        DataTable getUser();
         Task<IEnumerable<UserAccount>> GetAllUser();
         Task<UserAccount> GetUserById(string id);
         Task<UserAccount> CreateUser(CreateUserDTO createUser);
