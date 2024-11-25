@@ -245,7 +245,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
             vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
-            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
             var income = new Income
             {
