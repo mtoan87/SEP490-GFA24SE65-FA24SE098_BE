@@ -11,6 +11,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IAcademicReportRepository : IRepositoryGeneric<AcademicReport>
     {
-
+        Task<List<AcademicReport>> GetAcademicPerformanceDistribution();
     }
 }
