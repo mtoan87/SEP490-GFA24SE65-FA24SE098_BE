@@ -95,6 +95,39 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return childResponseDTOs;
         }
+        public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithHealthStatusBad()
+        {
+            var childs = await _childRepository.GetAllNotDeletedAsync();
+
+            var childResponseDTOs = childs
+                .Where(x => x.HealthStatus == "Bad")
+                .Select(x => new ChildResponseDTO
+            {
+                Id = x.Id,
+                ChildName = x.ChildName,
+                HealthStatus = x.HealthStatus,
+                HouseId = x.HouseId,
+                FacilitiesWalletId = x.FacilitiesWalletId,
+                SystemWalletId = x.SystemWalletId,
+                FoodStuffWalletId = x.FoodStuffWalletId,
+                HealthWalletId = x.HealthWalletId,
+                NecessitiesWalletId = x.NecessitiesWalletId,
+                Amount = x.Amount ?? 0,
+                CurrentAmount = x.CurrentAmount ?? 0,
+                AmountLimit = x.AmountLimit ?? 0,
+                Gender = x.Gender,
+                Dob = x.Dob,
+                Status = x.Status,
+                CreatedDate = x.CreatedDate,
+                ModifiedDate = x.ModifiedDate,
+                ImageUrls = x.Images.Where(img => !img.IsDeleted)
+                                     .Select(img => img.UrlPath)
+                                     .ToArray()
+            }).ToArray();
+
+            return childResponseDTOs;
+
+        }
 
         // GET ID
         public async Task<Child> GetChildById(string id)

@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         Task<IEnumerable<Child>> GetAllChildren();
         Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg();
+        Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithHealthStatusBad();
         Task<Child> GetChildById(string id);
         Task<ChildResponseDTO> GetChildByIdWithImg(string childid);
         Task<Child> CreateChild(CreateChildDTO createChild);
