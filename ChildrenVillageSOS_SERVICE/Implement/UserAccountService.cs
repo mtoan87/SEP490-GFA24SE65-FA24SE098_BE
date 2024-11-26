@@ -1,6 +1,8 @@
-﻿using ChildrenVillageSOS_DAL.DTO.UserDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -221,6 +223,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception("Login Fail!");
             }
             return login;
+        }
+
+        public Task<UserResponseDTO[]> GetAllUserIsDeletedAsync()
+        {
+            return _userAccountRepository.GetAllUserIsDeletedAsync();
         }
     }
 }
