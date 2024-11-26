@@ -98,7 +98,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             // Số sự kiện đang active
             var onGoingEvents = await _context.Events
-                .Where(e => !e.IsDeleted && e.Status == "Scheduled")
+                .Where(e => !e.IsDeleted && e.Status == "Active")
                 .CountAsync();
 
             return new TotalEventsStatDTO

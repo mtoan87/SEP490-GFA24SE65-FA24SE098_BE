@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
+using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<UserAccount> GetUserWithImagesByIdAsync(string id);
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync(); //Dashboard
         DataTable getUser();
+        Task<UserResponseDTO[]> GetAllUserIsDeletedAsync();
     }
 }

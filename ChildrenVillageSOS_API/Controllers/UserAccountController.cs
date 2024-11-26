@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,14 @@ namespace ChildrenVillageSOS_API.Controllers
             var user = await _userAccountService.GetAllUser();
             return Ok(user);
         }
+
+        [HttpGet("GetAllUserIsDelete")]
+        public async Task<IActionResult> GetAllUserIsDeletedAsync()
+        {
+            var children = await _userAccountService.GetAllUserIsDeletedAsync();
+            return Ok(children);
+        }
+
         [HttpGet("GetUserById/{Id}")]
         public async Task<IActionResult> GetUserById(string Id)
         {
