@@ -21,5 +21,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Village> DeleteVillage(string villageId);
         Task<Village> RestoreVillage(string villageId);
         List<Village> GetVillagesDonatedByUser(string userAccountId);
+        Task<VillageResponseDTO[]> GetAllVillageIsDelete();
     }
 }

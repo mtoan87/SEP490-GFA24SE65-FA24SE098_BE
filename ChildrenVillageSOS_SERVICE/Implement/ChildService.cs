@@ -94,7 +94,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }).ToArray();
 
             return childResponseDTOs;
-
         }
 
         // GET ID

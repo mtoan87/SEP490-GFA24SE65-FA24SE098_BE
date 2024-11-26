@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
@@ -42,6 +43,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<IEnumerable<Village>> GetAllVillage()
         {
             return await _villageRepository.GetAllNotDeletedAsync();
+        }
+
+        public Task<VillageResponseDTO[]> GetAllVillageIsDelete()
+        {
+            return _villageRepository.GetAllVillageIsDelete();
         }
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
