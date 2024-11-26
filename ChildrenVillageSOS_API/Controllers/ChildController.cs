@@ -38,6 +38,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(children);
         }
 
+        [HttpGet("GetAllChildWithHealthStatusBad")]
+        public async Task<IActionResult> GetAllChildrenBad()
+        {
+            var children = await _childService.GetAllChildrenWithHealthStatusBad();
+            return Ok(children);
+        }
+
         [HttpGet("GetChildWithImg/{Id}")]
         public async Task<IActionResult> GetChildWithImg(string Id)
         {
