@@ -25,6 +25,38 @@ namespace ChildrenVillageSOS_REPO.Implement
                                  .Where(e => !e.IsDeleted) // Nếu cần, lọc các sự kiện không bị xóa
                                  .ToListAsync();
         }
+
+
+        public async Task<EventResponseDTO[]> GetAllEventIsDeleteAsync()
+        {
+            return await _context.Events
+                .Where(e => e.IsDeleted) 
+                .Select(e => new EventResponseDTO
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    FacilitiesWalletId = e.FacilitiesWalletId,
+                    FoodStuffWalletId = e.FoodStuffWalletId,
+                    SystemWalletId = e.SystemWalletId,
+                    HealthWalletId = e.HealthWalletId,
+                    NecessitiesWalletId = e.NecessitiesWalletId,
+                    Description = e.Description,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Amount = e.Amount ?? 0, // Sử dụng giá trị mặc định nếu null
+                    CurrentAmount = e.CurrentAmount ?? 0,
+                    AmountLimit = e.AmountLimit ?? 0,
+                    Status = e.Status,
+                    VillageId = e.VillageId,
+                    CreatedDate = e.CreatedDate,
+                    ImageUrls = e.Images
+                                .Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
+                                .Select(img => img.UrlPath)
+                                .ToArray() // Chuyển thành mảng
+                })
+                .ToArrayAsync(); // Thực thi truy vấn và trả về mảng
+        }
+
         public EventResponseDTO GetEventById(int eventId)
         {
             var eventDetails = _context.Events
@@ -55,7 +87,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .FirstOrDefault();  // Get the first (or default) result
 
             return eventDetails;
-        }
+        }    
 
         public async Task<TotalEventsStatDTO> GetTotalEventsStatAsync()
         {

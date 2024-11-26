@@ -21,6 +21,14 @@ namespace ChildrenVillageSOS_API.Controllers
             var even = await _eventService.GetAllEvent();
             return Ok(even);
         }
+
+        [HttpGet("GetAllEventsIsDelete")]
+        public async Task<IActionResult> GetAllEventsIsDelete()
+        {
+            var deletedEvents = await _eventService.GetAllEventIsDeleteAsync();
+            return Ok(deletedEvents);
+        }
+
         [HttpGet("GetEventById/{id}")]
         public async Task<ActionResult<EventResponseDTO>> GetEventById(int id)
         {

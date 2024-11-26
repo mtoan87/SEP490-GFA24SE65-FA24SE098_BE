@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -41,6 +42,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _incomeRepository = incomeRepository;
 
         }
+
+        public Task<EventResponseDTO[]> GetAllEventIsDeleteAsync()
+        {
+            return _eventRepository.GetAllEventIsDeleteAsync();
+        }
+
         public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()
         {
             var events = await _eventRepository.GetAllNotDeletedAsync();

@@ -23,6 +23,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(vil);
         }
 
+        [HttpGet("GetAllVillageIsDelete")]
+        public async Task<IActionResult> GetAllVillageIsDelete()
+        {
+            var deletedVillages = await _villageService.GetAllVillageIsDelete();
+            return Ok(deletedVillages);
+        }
+
         [HttpGet("GetAllVillageWithImg")]
         public async Task<IActionResult> GetAllVillageWithImg()
         {

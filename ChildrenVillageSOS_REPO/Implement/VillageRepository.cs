@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,29 @@ namespace ChildrenVillageSOS_REPO.Implement
         public VillageRepository(SoschildrenVillageDbContext context) : base(context)
         {
 
+        }
+
+        public async Task<VillageResponseDTO[]> GetAllVillageIsDelete()
+        {
+            return await _context.Villages
+                .Where(v => v.IsDeleted)
+                .Select(v => new VillageResponseDTO
+                {
+                    Id = v.Id,
+                    VillageName = v.VillageName,
+                    Location = v.Location,
+                    Description = v.Description,
+                    Status = v.Status,
+                    UserAccountId = v.UserAccountId,
+                    IsDeleted = v.IsDeleted,
+                    CreatedDate = v.CreatedDate,
+                    ModifiedDate = v.ModifiedDate,
+                    ImageUrls = v.Images
+                        .Where(img => !img.IsDeleted) // Lấy các hình ảnh chưa bị xóa
+                        .Select(img => img.UrlPath)
+                        .ToArray()              // Convert to array
+                })
+                .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
         }
 
         public DataTable getVillage()

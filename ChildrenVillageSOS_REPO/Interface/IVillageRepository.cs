@@ -16,5 +16,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         //Dashboard:
         Task<IEnumerable<Village>> GetVillagesWithHouses();
         DataTable getVillage();
+        Task<VillageResponseDTO[]> GetAllVillageIsDelete();
     }
 }
