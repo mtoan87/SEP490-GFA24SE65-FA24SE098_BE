@@ -128,10 +128,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 Diploma = diploma,
                 ExcellentCount = 0,
+                VeryGoodCount = 0,
                 GoodCount = 0,
                 AverageCount = 0,
                 BelowAverageCount = 0,
                 ExcellentPercentage = 0,
+                VeryGoodPercentage = 0,
                 GoodPercentage = 0,
                 AveragePercentage = 0,
                 BelowAveragePercentage = 0
@@ -147,10 +149,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 Diploma = diploma,
                 ExcellentCount = excellent,
+                VeryGoodCount = veryGood,
                 GoodCount = good,
                 AverageCount = average,
                 BelowAverageCount = belowAverage,
                 ExcellentPercentage = Math.Round((double)excellent / total * 100, 2),
+                VeryGoodPercentage = Math.Round((double)veryGood / total * 100, 2),
                 GoodPercentage = Math.Round((double)good / total * 100, 2),
                 AveragePercentage = Math.Round((double)average / total * 100, 2),
                 BelowAveragePercentage = Math.Round((double)belowAverage / total * 100, 2)
