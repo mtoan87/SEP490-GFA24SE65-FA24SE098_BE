@@ -24,5 +24,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task SaveChangesAsync();
         Task<int> UpdateAsync(T entity);
         Task<bool> RestoreAsync(T entity);
+        Task<T> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
     }
 }

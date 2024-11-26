@@ -38,6 +38,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<AcademicReport> CreateAcademicReport(CreateAcademicReportDTO createReport)
         {
+            var existingReport = await _academicReportRepository.FindAsync(r => r.ChildId == createReport.ChildId);
+
+            if (existingReport != null)
+            {
+                throw new InvalidOperationException($"An academic report already exists for ChildId {createReport.ChildId}.");
+            }
+
             var newReport = new AcademicReport
             {
                 Diploma = createReport.Diploma,

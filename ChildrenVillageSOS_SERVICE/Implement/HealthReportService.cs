@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -36,6 +37,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<HealthReport> CreateHealthReport(CreateHealthReportDTO createReport)
         {
+            var existingReport = await _healthReportRepository.FindAsync(r => r.ChildId == createReport.ChildId);
+
+            if (existingReport != null)
+            {
+                throw new InvalidOperationException($"An health report already exists for ChildId {createReport.ChildId}.");
+            }
+
             var newReport = new HealthReport
             {
                 ChildId = createReport.ChildId,

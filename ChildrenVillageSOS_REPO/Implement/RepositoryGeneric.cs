@@ -129,6 +129,16 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             throw new InvalidOperationException("This entity does not support soft delete or is not deleted.");
         }
-    
+
+        public async Task<T> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+
     }
 }
