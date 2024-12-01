@@ -18,8 +18,8 @@ namespace ChildrenVillageSOS_DAL.DTO.HealthReportDTO
 
         public string VaccinationStatus { get; set; }
 
-        public string Weight { get; set; }
+        public double Weight { get; set; }
 
-        public string Height { get; set; }
+        public double Height { get; set; }
     }
 }

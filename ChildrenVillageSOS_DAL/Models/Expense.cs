@@ -5,7 +5,6 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class Expense
 {
-    
     public int Id { get; set; }
 
     public decimal ExpenseAmount { get; set; }
