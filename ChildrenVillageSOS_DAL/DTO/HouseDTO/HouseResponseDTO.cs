@@ -9,7 +9,7 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 {
     public class HouseResponseDTO
     {
-        public string HouseId { get; set; }
+        public string Id { get; set; }
 
         public string HouseName { get; set; }
 
@@ -21,6 +21,8 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public int? HouseMember { get; set; }
 
+        public int? CurrentMembers { get; set; }
+
         public string HouseOwner { get; set; }
 
         public string Status { get; set; }
@@ -28,6 +30,18 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
         public string UserAccountId { get; set; }
 
         public string VillageId { get; set; }
+
+        public DateTime FoundationDate { get; set; }
+
+        public DateTime? LastInspectionDate { get; set; }
+
+        public string MaintenanceStatus { get; set; } = null!;
+
+        public string? CreatedBy { get; set; }
+
+        public string? ModifiedBy { get; set; }
+
+        public string? RoleName { get; set; }
 
         public bool? IsDeleted { get; set; }
 

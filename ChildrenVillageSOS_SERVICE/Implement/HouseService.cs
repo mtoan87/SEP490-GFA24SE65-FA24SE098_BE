@@ -21,12 +21,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IHouseRepository _houseRepository;
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
+        private readonly IChildRepository _childRepository;
 
-        public HouseService(IHouseRepository houseRepository, IImageService imageService, IImageRepository imageRepository)
+        public HouseService(IHouseRepository houseRepository, IImageService imageService, IImageRepository imageRepository, IChildRepository childRepository)
         {
             _houseRepository = houseRepository;
             _imageRepository = imageRepository;
             _imageService = imageService;
+            _childRepository = childRepository;
         }
 
        public  DataTable getHouse()
@@ -44,26 +46,42 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Lấy tất cả các House không bị xóa
             var houses = await _houseRepository.GetAllNotDeletedAsync();
 
-            // Chuyển đổi dữ liệu thành HouseResponseDTO
-            var houseResponseDTOs = houses.Select(house => new HouseResponseDTO
-            {
-                HouseId = house.Id,
-                HouseName = house.HouseName,
-                HouseNumber = house.HouseNumber,
-                Location = house.Location,
-                Description = house.Description,
-                HouseMember = house.HouseMember,
-                HouseOwner = house.HouseOwner,
-                Status = house.Status,
-                UserAccountId = house.UserAccountId,
-                VillageId = house.VillageId,
-                IsDeleted = house.IsDeleted,
-                CreatedDate = house.CreatedDate,
-                ModifiedDate = house.ModifiedDate,
-                ImageUrls = house.Images.Where(img => !img.IsDeleted)  // Lọc các hình ảnh không bị xóa
-                                        .Select(img => img.UrlPath)  // Lấy đường dẫn hình ảnh
-                                        .ToArray()                  // Chuyển thành mảng
-            }).ToArray();
+            // Duyệt qua từng House để lấy CurrentMembers
+            var houseResponseDTOs = new List<HouseResponseDTO>();
+
+            foreach (var house in houses)
+            {             
+                int currentMembers = await _childRepository.CountChildrenByHouseIdAsync(house.Id);
+
+                // Tạo HouseResponseDTO với CurrentMembers được tính tự động
+                houseResponseDTOs.Add(new HouseResponseDTO
+                {
+                    Id = house.Id,
+                    HouseName = house.HouseName,
+                    HouseNumber = house.HouseNumber,
+                    Location = house.Location,
+                    Description = house.Description,
+                    HouseMember = house.HouseMember,
+                    CurrentMembers = currentMembers,
+                    HouseOwner = house.HouseOwner,
+                    Status = house.Status,
+                    UserAccountId = house.UserAccountId,
+                    VillageId = house.VillageId,
+                    FoundationDate = house.FoundationDate,
+                    LastInspectionDate = house.LastInspectionDate,
+                    MaintenanceStatus = house.MaintenanceStatus,
+                    CreatedBy = house.CreatedBy,
+                    ModifiedBy = house.ModifiedBy,
+                    RoleName = house.RoleName,
+                    IsDeleted = false,
+                    CreatedDate = house.CreatedDate,
+                    ModifiedDate = house.ModifiedDate,
+                    ImageUrls = house.Images
+                                    .Where(img => !img.IsDeleted)  // Lọc các hình ảnh không bị xóa
+                                    .Select(img => img.UrlPath)   // Lấy đường dẫn hình ảnh
+                                    .ToArray()                    // Chuyển thành mảng
+                });
+            }
 
             return houseResponseDTOs;
         }
@@ -96,10 +114,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Location = createHouse.Location,
                 Description = createHouse.Description,
                 HouseMember = createHouse.HouseMember,
+                CurrentMembers = 0,
                 HouseOwner = createHouse.HouseOwner,
-                Status = "Active",
+                Status = "Active", // Nếu không được cung cấp, mặc định là "Active"
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
+                FoundationDate = createHouse.FoundationDate,
+                LastInspectionDate = createHouse.LastInspectionDate,
+                MaintenanceStatus = createHouse.MaintenanceStatus,
+                CreatedBy = createHouse.CreatedBy,
                 IsDeleted = false,
                 CreatedDate = DateTime.Now
             };
@@ -144,10 +167,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Location = updateHouse.Location;
             existingHouse.Description = updateHouse.Description;
             existingHouse.HouseMember = updateHouse.HouseMember;
+            //existingHouse.CurrentMembers = updateHouse.CurrentMembers;
             existingHouse.HouseOwner = updateHouse.HouseOwner;
             existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
+            existingHouse.FoundationDate = updateHouse.FoundationDate;
+            existingHouse.LastInspectionDate = updateHouse.LastInspectionDate;
+            existingHouse.MaintenanceStatus = updateHouse.MaintenanceStatus;
+            existingHouse.ModifiedBy = updateHouse.ModifiedBy;
             existingHouse.ModifiedDate = DateTime.Now;
 
             var existingImages = await _imageRepository.GetByHouseIdAsync(existingHouse.Id);
@@ -197,28 +225,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _houseRepository.UpdateAsync(existingHouse);
             return existingHouse;
         }
-        //public async Task<House> SoftDelete(string id)
-        //{
-        //    var house = await _houseRepository.GetByIdAsync(id);
-        //    if (house == null)
-        //    {
-        //        throw new Exception($"House with ID{id} not found!");
-        //    }
-        //    house.IsDeleted = true;
-        //    await _houseRepository.UpdateAsync(house);
-        //    return house;
-        //}
-        //public async Task<House> SoftRestoreHouse(string id)
-        //{
-        //    var house = await _houseRepository.GetByIdAsync(id);
-        //    if (house == null)
-        //    {
-        //        throw new Exception($"House with ID{id} not found!");
-        //    }
-        //    house.IsDeleted = false;
-        //    await _houseRepository.UpdateAsync(house);
-        //    return house;
-        //}
 
         public async Task<House> DeleteHouse(string id)
         {
@@ -257,6 +263,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return house;
         }
+
         //public Task<HouseResponseDTO[]> GetAllHouseAsync()
         //{
         //    return _houseRepository.GetAllHouseAsync();
