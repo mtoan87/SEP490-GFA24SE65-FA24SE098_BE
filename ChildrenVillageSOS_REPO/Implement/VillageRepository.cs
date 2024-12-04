@@ -26,20 +26,29 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Select(v => new VillageResponseDTO
                 {
                     Id = v.Id,
-                    VillageName = v.VillageName,
-                    Location = v.Location,
-                    Description = v.Description,
-                    Status = v.Status,
+                    VillageName = v.VillageName ?? string.Empty,
+                    EstablishedDate = v.EstablishedDate,
+                    TotalHouses = v.Houses.Count(h => !h.IsDeleted),
+                    TotalChildren = v.Houses
+                        .SelectMany(h => h.Children)
+                        .Count(c => !c.IsDeleted),
+                    ContactNumber = v.ContactNumber,
+                    Location = v.Location ?? string.Empty,
+                    Description = v.Description ?? string.Empty,
+                    Status = "Active",
                     UserAccountId = v.UserAccountId,
+                    CreatedBy = v.CreatedBy,
+                    ModifiedBy = v.ModifiedBy,
+                    RoleName = v.RoleName,
                     IsDeleted = v.IsDeleted,
                     CreatedDate = v.CreatedDate,
                     ModifiedDate = v.ModifiedDate,
                     ImageUrls = v.Images
-                        .Where(img => !img.IsDeleted) // Lấy các hình ảnh chưa bị xóa
+                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
                         .Select(img => img.UrlPath)
-                        .ToArray()              // Convert to array
+                        .ToArray() // Chuyển thành mảng
                 })
-                .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
+                .ToArrayAsync(); // Chuyển kết quả thành mảng (Array) bất đồng bộ
         }
 
         public DataTable getVillage()
@@ -86,16 +95,27 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Select(village => new VillageResponseDTO
                 {
                     Id = village.Id,
-                    VillageName = village.VillageName,
-                    Location = village.Location,
-                    Description = village.Description,
-                    Status = village.Status,
+                    VillageName = village.VillageName ?? string.Empty,
+                    EstablishedDate = village.EstablishedDate,
+                    TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                    TotalChildren = village.Houses
+                        .SelectMany(h => h.Children)
+                        .Count(c => !c.IsDeleted),
+                    ContactNumber = village.ContactNumber,
+                    Location = village.Location ?? string.Empty,
+                    Description = village.Description ?? string.Empty,
+                    Status = "Active",
                     UserAccountId = village.UserAccountId,
+                    CreatedBy = village.CreatedBy,
+                    ModifiedBy = village.ModifiedBy,
+                    RoleName = village.RoleName,
+                    IsDeleted = village.IsDeleted,
                     CreatedDate = village.CreatedDate,
                     ModifiedDate = village.ModifiedDate,
-                    ImageUrls = village.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
-                                              .Select(img => img.UrlPath)  // Lấy đường dẫn URL
-                                              .ToArray()                  // Chuyển thành mảng
+                    ImageUrls = village.Images
+                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                        .Select(img => img.UrlPath)
+                        .ToArray() // Chuyển thành mảng                // Chuyển thành mảng
                 })
                 .FirstOrDefault(); // Lấy kết quả đầu tiên hoặc null nếu không tìm thấy
 

@@ -9,15 +9,27 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
 {
     public class UpdateVillageDTO
     {
-        public string? VillageName { get; set; } = null!;
+        public string VillageName { get; set; }
 
-        public string? Location { get; set; } = null!;
+        public DateTime? EstablishedDate { get; set; }
 
-        public string? Description { get; set; } = null!;
+        public int? TotalHouses { get; set; }
 
-        public string? Status { get; set; }
-      
-        public string? UserAccountId { get; set; }
+        public int? TotalChildren { get; set; }
+
+        public string? ContactNumber { get; set; }
+
+        public string Location { get; set; }
+
+        public string Description { get; set; }
+
+        public string Status { get; set; }
+
+        public string UserAccountId { get; set; }
+
+        public string? ModifiedBy { get; set; }
+
+        public string? RoleName { get; set; }
 
         public List<IFormFile>? Img { get; set; }
 

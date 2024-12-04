@@ -25,6 +25,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public decimal? Amount { get; set; }
 
         public decimal? AmountLimit { get; set; }
+
         public string HouseId { get; set; }
 
         public string Gender { get; set; }

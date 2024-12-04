@@ -19,13 +19,26 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public int? HouseMember { get; set; }
 
+        public int? CurrentMembers { get; set; }
+
         public string HouseOwner { get; set; }
+
+        public string Status { get; set; }
 
         public string UserAccountId { get; set; }
 
         public string VillageId { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public DateTime FoundationDate { get; set; }
+
+        public DateTime? LastInspectionDate { get; set; }
+
+        public string MaintenanceStatus { get; set; } = null!;
+
+        public string? CreatedBy { get; set; }
+
+        public string? RoleName { get; set; }
+
         public List<IFormFile> Img { get; set; }
     }
 }

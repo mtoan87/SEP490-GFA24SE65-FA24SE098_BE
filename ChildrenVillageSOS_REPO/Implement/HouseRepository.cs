@@ -21,7 +21,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             DataTable dt = new DataTable();
             dt.TableName = "HouseData";
-            dt.Columns.Add("HouseId", typeof(string));
+            dt.Columns.Add("Id", typeof(string));
             dt.Columns.Add("HouseName", typeof(string));
             dt.Columns.Add("HouseNumber", typeof(int));
             dt.Columns.Add("Location", typeof(string));
@@ -66,16 +66,23 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(house => house.Id == houseId && !house.IsDeleted) // Kiểm tra không bị xóa
                 .Select(house => new HouseResponseDTO
                 {
-                    HouseId = house.Id,
+                    Id = house.Id,
                     HouseName = house.HouseName,
                     HouseNumber = house.HouseNumber,
                     Location = house.Location,
                     Description = house.Description,
                     HouseMember = house.HouseMember,
+                    CurrentMembers = house.CurrentMembers,
                     HouseOwner = house.HouseOwner,
                     Status = house.Status,
                     UserAccountId = house.UserAccountId,
                     VillageId = house.VillageId,
+                    FoundationDate = house.FoundationDate,
+                    LastInspectionDate = house.LastInspectionDate,
+                    MaintenanceStatus = house.MaintenanceStatus,
+                    CreatedBy = house.CreatedBy,
+                    ModifiedBy = house.ModifiedBy,
+                    RoleName = house.RoleName,
                     CreatedDate = house.CreatedDate,
                     ModifiedDate = house.ModifiedDate,
                     ImageUrls = house.Images.Where(img => !img.IsDeleted) // Lọc các ảnh không bị xóa
@@ -126,16 +133,23 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(h => h.IsDeleted)
                 .Select(h => new HouseResponseDTO
                 {
-                    HouseId = h.Id,
+                    Id = h.Id,
                     HouseName = h.HouseName,
                     HouseNumber = h.HouseNumber,
                     Location = h.Location,
                     Description = h.Description,
                     HouseMember = h.HouseMember,
+                    CurrentMembers = _context.Children.Count(c => c.HouseId == h.Id && !c.IsDeleted),
                     HouseOwner = h.HouseOwner,
                     Status = h.Status,
                     UserAccountId = h.UserAccountId,
                     VillageId = h.VillageId,
+                    FoundationDate = h.FoundationDate,
+                    LastInspectionDate = h.LastInspectionDate,
+                    MaintenanceStatus = h.MaintenanceStatus,
+                    CreatedBy = h.CreatedBy,
+                    ModifiedBy = h.ModifiedBy,
+                    RoleName = h.RoleName,
                     IsDeleted = h.IsDeleted,
                     ImageUrls = h.Images
                         .Where(i => !i.IsDeleted)  // Exclude deleted images
@@ -150,16 +164,23 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(h => h.VillageId == villageId && (h.IsDeleted == null || h.IsDeleted == false)) // Ensure the house is not deleted
                 .Select(h => new HouseResponseDTO
                 {
-                    HouseId = h.Id,
+                    Id = h.Id,
                     HouseName = h.HouseName,
                     HouseNumber = h.HouseNumber,
                     Location = h.Location,
                     Description = h.Description,
                     HouseMember = h.HouseMember,
+                    CurrentMembers = h.CurrentMembers,
                     HouseOwner = h.HouseOwner,
                     Status = h.Status,
                     UserAccountId = h.UserAccountId,
                     VillageId = h.VillageId,
+                    FoundationDate = h.FoundationDate,
+                    LastInspectionDate = h.LastInspectionDate,
+                    MaintenanceStatus = h.MaintenanceStatus,
+                    CreatedBy = h.CreatedBy,
+                    ModifiedBy = h.ModifiedBy,
+                    RoleName = h.RoleName,
                     IsDeleted = h.IsDeleted,
                     ImageUrls = h.Images
                         .Where(i => !i.IsDeleted)  // Exclude deleted images

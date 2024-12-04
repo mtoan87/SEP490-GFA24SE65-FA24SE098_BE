@@ -91,11 +91,20 @@ namespace ChildrenVillageSOS_REPO.Implement
             return childDetails;
         }
 
+        // Lấy toàn bộ danh sách các Child thuộc HouseId cụ thể.
         public async Task<List<Child>> GetChildByHouseIdAsync(string houseId)
         {
             return await _context.Children
                 .Where(c => c.HouseId == houseId && (c.IsDeleted == null || c.IsDeleted == false))
                 .ToListAsync();
+        }
+
+        // Đếm số lượng Child thuộc HouseId cụ thể.
+        public async Task<int> CountChildrenByHouseIdAsync(string houseId)
+        {
+            return await _context.Children
+                .Where(child => child.HouseId == houseId && !child.IsDeleted)
+                .CountAsync();
         }
 
 

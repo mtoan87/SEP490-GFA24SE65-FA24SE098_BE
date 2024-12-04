@@ -8,9 +8,17 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
 {
     public class VillageResponseDTO
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
         public string VillageName { get; set; }
+
+        public DateTime? EstablishedDate { get; set; }
+
+        public int? TotalHouses { get; set; }
+
+        public int? TotalChildren { get; set; }
+
+        public string? ContactNumber { get; set; }
 
         public string Location { get; set; }
 
@@ -19,6 +27,12 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
         public string Status { get; set; }
 
         public string UserAccountId { get; set; }
+
+        public string? CreatedBy { get; set; }
+
+        public string? ModifiedBy { get; set; }
+
+        public string? RoleName { get; set; }
 
         public bool IsDeleted { get; set; }
 

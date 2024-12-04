@@ -59,16 +59,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
             {
                 Id = village.Id,
-                VillageName = village.VillageName,
-                Location = village.Location,
-                Description = village.Description,
-                Status = village.Status,
+                VillageName = village.VillageName ?? string.Empty,
+                EstablishedDate = village.EstablishedDate,
+                TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                TotalChildren = village.Houses
+                        .SelectMany(h => h.Children)
+                        .Count(c => !c.IsDeleted),
+                ContactNumber = village.ContactNumber,
+                Location = village.Location ?? string.Empty,
+                Description = village.Description ?? string.Empty,
+                Status = "Active",
                 UserAccountId = village.UserAccountId,
+                CreatedBy = village.CreatedBy,
+                ModifiedBy = village.ModifiedBy,
+                RoleName = village.RoleName,
+                IsDeleted = village.IsDeleted,
                 CreatedDate = village.CreatedDate,
                 ModifiedDate = village.ModifiedDate,
-                ImageUrls = village.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh không bị xóa
-                                          .Select(img => img.UrlPath)  // Lấy đường dẫn URL của hình ảnh
-                                          .ToArray()                  // Chuyển thành mảng
+                ImageUrls = village.Images
+                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                        .Select(img => img.UrlPath)
+                        .ToArray() // Chuyển thành mảng                  // Chuyển thành mảng
             }).ToArray();
 
             return villageResponseDTOs;
@@ -92,11 +103,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 Id = newVillageId,
                 VillageName = createVillage.VillageName,
+                EstablishedDate = createVillage.EstablishedDate,
                 Location = createVillage.Location,
                 Description = createVillage.Description,
                 Status = createVillage.Status,
                 UserAccountId = createVillage.UserAccountId,
-                CreatedDate = DateTime.Now
+                CreatedBy = createVillage.CreatedBy,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false
             };
             await _villageRepository.AddAsync(newVillage);
 
@@ -126,10 +140,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             updaVillage.VillageName = updateVillage.VillageName;
 
+            updaVillage.VillageName = updateVillage.VillageName;
+            updaVillage.EstablishedDate = updateVillage.EstablishedDate;
             updaVillage.Location = updateVillage.Location;
             updaVillage.Description = updateVillage.Description;
             updaVillage.Status = updateVillage.Status;
             updaVillage.UserAccountId = updateVillage.UserAccountId;
+            updaVillage.ContactNumber = updateVillage.ContactNumber;
+            updaVillage.ModifiedBy = updateVillage.ModifiedBy;
             updaVillage.ModifiedDate = DateTime.Now;
 
             // Lấy danh sách ảnh hiện tại
@@ -174,9 +192,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     };
                     await _imageRepository.AddAsync(newImage);
                 }
-            }
-            else
-            {
             }
 
             // Lưu thông tin cập nhật
