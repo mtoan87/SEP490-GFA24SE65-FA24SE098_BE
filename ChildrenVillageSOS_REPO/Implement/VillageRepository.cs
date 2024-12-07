@@ -153,5 +153,34 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(v => !v.IsDeleted)
                 .ToListAsync();
         }
+
+        //public async Task UpdateVillageStatistics(string villageId)
+        //{
+        //    var village = await _context.Villages
+        //        .Include(v => v.Houses)
+        //        .ThenInclude(h => h.Children)
+        //        .FirstOrDefaultAsync(v => v.Id == villageId && !v.IsDeleted);
+
+        //    if (village != null)
+        //    {
+        //        village.TotalHouses = village.Houses.Count(h => !h.IsDeleted);
+        //        village.TotalChildren = village.Houses
+        //            .SelectMany(h => h.Children)
+        //            .Count(c => !c.IsDeleted);
+
+        //        _context.Villages.Update(village);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
+
+        public async Task<IEnumerable<Village>> GetVillagesWithHousesAndChildrenAsync()
+        {
+            return await _context.Villages
+                .Include(v => v.Houses)
+                .ThenInclude(h => h.Children)
+                .Include(v => v.Images)
+                .Where(v => !v.IsDeleted)
+                .ToListAsync();
+        }
     }
 }

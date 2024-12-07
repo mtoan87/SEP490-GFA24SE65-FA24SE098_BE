@@ -52,10 +52,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
         {
-            // Lấy tất cả các village không bị xóa từ repository
-            var villages = await _villageRepository.GetAllNotDeletedAsync();
 
-            // Chuyển đổi danh sách village sang DTO
+            //var villages = await _villageRepository.GetAllNotDeletedAsync();
+            // Lấy tất cả các village không bị xóa từ repository, bao gồm liên kết tới Houses và Children
+            var villages = await _villageRepository.GetVillagesWithHousesAndChildrenAsync();
+
             var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
             {
                 Id = village.Id,
@@ -77,9 +78,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = village.CreatedDate,
                 ModifiedDate = village.ModifiedDate,
                 ImageUrls = village.Images
-                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
-                        .Select(img => img.UrlPath)
-                        .ToArray() // Chuyển thành mảng                  // Chuyển thành mảng
+                .Where(img => !img.IsDeleted)
+                .Select(img => img.UrlPath)
+                .ToArray()
             }).ToArray();
 
             return villageResponseDTOs;
