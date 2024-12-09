@@ -34,6 +34,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Select(e => new EventResponseDTO
                 {
                     Id = e.Id,
+                    EventCode = e.EventCode,
                     Name = e.Name,
                     FacilitiesWalletId = e.FacilitiesWalletId,
                     FoodStuffWalletId = e.FoodStuffWalletId,

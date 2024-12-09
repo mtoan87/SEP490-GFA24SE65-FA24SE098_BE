@@ -56,6 +56,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var eventResponseDTOs = events.Select(e => new EventResponseDTO
             {
                 Id = e.Id,
+                EventCode = e.EventCode,
                 Name = e.Name,
                 FacilitiesWalletId = e.FacilitiesWalletId,
                 HealthWalletId = e.HealthWalletId,
