@@ -64,6 +64,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Select(e => new EventResponseDTO
                 {
                     Id = e.Id,
+                    EventCode = e.EventCode,
                     Name = e.Name,
                     Description = e.Description,
                     StartTime = e.StartTime ?? default,  // Default value if null

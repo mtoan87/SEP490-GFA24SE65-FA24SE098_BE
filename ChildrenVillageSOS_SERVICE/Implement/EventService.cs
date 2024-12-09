@@ -136,6 +136,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Event with ID{id} not found!");
             }
 
+            editEvent.EventCode = updateEvent.EventCode;
             editEvent.Name = updateEvent.Name;
             editEvent.Description = updateEvent.Description;
             editEvent.FacilitiesWalletId = updateEvent.FacilitiesWalletId;
