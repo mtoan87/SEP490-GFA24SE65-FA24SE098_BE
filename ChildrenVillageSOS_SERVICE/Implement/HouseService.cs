@@ -76,14 +76,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     IsDeleted = false,
                     CreatedDate = house.CreatedDate,
                     ModifiedDate = house.ModifiedDate,
-                    ImageUrls = house.Images
-                                    .Where(img => !img.IsDeleted)  // Lọc các hình ảnh không bị xóa
-                                    .Select(img => img.UrlPath)   // Lấy đường dẫn hình ảnh
-                                    .ToArray()                    // Chuyển thành mảng
+                    ImageUrls = house.Images.Where(img => !img.IsDeleted)
+                                     .Select(img => img.UrlPath)
+                                     .ToArray()
                 });
             }
 
-            return houseResponseDTOs;
+            return houseResponseDTOs.ToArray();
         }
 
         public async Task<House> GetHouseById(string id)
