@@ -15,9 +15,9 @@ public partial class Event
 
     public string? Address { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public DateTime? StartTime { get; set; }
 
@@ -41,7 +41,7 @@ public partial class Event
 
     public decimal? AmountLimit { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public string? CreatedBy { get; set; }
 
@@ -59,17 +59,17 @@ public partial class Event
 
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
-    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 
-    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
+    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
 
-    public virtual HealthWallet HealthWallet { get; set; }
+    public virtual HealthWallet? HealthWallet { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
 
-    public virtual SystemWallet SystemWallet { get; set; }
+    public virtual SystemWallet? SystemWallet { get; set; }
 
-    public virtual Village Village { get; set; }
+    public virtual Village? Village { get; set; }
 }

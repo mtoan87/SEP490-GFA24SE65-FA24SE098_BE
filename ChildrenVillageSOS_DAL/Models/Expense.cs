@@ -9,11 +9,11 @@ public partial class Expense
 
     public decimal ExpenseAmount { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public DateTime? Expenseday { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public int? SystemWalletId { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Expense
 
     public int? NecessitiesWalletId { get; set; }
 
-    public string HouseId { get; set; }
+    public string? HouseId { get; set; }
 
     public bool IsDeleted { get; set; }
 
@@ -33,13 +33,13 @@ public partial class Expense
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 
-    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
+    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
 
-    public virtual HealthWallet HealthWallet { get; set; }
+    public virtual HealthWallet? HealthWallet { get; set; }
 
-    public virtual House House { get; set; }
+    public virtual House? House { get; set; }
 
-    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
 }

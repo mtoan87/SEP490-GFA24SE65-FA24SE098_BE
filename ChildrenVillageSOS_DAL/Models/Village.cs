@@ -7,7 +7,7 @@ public partial class Village
 {
     public string Id { get; set; } = null!;
 
-    public string VillageName { get; set; }
+    public string? VillageName { get; set; }
 
     public DateTime? EstablishedDate { get; set; }
 
@@ -17,13 +17,13 @@ public partial class Village
 
     public string? ContactNumber { get; set; }
 
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
     public string? CreatedBy { get; set; }
 
@@ -43,5 +43,5 @@ public partial class Village
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual UserAccount UserAccount { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 }

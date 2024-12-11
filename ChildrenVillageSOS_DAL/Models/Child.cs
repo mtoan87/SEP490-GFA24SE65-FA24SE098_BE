@@ -5,13 +5,13 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class Child
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
-    public string ChildName { get; set; }
+    public string? ChildName { get; set; }
 
-    public string HealthStatus { get; set; }
+    public string? HealthStatus { get; set; }
 
-    public string HouseId { get; set; }
+    public string? HouseId { get; set; }
 
     public int? FacilitiesWalletId { get; set; }
 
@@ -29,11 +29,11 @@ public partial class Child
 
     public decimal? AmountLimit { get; set; }
 
-    public string Gender { get; set; }
+    public string? Gender { get; set; }
 
     public DateTime Dob { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public string? CreatedBy { get; set; }
 
@@ -55,19 +55,19 @@ public partial class Child
 
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
-    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 
-    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
+    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
 
     public virtual ICollection<HealthReport> HealthReports { get; set; } = new List<HealthReport>();
 
-    public virtual HealthWallet HealthWallet { get; set; }
+    public virtual HealthWallet? HealthWallet { get; set; }
 
-    public virtual House House { get; set; }
+    public virtual House? House { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
 
-    public virtual SystemWallet SystemWallet { get; set; }
+    public virtual SystemWallet? SystemWallet { get; set; }
 }

@@ -23,9 +23,9 @@ public partial class Income
 
     public DateTime Receiveday { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
     public bool IsDeleted { get; set; }
 
@@ -33,19 +33,19 @@ public partial class Income
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual Donation Donation { get; set; }
+    public virtual Donation? Donation { get; set; }
 
-    public virtual FacilitiesWallet FacilitiesWallet { get; set; }
+    public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 
-    public virtual FoodStuffWallet FoodStuffWallet { get; set; }
+    public virtual FoodStuffWallet? FoodStuffWallet { get; set; }
 
-    public virtual HealthWallet HealthWallet { get; set; }
+    public virtual HealthWallet? HealthWallet { get; set; }
 
-    public virtual NecessitiesWallet NecessitiesWallet { get; set; }
+    public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
 
-    public virtual SystemWallet SystemWallet { get; set; }
+    public virtual SystemWallet? SystemWallet { get; set; }
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public virtual UserAccount UserAccount { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 }

@@ -19,23 +19,19 @@ public partial class Image
 
     public string? UserAccountId { get; set; }
 
-    public int? ProductId { get; set; }
-
     public DateTime? CreatedDate { get; set; }
 
     public bool IsDeleted { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual Child Child { get; set; }
+    public virtual Child? Child { get; set; }
 
-    public virtual Event Event { get; set; }
+    public virtual Event? Event { get; set; }
 
-    public virtual House House { get; set; }
+    public virtual House? House { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 
-    public virtual UserAccount UserAccount { get; set; }
-
-    public virtual Village Village { get; set; }
+    public virtual Village? Village { get; set; }
 }

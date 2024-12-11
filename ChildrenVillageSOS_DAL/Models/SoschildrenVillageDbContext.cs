@@ -21,12 +21,6 @@ public partial class SoschildrenVillageDbContext : DbContext
 
     public virtual DbSet<BookingSlot> BookingSlots { get; set; }
 
-    public virtual DbSet<Cart> Carts { get; set; }
-
-    public virtual DbSet<CartItem> CartItems { get; set; }
-
-    public virtual DbSet<Category> Categories { get; set; }
-
     public virtual DbSet<Child> Children { get; set; }
 
     public virtual DbSet<Donation> Donations { get; set; }
@@ -51,15 +45,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
     public virtual DbSet<NecessitiesWallet> NecessitiesWallets { get; set; }
 
-    public virtual DbSet<Order> Orders { get; set; }
-
-    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-
     public virtual DbSet<Payment> Payments { get; set; }
-
-    public virtual DbSet<Product> Products { get; set; }
-
-    public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -73,7 +59,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(local); uid=sa; pwd=12345; database=SOSChildrenVillageDB; TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=12345;database=SOSChildrenVillageDB;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -100,7 +86,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC07F6C7E4DB");
+            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC0743C0FFFD");
 
             entity.ToTable("Booking");
 
@@ -120,16 +106,16 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.House).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Booking__House_i__1DB06A4F");
+                .HasConstraintName("FK__Booking__House_i__6C190EBB");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Booking__UserAcc__1EA48E88");
+                .HasConstraintName("FK__Booking__UserAcc__6D0D32F4");
         });
 
         modelBuilder.Entity<BookingSlot>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC070DE91FF4");
+            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC07833EF046");
 
             entity.ToTable("BookingSlot");
 
@@ -142,56 +128,9 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.Status).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<Cart>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Carts__3214EC07842BC0DA");
-
-            entity.HasIndex(e => e.UserAccountId, "UQ__Carts__DA6C709B8A62D802").IsUnique();
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserAccountId)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.UserAccount).WithOne(p => p.Cart)
-                .HasForeignKey<Cart>(d => d.UserAccountId)
-                .HasConstraintName("FK__Carts__UserAccou__02084FDA");
-        });
-
-        modelBuilder.Entity<CartItem>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__CartItem__3214EC07619605FD");
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartItems)
-                .HasForeignKey(d => d.CartId)
-                .HasConstraintName("FK__CartItems__CartI__04E4BC85");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.CartItems)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__CartItems__Produ__05D8E0BE");
-        });
-
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Categori__3214EC07B8E6EB50");
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-        });
-
         modelBuilder.Entity<Child>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC07F346D668");
+            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC07E8C76F40");
 
             entity.ToTable("Child");
 
@@ -233,32 +172,32 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Children)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Child__Facilitie__40058253");
+                .HasConstraintName("FK__Child__Facilitie__0E6E26BF");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Children)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Child__FoodStuff__3E1D39E1");
+                .HasConstraintName("FK__Child__FoodStuff__0C85DE4D");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Children)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Child__HealthWal__3D2915A8");
+                .HasConstraintName("FK__Child__HealthWal__0B91BA14");
 
             entity.HasOne(d => d.House).WithMany(p => p.Children)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Child__House_Id__1F98B2C1");
+                .HasConstraintName("FK__Child__House_Id__6E01572D");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Children)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Child__Necessiti__3F115E1A");
+                .HasConstraintName("FK__Child__Necessiti__0D7A0286");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Children)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Child__SystemWal__40F9A68C");
+                .HasConstraintName("FK__Child__SystemWal__0F624AF8");
         });
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC077B8DD909");
+            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC07C02870E8");
 
             entity.ToTable("Donation");
 
@@ -304,35 +243,35 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Child).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.ChildId)
-                .HasConstraintName("FK__Donation__Child___2180FB33");
+                .HasConstraintName("FK__Donation__Child___6FE99F9F");
 
             entity.HasOne(d => d.Event).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.EventId)
-                .HasConstraintName("FK__Donation__Event___22751F6C");
+                .HasConstraintName("FK__Donation__Event___70DDC3D8");
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Donation__Facili__540C7B00");
+                .HasConstraintName("FK__Donation__Facili__22751F6C");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Donation__FoodSt__5224328E");
+                .HasConstraintName("FK__Donation__FoodSt__208CD6FA");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Donation__Health__51300E55");
+                .HasConstraintName("FK__Donation__Health__1F98B2C1");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Donation__Necess__531856C7");
+                .HasConstraintName("FK__Donation__Necess__2180FB33");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Donation__System__55009F39");
+                .HasConstraintName("FK__Donation__System__236943A5");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Donation__UserAc__208CD6FA");
+                .HasConstraintName("FK__Donation__UserAc__6EF57B66");
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -374,23 +313,23 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Events)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Event__Facilitie__44CA3770");
+                .HasConstraintName("FK__Event__Facilitie__1332DBDC");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Events)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Event__FoodStuff__42E1EEFE");
+                .HasConstraintName("FK__Event__FoodStuff__114A936A");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Events)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Event__HealthWal__41EDCAC5");
+                .HasConstraintName("FK__Event__HealthWal__10566F31");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Events)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Event__Necessiti__43D61337");
+                .HasConstraintName("FK__Event__Necessiti__123EB7A3");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Events)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Event__SystemWal__45BE5BA9");
+                .HasConstraintName("FK__Event__SystemWal__14270015");
 
             entity.HasOne(d => d.Village).WithMany(p => p.Events)
                 .HasForeignKey(d => d.VillageId)
@@ -399,7 +338,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Expense>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC07490CCC94");
+            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC07863D5318");
 
             entity.ToTable("Expense");
 
@@ -424,28 +363,28 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Expense__Facilit__4A8310C6");
+                .HasConstraintName("FK__Expense__Facilit__18EBB532");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Expense__FoodStu__489AC854");
+                .HasConstraintName("FK__Expense__FoodStu__17036CC0");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Expense__HealthW__47A6A41B");
+                .HasConstraintName("FK__Expense__HealthW__160F4887");
 
             entity.HasOne(d => d.House).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.HouseId)
-                .HasConstraintName("FK__Expense__House_I__245D67DE");
+                .HasConstraintName("FK__Expense__House_I__72C60C4A");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Expense__Necessi__498EEC8D");
+                .HasConstraintName("FK__Expense__Necessi__17F790F9");
         });
 
         modelBuilder.Entity<FacilitiesWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Faciliti__3214EC077D9EEB30");
+            entity.HasKey(e => e.Id).HasName("PK__Faciliti__3214EC074E82C04D");
 
             entity.ToTable("FacilitiesWallet");
 
@@ -457,12 +396,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.FacilitiesWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Facilitie__UserA__30C33EC3");
+                .HasConstraintName("FK__Facilitie__UserA__7F2BE32F");
         });
 
         modelBuilder.Entity<FoodStuffWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FoodStuf__3214EC078490A091");
+            entity.HasKey(e => e.Id).HasName("PK__FoodStuf__3214EC078555FF71");
 
             entity.ToTable("FoodStuffWallet");
 
@@ -474,7 +413,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.FoodStuffWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__FoodStuff__UserA__32AB8735");
+                .HasConstraintName("FK__FoodStuff__UserA__01142BA1");
         });
 
         modelBuilder.Entity<HealthReport>(entity =>
@@ -516,7 +455,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<HealthWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__HealthWa__3214EC075630D8F4");
+            entity.HasKey(e => e.Id).HasName("PK__HealthWa__3214EC074721F54D");
 
             entity.ToTable("HealthWallet");
 
@@ -528,12 +467,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.HealthWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__HealthWal__UserA__31B762FC");
+                .HasConstraintName("FK__HealthWal__UserA__00200768");
         });
 
         modelBuilder.Entity<House>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__House__3214EC078E3B3D4E");
+            entity.HasKey(e => e.Id).HasName("PK__House__3214EC070503E5EF");
 
             entity.ToTable("House");
 
@@ -576,11 +515,11 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Houses)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__House__UserAccou__2645B050");
+                .HasConstraintName("FK__House__UserAccou__74AE54BC");
 
             entity.HasOne(d => d.Village).WithMany(p => p.Houses)
                 .HasForeignKey(d => d.VillageId)
-                .HasConstraintName("FK__House__Village_I__2739D489");
+                .HasConstraintName("FK__House__Village_I__75A278F5");
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -599,7 +538,6 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasColumnName("House_Id");
             entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.ProductId).HasColumnName("Product_Id");
             entity.Property(e => e.UserAccountId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -621,10 +559,6 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasForeignKey(d => d.HouseId)
                 .HasConstraintName("FK_Image_House");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Images)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__Image__Product_I__76969D2E");
-
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Images)
                 .HasForeignKey(d => d.UserAccountId)
                 .HasConstraintName("FK_Image_UserAccount");
@@ -636,7 +570,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Income>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC07EDC1703E");
+            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC07159C30E1");
 
             entity.ToTable("Income");
 
@@ -659,36 +593,36 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Income__Donation__2CF2ADDF");
+                .HasConstraintName("FK__Income__Donation__7B5B524B");
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Income__Faciliti__4F47C5E3");
+                .HasConstraintName("FK__Income__Faciliti__1DB06A4F");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Income__FoodStuf__4D5F7D71");
+                .HasConstraintName("FK__Income__FoodStuf__1BC821DD");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Income__HealthWa__4C6B5938");
+                .HasConstraintName("FK__Income__HealthWa__1AD3FDA4");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Income__Necessit__4E53A1AA");
+                .HasConstraintName("FK__Income__Necessit__1CBC4616");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Income__SystemWa__4B7734FF");
+                .HasConstraintName("FK__Income__SystemWa__19DFD96B");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Incomes)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Income__UserAcco__2DE6D218");
+                .HasConstraintName("FK__Income__UserAcco__7C4F7684");
         });
 
         modelBuilder.Entity<NecessitiesWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Necessit__3214EC079116A3CB");
+            entity.HasKey(e => e.Id).HasName("PK__Necessit__3214EC074DF4CF7F");
 
             entity.ToTable("NecessitiesWallet");
 
@@ -700,58 +634,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.NecessitiesWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Necessiti__UserA__339FAB6E");
-        });
-
-        modelBuilder.Entity<Order>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Orders__3214EC07D08A979E");
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.OrderDate).HasColumnType("datetime");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(15)
-                .IsUnicode(false);
-            entity.Property(e => e.Status)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.UserAccountId)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.Payment).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.PaymentId)
-                .HasConstraintName("FK__Orders__PaymentI__7A672E12");
-
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Orders__UserAcco__797309D9");
-        });
-
-        modelBuilder.Entity<OrderDetail>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC078B76AEEB");
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
-
-            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
-                .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__OrderDeta__Order__7D439ABD");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__OrderDeta__Produ__7E37BEF6");
+                .HasConstraintName("FK__Necessiti__UserA__02084FDA");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC0767809546");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07C6127601");
 
             entity.ToTable("Payment");
 
@@ -770,58 +658,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Payment__Donatio__2EDAF651");
-        });
-
-        modelBuilder.Entity<Product>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3214EC07B372F082");
-
-            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.Description).IsUnicode(false);
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.Name).HasMaxLength(255);
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.Status)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__Products__Catego__73BA3083");
-        });
-
-        modelBuilder.Entity<Review>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Reviews__3214EC07261B0C42");
-
-            entity.Property(e => e.Comment)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("('0')");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.Status)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.UserAccountId)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.OrderDetail).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.OrderDetailId)
-                .HasConstraintName("FK__Reviews__OrderDe__08B54D69");
-
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Reviews__UserAcc__09A971A2");
+                .HasConstraintName("FK__Payment__Donatio__7D439ABD");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC07F7D4D8D4");
+            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC0743DF598A");
 
             entity.ToTable("Role");
 
@@ -832,7 +674,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<SystemWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC07FF2BC496");
+            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC078C668129");
 
             entity.ToTable("SystemWallet");
 
@@ -844,12 +686,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.SystemWallets)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__SystemWal__UserA__2FCF1A8A");
+                .HasConstraintName("FK__SystemWal__UserA__7E37BEF6");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC07D64F0AEA");
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC075C2FAA77");
 
             entity.ToTable("Transaction");
 
@@ -872,40 +714,40 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Donation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.DonationId)
-                .HasConstraintName("FK__Transacti__Donat__3493CFA7");
+                .HasConstraintName("FK__Transacti__Donat__02FC7413");
 
             entity.HasOne(d => d.FacilitiesWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.FacilitiesWalletId)
-                .HasConstraintName("FK__Transacti__Facil__395884C4");
+                .HasConstraintName("FK__Transacti__Facil__07C12930");
 
             entity.HasOne(d => d.FoodStuffWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.FoodStuffWalletId)
-                .HasConstraintName("FK__Transacti__FoodS__37703C52");
+                .HasConstraintName("FK__Transacti__FoodS__05D8E0BE");
 
             entity.HasOne(d => d.HealthWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.HealthWalletId)
-                .HasConstraintName("FK__Transacti__Healt__367C1819");
+                .HasConstraintName("FK__Transacti__Healt__04E4BC85");
 
             entity.HasOne(d => d.Income).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IncomeId)
-                .HasConstraintName("FK__Transacti__Incom__3587F3E0");
+                .HasConstraintName("FK__Transacti__Incom__03F0984C");
 
             entity.HasOne(d => d.NecessitiesWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.NecessitiesWalletId)
-                .HasConstraintName("FK__Transacti__Neces__3864608B");
+                .HasConstraintName("FK__Transacti__Neces__06CD04F7");
 
             entity.HasOne(d => d.SystemWallet).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.SystemWalletId)
-                .HasConstraintName("FK__Transacti__Syste__3A4CA8FD");
+                .HasConstraintName("FK__Transacti__Syste__08B54D69");
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Transacti__UserA__236943A5");
+                .HasConstraintName("FK__Transacti__UserA__71D1E811");
         });
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC071E3F6BA2");
+            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC072E215EC7");
 
             entity.ToTable("UserAccount");
 
@@ -931,12 +773,12 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.UserAccounts)
                 .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK__UserAccou__Role___3B40CD36");
+                .HasConstraintName("FK__UserAccou__Role___09A971A2");
         });
 
         modelBuilder.Entity<Village>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC0735466547");
+            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC07FAEA22FD");
 
             entity.ToTable("Village");
 
@@ -966,7 +808,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
             entity.HasOne(d => d.UserAccount).WithMany(p => p.Villages)
                 .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK__Village__UserAcc__3C34F16F");
+                .HasConstraintName("FK__Village__UserAcc__0A9D95DB");
         });
 
         OnModelCreatingPartial(modelBuilder);

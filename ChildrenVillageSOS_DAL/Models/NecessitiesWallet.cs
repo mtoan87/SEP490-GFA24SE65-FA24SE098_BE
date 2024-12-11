@@ -9,7 +9,7 @@ public partial class NecessitiesWallet
 
     public decimal Budget { get; set; }
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
 

@@ -7,19 +7,19 @@ public partial class AcademicReport
 {
     public int Id { get; set; }
 
-    public string Diploma { get; set; }
+    public string? Diploma { get; set; }
 
     public string? SchoolLevel { get; set; }
 
-    public string ChildId { get; set; }
+    public string? ChildId { get; set; }
 
     public decimal? Gpa { get; set; }
 
-    public string SchoolReport { get; set; }
+    public string? SchoolReport { get; set; }
 
-    public string? Semester { get; set; }
+    public string Semester { get; set; } = null!;
 
-    public int? AcademicYear { get; set; }
+    public int AcademicYear { get; set; }
 
     public string? Remarks { get; set; }
 
@@ -31,5 +31,5 @@ public partial class AcademicReport
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual Child Child { get; set; }
+    public virtual Child? Child { get; set; }
 }

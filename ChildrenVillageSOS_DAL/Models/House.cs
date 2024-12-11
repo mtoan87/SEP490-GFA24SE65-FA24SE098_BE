@@ -5,27 +5,27 @@ namespace ChildrenVillageSOS_DAL.Models;
 
 public partial class House
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
-    public string HouseName { get; set; }
+    public string HouseName { get; set; } = null!;
 
     public int? HouseNumber { get; set; }
 
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public int? HouseMember { get; set; }
 
     public int? CurrentMembers { get; set; }
 
-    public string HouseOwner { get; set; }
+    public string? HouseOwner { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
-    public string UserAccountId { get; set; }
+    public string? UserAccountId { get; set; }
 
-    public string VillageId { get; set; }
+    public string? VillageId { get; set; }
 
     public DateTime FoundationDate { get; set; }
 
@@ -53,7 +53,7 @@ public partial class House
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual UserAccount UserAccount { get; set; }
+    public virtual UserAccount? UserAccount { get; set; }
 
-    public virtual Village Village { get; set; }
+    public virtual Village? Village { get; set; }
 }

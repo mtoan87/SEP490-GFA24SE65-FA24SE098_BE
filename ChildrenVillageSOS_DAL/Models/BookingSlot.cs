@@ -11,7 +11,7 @@ public partial class BookingSlot
 
     public TimeOnly? EndTime { get; set; }
 
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public int? SlotTime { get; set; }
 

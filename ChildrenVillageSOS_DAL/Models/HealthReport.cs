@@ -7,17 +7,17 @@ public partial class HealthReport
 {
     public int Id { get; set; }
 
-    public string ChildId { get; set; }
+    public string? ChildId { get; set; }
 
-    public string NutritionalStatus { get; set; }
+    public string? NutritionalStatus { get; set; }
 
-    public string MedicalHistory { get; set; }
+    public string? MedicalHistory { get; set; }
 
-    public string VaccinationStatus { get; set; }
+    public string? VaccinationStatus { get; set; }
 
-    public double Weight { get; set; }
+    public double? Weight { get; set; }
 
-    public double Height { get; set; }
+    public double? Height { get; set; }
 
     public DateTime? CheckupDate { get; set; }
 
@@ -39,5 +39,5 @@ public partial class HealthReport
 
     public DateTime? ModifiedDate { get; set; }
 
-    public virtual Child Child { get; set; }
+    public virtual Child? Child { get; set; }
 }
