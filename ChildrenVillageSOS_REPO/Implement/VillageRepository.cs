@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
@@ -181,6 +182,44 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Include(v => v.Images)
                 .Where(v => !v.IsDeleted)
                 .ToListAsync();
+        }
+
+        public async Task<VillageDetailsDTO> GetVillageDetailsWithHousesAsync(string villageId)
+        {
+            var village = await _context.Villages
+                .Include(v => v.Houses.Where(h => !h.IsDeleted))
+                .ThenInclude(h => h.Children.Where(c => !c.IsDeleted))
+                .FirstOrDefaultAsync(v => v.Id == villageId);
+
+            if (village == null)
+            {
+                throw new Exception("Village not found.");
+            }
+
+            var totalHouses = village.Houses.Count;
+            var totalChildren = village.Houses.Sum(h => h.Children.Count);
+
+            var housesArray = village.Houses.Select(h => new HouseSummaryDTO
+            {
+                Id = h.Id,
+                HouseName = h.HouseName,
+                HouseOwner = h.HouseOwner ?? "Unknown",
+                TotalChildren = h.Children.Count()
+            }).ToList();
+
+            var result = new VillageDetailsDTO
+            {
+                Id = village.Id,
+                VillageName = village.VillageName,
+                Location = village.Location,
+                EstablishedDate = village.EstablishedDate,
+                ContactNumber = village.ContactNumber,
+                TotalHouses = totalHouses,
+                TotalChildren = totalChildren,
+                Houses = housesArray // Gán mảng đã được chuyển đổi
+            };
+
+            return result;
         }
     }
 }
