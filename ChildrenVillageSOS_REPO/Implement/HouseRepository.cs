@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -204,6 +205,45 @@ namespace ChildrenVillageSOS_REPO.Implement
                 throw new KeyNotFoundException($"No house found with ID: {houseId}");
 
             return houseName;
+        }
+
+        public async Task<HouseDetailsDTO> GetHouseDetailsWithChildrenAsync(string houseId)
+        {
+            var house = await _context.Houses
+                .Include(h => h.Children.Where(c => !c.IsDeleted))
+                .FirstOrDefaultAsync(h => h.Id == houseId);
+
+            if (house == null)
+            {
+                throw new Exception("House not found.");
+            }
+
+            var currentMembers = house.Children.Count;
+
+            // Chuyển đổi danh sách Children thành ChildSummaryDTO
+            var childrenList = house.Children.Select(c => new ChildSummaryDTO
+            {
+                Id = c.Id,
+                ChildName = c.ChildName ?? "Unknown",
+                HealthStatus = c.HealthStatus ?? "Unknown",
+                Gender = c.Gender ?? "Unknown",
+                Dob = c.Dob
+            }).ToList();
+
+            var result = new HouseDetailsDTO
+            {
+                Id = house.Id,
+                HouseName = house.HouseName,
+                HouseNumber = house.HouseNumber,
+                Location = house.Location,
+                HouseOwner = house.HouseOwner ?? "Unknown",
+                CurrentMembers = currentMembers,
+                FoundationDate = house.FoundationDate,
+                MaintenanceStatus = house.MaintenanceStatus,
+                Children = childrenList
+            };
+
+            return result;
         }
     }
 }

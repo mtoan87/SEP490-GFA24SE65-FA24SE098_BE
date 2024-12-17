@@ -64,6 +64,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(house);
         }
 
+        [HttpGet("GetHouseDetailsWithChildren/{houseId}")]
+        public async Task<IActionResult> GetHouseDetailsWithChildrenAsync(string houseId)
+        {
+            var houseDetails = await _houseService.GetHouseDetailsWithChildrenAsync(houseId);
+            return Ok(houseDetails);
+        }
+
         [HttpPost]
         [Route("CreateHouse")]
         public async Task<ActionResult<House>> CreateHouse([FromForm] CreateHouseDTO createHouseDTO)
