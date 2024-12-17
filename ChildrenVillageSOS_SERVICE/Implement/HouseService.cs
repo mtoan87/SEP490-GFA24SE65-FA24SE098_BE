@@ -118,11 +118,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = "Active", // Nếu không được cung cấp, mặc định là "Active"
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
+                RoleName = createHouse.RoleName,
                 FoundationDate = createHouse.FoundationDate,
                 LastInspectionDate = createHouse.LastInspectionDate,
                 MaintenanceStatus = createHouse.MaintenanceStatus,
-                CreatedBy = createHouse.CreatedBy,
                 IsDeleted = false,
+                CreatedBy = createHouse.CreatedBy,              
                 CreatedDate = DateTime.Now
             };
             await _houseRepository.AddAsync(newHouse);
@@ -167,14 +168,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Location = updateHouse.Location;
             existingHouse.Description = updateHouse.Description;
             existingHouse.HouseMember = updateHouse.HouseMember;
-            //existingHouse.CurrentMembers = updateHouse.CurrentMembers;
+            existingHouse.CurrentMembers = updateHouse.CurrentMembers;
             existingHouse.HouseOwner = updateHouse.HouseOwner;
             existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
+            existingHouse.RoleName = updateHouse.RoleName;
             existingHouse.FoundationDate = updateHouse.FoundationDate;
             existingHouse.LastInspectionDate = updateHouse.LastInspectionDate;
             existingHouse.MaintenanceStatus = updateHouse.MaintenanceStatus;
+            existingHouse.IsDeleted = false;
             existingHouse.ModifiedBy = updateHouse.ModifiedBy;
             existingHouse.ModifiedDate = DateTime.Now;
 
