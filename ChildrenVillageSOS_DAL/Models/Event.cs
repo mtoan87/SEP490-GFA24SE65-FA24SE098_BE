@@ -57,6 +57,10 @@ public partial class Event
 
     public string? VillageId { get; set; }
 
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
+
+    public virtual ICollection<ChildProgress> ChildProgresses { get; set; } = new List<ChildProgress>();
+
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 
     public virtual FacilitiesWallet? FacilitiesWallet { get; set; }

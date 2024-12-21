@@ -53,6 +53,14 @@ public partial class House
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
+    public virtual ICollection<TransferHistory> TransferHistoryFromHouses { get; set; } = new List<TransferHistory>();
+
+    public virtual ICollection<TransferHistory> TransferHistoryToHouses { get; set; } = new List<TransferHistory>();
+
+    public virtual ICollection<TransferRequest> TransferRequestFromHouses { get; set; } = new List<TransferRequest>();
+
+    public virtual ICollection<TransferRequest> TransferRequestToHouses { get; set; } = new List<TransferRequest>();
+
     public virtual UserAccount? UserAccount { get; set; }
 
     public virtual Village? Village { get; set; }
