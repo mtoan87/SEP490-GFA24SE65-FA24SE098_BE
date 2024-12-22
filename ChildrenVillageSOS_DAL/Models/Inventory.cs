@@ -25,7 +25,7 @@ public partial class Inventory
 
     public string MaintenanceStatus { get; set; } = null!;
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? CreatedBy { get; set; }
 

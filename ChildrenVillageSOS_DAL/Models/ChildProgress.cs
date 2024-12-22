@@ -19,7 +19,7 @@ public partial class ChildProgress
 
     public int? ActivityId { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? CreatedBy { get; set; }
 
