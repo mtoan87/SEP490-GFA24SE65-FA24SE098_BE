@@ -23,7 +23,7 @@ public partial class TransferRequest
 
     public string? ApprovedBy { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? CreatedBy { get; set; }
 

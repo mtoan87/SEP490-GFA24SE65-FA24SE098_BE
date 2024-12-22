@@ -21,7 +21,7 @@ public partial class TransferHistory
 
     public string? HandledBy { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

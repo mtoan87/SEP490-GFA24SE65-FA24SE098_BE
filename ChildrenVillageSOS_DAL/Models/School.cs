@@ -17,7 +17,7 @@ public partial class School
 
     public string? Email { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public string? CreatedBy { get; set; }
 

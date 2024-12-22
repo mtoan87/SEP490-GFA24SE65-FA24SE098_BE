@@ -31,6 +31,14 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IHealthReportRepository, HealthReportRepository>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<ISchoolRepository, SchoolRepository>();
+            services.AddScoped<ISubjectDetailRepository, SubjectDetailRepository>();
+            services.AddScoped<IChildNeedRepository, ChildNeedRepository>();
+            services.AddScoped<IChildProgressRepository, ChildProgressRepository>();
+            services.AddScoped<ITransferRequestRepository, TransferRequestRepository>();
+            services.AddScoped<ITransferHistoryRepository, TransferHistoryRepository>();
             return services;
         }
 
@@ -56,6 +64,14 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IHealthReportService, HealthReportService>();
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IInventoryService, InventoryService>();
+            services.AddScoped<ISchoolService, SchoolService>();
+            services.AddScoped<ISubjectDetailService, SubjectDetailService>();
+            services.AddScoped<IChildNeedService, ChildNeedService>();
+            services.AddScoped<IChildProgressService, ChildProgressService>();
+            services.AddScoped<ITransferRequestService, TransferRequestService>();
+            services.AddScoped<ITransferHistoryService, TransferHistoryService>();
             return services;
         }
 
