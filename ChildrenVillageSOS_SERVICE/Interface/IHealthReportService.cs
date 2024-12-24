@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HealthReport> CreateHealthReport(CreateHealthReportDTO createReport);
         Task<HealthReport> UpdateHealthReport(int id, UpdateHealthReportDTO updateReport);
         Task<HealthReport> DeleteHealthReport(int id);
+        Task<HealthReport> RestoreHealthReport(int id);
     }
 }

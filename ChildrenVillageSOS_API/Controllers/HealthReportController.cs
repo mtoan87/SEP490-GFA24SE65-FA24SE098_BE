@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,6 +70,20 @@ namespace ChildrenVillageSOS_API.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("RestoreHealthReport/{id}")]
+        public async Task<IActionResult> RestoreHealthReport(int id)
+        {
+            try
+            {
+                var restoredHealthReport = await _healthReportService.RestoreHealthReport(id);
+                return Ok(restoredHealthReport);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

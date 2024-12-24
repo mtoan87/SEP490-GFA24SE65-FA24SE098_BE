@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<AcademicReport> CreateAcademicReport(CreateAcademicReportDTO createReport);
         Task<AcademicReport> UpdateAcademicReport(int id, UpdateAcademicReportDTO updateReport);
         Task<AcademicReport> DeleteAcademicReport(int id);
+        Task<AcademicReport> RestoreAcademicReport(int id);
     }
 }

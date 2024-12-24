@@ -49,10 +49,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ChildId = createReport.ChildId,
                 NutritionalStatus = createReport.NutritionalStatus,
                 MedicalHistory = createReport.MedicalHistory,
-                HealthCertificate = createReport.HealthCertificate,
                 VaccinationStatus = createReport.VaccinationStatus,
                 Weight = createReport.Weight,
                 Height = createReport.Height,
+                CheckupDate = createReport.CheckupDate,
+                DoctorName = createReport.DoctorName,
+                Recommendations = createReport.Recommendations,
+                HealthStatus = createReport.HealthStatus,
+                FollowUpDate = createReport.FollowUpDate,
+                Illnesses = createReport.Illnesses,
+                Allergies = createReport.Allergies,
+                HealthCertificate = createReport.HealthCertificate,
+                Status = createReport.Status,
+                CreatedBy = createReport.CreatedBy,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false
             };
 
             await _healthReportRepository.AddAsync(newReport);
@@ -67,12 +78,23 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"HealthReport with ID {id} not found!");
             }
 
+            existingReport.ChildId = updateReport.ChildId;
             existingReport.NutritionalStatus = updateReport.NutritionalStatus;
             existingReport.MedicalHistory = updateReport.MedicalHistory;
-            existingReport.HealthCertificate = updateReport.HealthCertificate;
             existingReport.VaccinationStatus = updateReport.VaccinationStatus;
             existingReport.Weight = updateReport.Weight;
             existingReport.Height = updateReport.Height;
+            existingReport.CheckupDate = updateReport.CheckupDate;
+            existingReport.DoctorName = updateReport.DoctorName;
+            existingReport.Recommendations = updateReport.Recommendations;
+            existingReport.HealthStatus = updateReport.HealthStatus;
+            existingReport.FollowUpDate = updateReport.FollowUpDate;
+            existingReport.Illnesses = updateReport.Illnesses;
+            existingReport.Allergies = updateReport.Allergies;
+            existingReport.HealthCertificate = updateReport.HealthCertificate;
+            existingReport.Status = updateReport.Status;
+            existingReport.ModifiedBy = updateReport.ModifiedBy;
+            existingReport.ModifiedDate = DateTime.Now;
 
             await _healthReportRepository.UpdateAsync(existingReport);
             return existingReport;
@@ -83,10 +105,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var report = await _healthReportRepository.GetByIdAsync(id);
             if (report == null)
             {
-                throw new Exception($"HealthReport with ID {id} not found!");
+                throw new Exception($"Health report with ID {id} not found!");
             }
 
             await _healthReportRepository.RemoveAsync(report);
+            return report;
+        }
+
+        public async Task<HealthReport> RestoreHealthReport(int id)
+        {
+            var report = await _healthReportRepository.GetByIdAsync(id);
+            if (report == null)
+            {
+                throw new Exception($"Health report with ID {id} not found");
+            }
+
+            if (report.IsDeleted)
+            {
+                report.IsDeleted = false;
+                await _healthReportRepository.UpdateAsync(report);
+            }
+
             return report;
         }
     }

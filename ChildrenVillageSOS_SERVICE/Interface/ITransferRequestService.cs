@@ -10,12 +10,11 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface ITransferRequestService
     {
-        Task<IEnumerable<TransferRequest>> GetAllTransferRequests();
+        Task<TransferRequest> CreateTransferRequest(CreateTransferRequestDTO dto);
+        Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto);
         Task<TransferRequest> GetTransferRequestById(int id);
-        Task<TransferRequest> CreateTransferRequest(CreateTransferRequestDTO createTransferRequest);
-        Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO updateTransferRequest);
-        Task<TransferRequest> DeleteTransferRequest(int id);
-        Task<TransferRequest> RestoreTransferRequest(int id);
+        Task<IEnumerable<TransferRequest>> GetAllTransferRequests();
+        Task<IEnumerable<TransferRequest>> GetTransferRequestsByHouse(string houseId);
     }
 
 }

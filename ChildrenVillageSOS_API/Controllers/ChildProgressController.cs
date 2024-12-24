@@ -35,14 +35,14 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateChildProgress")]
-        public async Task<ActionResult<ChildProgress>> CreateChildProgress(CreateChildProgressDTO createChildProgress)
+        public async Task<ActionResult<ChildProgress>> CreateChildProgress([FromForm] CreateChildProgressDTO createChildProgress)
         {
             var childProgress = await _childProgressService.CreateChildProgress(createChildProgress);
             return CreatedAtAction(nameof(GetChildProgressById), new { id = childProgress.Id }, childProgress);
         }
 
         [HttpPut("UpdateChildProgress/{id}")]
-        public async Task<IActionResult> UpdateChildProgress(int id, UpdateChildProgressDTO updateChildProgress)
+        public async Task<IActionResult> UpdateChildProgress(int id, [FromForm] UpdateChildProgressDTO updateChildProgress)
         {
             try
             {

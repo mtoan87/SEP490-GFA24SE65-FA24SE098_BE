@@ -36,7 +36,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateTransferHistory")]
-        public async Task<ActionResult<TransferHistory>> CreateTransferHistory(CreateTransferHistoryDTO createTransferHistory)
+        public async Task<ActionResult<TransferHistory>> CreateTransferHistory([FromForm] CreateTransferHistoryDTO createTransferHistory)
         {
             var transferHistory = await _transferHistoryService.CreateTransferHistory(createTransferHistory);
             return CreatedAtAction(nameof(GetTransferHistoryById), new { id = transferHistory.Id }, transferHistory);
@@ -44,7 +44,7 @@ namespace ChildrenVillageSOS_API.Controllers
 
 
         [HttpPut("UpdateTransferHistory/{id}")]
-        public async Task<IActionResult> UpdateTransferHistory(int id, UpdateTransferHistoryDTO updateTransferHistory)
+        public async Task<IActionResult> UpdateTransferHistory(int id, [FromForm] UpdateTransferHistoryDTO updateTransferHistory)
         {
             try
             {
