@@ -9,6 +9,8 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface ITransferRequestRepository : IRepositoryGeneric<TransferRequest>
     {
-
+        Task<IEnumerable<TransferRequest>> GetTransferRequestsByHouse(string houseId);
+        Task<TransferRequest> GetTransferRequestWithDetails(int requestId);
+        Task<IEnumerable<TransferRequest>> GetAllTransferRequestsWithDetails();
     }
 }

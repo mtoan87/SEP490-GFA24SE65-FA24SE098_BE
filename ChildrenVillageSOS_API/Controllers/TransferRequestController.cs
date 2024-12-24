@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferRequestDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChildrenVillageSOS_API.Controllers
@@ -16,72 +17,39 @@ namespace ChildrenVillageSOS_API.Controllers
             _transferRequestService = transferRequestService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllTransferRequests")]
         public async Task<ActionResult<IEnumerable<TransferRequest>>> GetAllTransferRequests()
         {
-            var transferRequests = await _transferRequestService.GetAllTransferRequests();
-            return Ok(transferRequests);
+            var results = await _transferRequestService.GetAllTransferRequests();
+            return Ok(results);
         }
 
         [HttpGet("GetTransferRequestById/{id}")]
         public async Task<ActionResult<TransferRequest>> GetTransferRequestById(int id)
         {
-            var transferRequest = await _transferRequestService.GetTransferRequestById(id);
-            if (transferRequest == null)
-            {
-                return NotFound();
-            }
-            return Ok(transferRequest);
+            var result = await _transferRequestService.GetTransferRequestById(id);
+            return Ok(result);
+        }
+
+        [HttpGet("GetTransferRequestsByHouse/{houseId}")]
+        public async Task<ActionResult<IEnumerable<TransferRequest>>> GetTransferRequestsByHouse(string houseId)
+        {
+            var results = await _transferRequestService.GetTransferRequestsByHouse(houseId);
+            return Ok(results);
         }
 
         [HttpPost("CreateTransferRequest")]
-        public async Task<ActionResult<TransferRequest>> CreateTransferRequest(CreateTransferRequestDTO createTransferRequest)
+        public async Task<ActionResult<TransferRequest>> CreateTransferRequest([FromForm] CreateTransferRequestDTO dto)
         {
-            var transferRequest = await _transferRequestService.CreateTransferRequest(createTransferRequest);
-            return CreatedAtAction(nameof(GetTransferRequestById), new { id = transferRequest.Id }, transferRequest);
+            var result = await _transferRequestService.CreateTransferRequest(dto);
+            return Ok(result);
         }
 
         [HttpPut("UpdateTransferRequest/{id}")]
-        public async Task<IActionResult> UpdateTransferRequest(int id, UpdateTransferRequestDTO updateTransferRequest)
+        public async Task<ActionResult<TransferRequest>> UpdateTransferRequest(int id, [FromForm] UpdateTransferRequestDTO dto)
         {
-            try
-            {
-                var updatedTransferRequest = await _transferRequestService.UpdateTransferRequest(id, updateTransferRequest);
-                return Ok(updatedTransferRequest);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
-
-        [HttpDelete("DeleteTransferRequest{id}")]
-        public async Task<IActionResult> DeleteTransferRequest(int id)
-        {
-            try
-            {
-                await _transferRequestService.DeleteTransferRequest(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
-
-        [HttpPatch("RestoreTransferRequest/{id}")]
-        public async Task<IActionResult> RestoreTransferRequest(int id)
-        {
-            try
-            {
-                var restoredTransferRequest = await _transferRequestService.RestoreTransferRequest(id);
-                return Ok(restoredTransferRequest);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
+            var result = await _transferRequestService.UpdateTransferRequest(id, dto);
+            return Ok(result);
+        }     
     }
-
 }

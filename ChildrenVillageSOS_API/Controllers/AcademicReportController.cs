@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,6 +70,20 @@ namespace ChildrenVillageSOS_API.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("RestoreAcademicReport/{id}")]
+        public async Task<IActionResult> RestoreAcademicReport(int id)
+        {
+            try
+            {
+                var restoredAcademicReport = await _academicReportService.RestoreAcademicReport(id);
+                return Ok(restoredAcademicReport);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }
