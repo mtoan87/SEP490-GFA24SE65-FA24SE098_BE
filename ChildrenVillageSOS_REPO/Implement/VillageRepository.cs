@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -199,6 +200,16 @@ namespace ChildrenVillageSOS_REPO.Implement
             var totalHouses = village.Houses.Count;
             var totalChildren = village.Houses.Sum(h => h.Children.Count);
 
+            var totalHouseOwners = village.Houses
+                .Where(h => !string.IsNullOrEmpty(h.HouseOwner))
+                .Select(h => h.HouseOwner)
+                .Distinct()
+                .Count();
+
+            var totalMatureChildren = village.Houses
+                .SelectMany(h => h.Children)
+                .Count(c => AgeCalculator.CalculateAge(c.Dob) >= 18);
+
             var housesArray = village.Houses.Select(h => new HouseSummaryDTO
             {
                 Id = h.Id,
@@ -213,10 +224,13 @@ namespace ChildrenVillageSOS_REPO.Implement
                 VillageName = village.VillageName,
                 Location = village.Location,
                 EstablishedDate = village.EstablishedDate,
+                Description = village.Description,
                 ContactNumber = village.ContactNumber,
                 TotalHouses = totalHouses,
                 TotalChildren = totalChildren,
-                Houses = housesArray // Gán mảng đã được chuyển đổi
+                Houses = housesArray,
+                TotalHouseOwners = totalHouseOwners,
+                TotalMatureChildren = totalMatureChildren,
             };
 
             return result;

@@ -16,6 +16,9 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
         public int? TotalChildren { get; set; }
         public DateTime? EstablishedDate { get; set; }
         public string? ContactNumber { get; set; }
+        public string? Description { get; set; }
+        public int TotalHouseOwners { get; set; }
+        public int TotalMatureChildren { get; set; }
         public List<HouseSummaryDTO> Houses { get; set; }
     }
 }

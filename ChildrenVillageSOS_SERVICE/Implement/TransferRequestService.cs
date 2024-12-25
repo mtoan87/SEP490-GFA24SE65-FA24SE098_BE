@@ -116,5 +116,43 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _transferRequestRepository.UpdateAsync(transferRequest);
             return transferRequest;
         }
+
+        public async Task<TransferRequest> DeleteTransferRequest(int id)
+        {
+            var transferRequest = await _transferRequestRepository.GetByIdAsync(id);
+            if (transferRequest == null)
+            {
+                throw new Exception($"Transfer request with ID {id} not found");
+            }
+
+            if (transferRequest.IsDeleted == true)
+            {
+                await _transferRequestRepository.RemoveAsync(transferRequest);
+            }
+            else
+            {
+                transferRequest.IsDeleted = true;
+                transferRequest.ModifiedDate = DateTime.UtcNow;
+                await _transferRequestRepository.UpdateAsync(transferRequest);
+            }
+            return transferRequest;
+        }
+
+        public async Task<TransferRequest> RestoreTransferRequest(int id)
+        {
+            var transferRequest = await _transferRequestRepository.GetByIdAsync(id);
+            if (transferRequest == null)
+            {
+                throw new Exception($"Transfer request with ID {id} not found");
+            }
+
+            if (transferRequest.IsDeleted == true)
+            {
+                transferRequest.IsDeleted = false;
+                transferRequest.ModifiedDate = DateTime.UtcNow;
+                await _transferRequestRepository.UpdateAsync(transferRequest);
+            }
+            return transferRequest;
+        }
     }
 }
