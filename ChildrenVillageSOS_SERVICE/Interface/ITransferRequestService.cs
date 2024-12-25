@@ -15,6 +15,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<TransferRequest> GetTransferRequestById(int id);
         Task<IEnumerable<TransferRequest>> GetAllTransferRequests();
         Task<IEnumerable<TransferRequest>> GetTransferRequestsByHouse(string houseId);
+        Task<TransferRequest> DeleteTransferRequest(int id);
+        Task<TransferRequest> RestoreTransferRequest(int id);
     }
 
 }

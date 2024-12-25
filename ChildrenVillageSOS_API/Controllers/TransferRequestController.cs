@@ -50,6 +50,34 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var result = await _transferRequestService.UpdateTransferRequest(id, dto);
             return Ok(result);
-        }     
+        }
+
+        [HttpDelete("DeleteTransferRequest/{id}")]
+        public async Task<ActionResult<TransferRequest>> DeleteTransferRequest(int id)
+        {
+            try
+            {
+                var result = await _transferRequestService.DeleteTransferRequest(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpPut("RestoreTransferRequest/{id}")]
+        public async Task<ActionResult<TransferRequest>> RestoreTransferRequest(int id)
+        {
+            try
+            {
+                var result = await _transferRequestService.RestoreTransferRequest(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }
