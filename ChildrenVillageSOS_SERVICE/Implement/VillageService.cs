@@ -49,6 +49,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _villageRepository.GetAllVillageIsDelete();
         }
+        public Task<Village[]> GetVillageByEventIDAsync(int eventId)
+        {
+            return _villageRepository.GetVillageByEventIDAsync(eventId);
+        }
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
         {

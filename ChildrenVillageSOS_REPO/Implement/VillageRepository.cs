@@ -21,6 +21,27 @@ namespace ChildrenVillageSOS_REPO.Implement
 
         }
 
+        public async Task<Village[]> GetVillageByEventIDAsync(int eventId)
+        {
+            try
+            {
+                // Truy vấn để tìm Village dựa trên EventID và ép dữ liệu thành mảng
+                var villages = await _context.Events
+                    .Where(e => e.Id == eventId && !e.IsDeleted)
+                    .Include(e => e.Village) // Bao gồm thông tin Village
+                    .Select(e => e.Village) // Chọn Village từ Event
+                    .Where(v => v != null)  // Lọc các giá trị null
+                    .ToArrayAsync();
+
+                return villages;
+            }
+            catch (Exception ex)
+            {
+               
+                Console.WriteLine($"Error: {ex.Message}");
+                return Array.Empty<Village>();
+            }
+        }
         public async Task<VillageResponseDTO[]> GetAllVillageIsDelete()
         {
             return await _context.Villages
