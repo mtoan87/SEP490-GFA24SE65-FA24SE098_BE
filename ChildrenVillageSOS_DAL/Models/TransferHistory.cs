@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChildrenVillageSOS_DAL.Models;
 
@@ -34,4 +35,7 @@ public partial class TransferHistory
     public virtual House FromHouse { get; set; } = null!;
 
     public virtual House ToHouse { get; set; } = null!;
+
+    [NotMapped]
+    public string RejectionReason { get; set; }
 }

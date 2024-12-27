@@ -75,6 +75,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ChildName = x.ChildName,
                 HealthStatus = x.HealthStatus,
                 HouseId = x.HouseId,
+                SchoolId = x.SchoolId,
                 FacilitiesWalletId = x.FacilitiesWalletId,
                 SystemWalletId = x.SystemWalletId,
                 FoodStuffWalletId = x.FoodStuffWalletId,
@@ -107,6 +108,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ChildName = x.ChildName,
                 HealthStatus = x.HealthStatus,
                 HouseId = x.HouseId,
+                SchoolId = x.SchoolId,
                 FacilitiesWalletId = x.FacilitiesWalletId,
                 SystemWalletId = x.SystemWalletId,
                 FoodStuffWalletId = x.FoodStuffWalletId,
@@ -169,6 +171,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CurrentAmount = createChild.Amount,
                 AmountLimit = createChild.AmountLimit,
                 HouseId = createChild.HouseId,
+                SchoolId = createChild.SchoolId,
                 Gender = createChild.Gender,
                 Dob = createChild.Dob,
                 CreatedDate = DateTime.Now,
@@ -360,6 +363,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.ChildName = updateChild.ChildName;
             existingChild.HealthStatus = updateChild.HealthStatus;
             existingChild.HouseId = updateChild.HouseId;
+            existingChild.SchoolId = updateChild.SchoolId;
             existingChild.Gender = updateChild.Gender;
             existingChild.Dob = updateChild.Dob;
             existingChild.Status = updateChild.Status;
