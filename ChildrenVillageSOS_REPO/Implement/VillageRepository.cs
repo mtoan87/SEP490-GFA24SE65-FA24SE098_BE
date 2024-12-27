@@ -21,27 +21,40 @@ namespace ChildrenVillageSOS_REPO.Implement
 
         }
 
-        public async Task<Village[]> GetVillageByEventIDAsync(int eventId)
+        public async Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId)
         {
-            try
-            {
-                // Truy vấn để tìm Village dựa trên EventID và ép dữ liệu thành mảng
-                var villages = await _context.Events
-                    .Where(e => e.Id == eventId && !e.IsDeleted)
-                    .Include(e => e.Village) // Bao gồm thông tin Village
-                    .Select(e => e.Village) // Chọn Village từ Event
-                    .Where(v => v != null)  // Lọc các giá trị null
-                    .ToArrayAsync();
-
-                return villages;
-            }
-            catch (Exception ex)
-            {
-               
-                Console.WriteLine($"Error: {ex.Message}");
-                return Array.Empty<Village>();
-            }
+            return await _context.Events
+                .Where(e => e.Id == eventId && !e.IsDeleted)
+                .Select(e => e.Village)  // Lấy danh sách villages liên quan đến Event
+                .Where(v => !v.IsDeleted) // Chỉ lấy các Village chưa bị xóa
+                .Select(v => new VillageResponseDTO
+                {
+                    Id = v.Id,
+                    VillageName = v.VillageName ?? string.Empty,
+                    EstablishedDate = v.EstablishedDate,
+                    TotalHouses = v.Houses.Count(h => !h.IsDeleted),
+                    TotalChildren = v.Houses
+                        .SelectMany(h => h.Children)
+                        .Count(c => !c.IsDeleted),
+                    ContactNumber = v.ContactNumber,
+                    Location = v.Location ?? string.Empty,
+                    Description = v.Description ?? string.Empty,
+                    Status = "Active",
+                    UserAccountId = v.UserAccountId,
+                    CreatedBy = v.CreatedBy,
+                    ModifiedBy = v.ModifiedBy,
+                    RoleName = v.RoleName,
+                    IsDeleted = v.IsDeleted,
+                    CreatedDate = v.CreatedDate,
+                    ModifiedDate = v.ModifiedDate,
+                    ImageUrls = v.Images
+                        .Where(img => !img.IsDeleted)
+                        .Select(img => img.UrlPath)
+                        .ToArray()
+                })
+                .ToArrayAsync();
         }
+
         public async Task<VillageResponseDTO[]> GetAllVillageIsDelete()
         {
             return await _context.Villages

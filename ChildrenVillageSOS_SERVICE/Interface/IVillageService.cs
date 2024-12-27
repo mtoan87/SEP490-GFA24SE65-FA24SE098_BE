@@ -15,7 +15,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<Village>> GetAllVillage();
         Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg();
         Task<Village> GetVillageById(string villageId);
-        Task<Village[]> GetVillageByEventIDAsync(int eventId);
+        Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId);
         Task<VillageResponseDTO> GetVillageByIdWithImg(string villageId);
         Task<Village> CreateVillage(CreateVillageDTO createVillage);
         Task<Village> UpdateVillage(string villageId, UpdateVillageDTO updateVillage);
