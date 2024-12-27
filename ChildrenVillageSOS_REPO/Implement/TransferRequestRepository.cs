@@ -26,6 +26,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .ToListAsync();
         }
 
+        // Get Id
         public async Task<TransferRequest> GetTransferRequestWithDetails(int requestId)
         {
             return await _context.TransferRequests
@@ -35,13 +36,14 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .FirstOrDefaultAsync(t => t.Id == requestId && !t.IsDeleted);
         }
 
+        // Get All
         public async Task<IEnumerable<TransferRequest>> GetAllTransferRequestsWithDetails()
         {
             return await _context.TransferRequests
                 .Include(t => t.Child)
                 .Include(t => t.FromHouse)
                 .Include(t => t.ToHouse)
-                .Where(t => !t.IsDeleted)
+                .Where(t => !t.IsDeleted && (t.Status == "Pending" || t.Status == "Rejected"))
                 .ToListAsync();
         }
     }

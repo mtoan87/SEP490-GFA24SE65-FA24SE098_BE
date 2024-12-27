@@ -68,11 +68,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ChildId = dto.ChildId,
                 FromHouseId = dto.FromHouseId,
                 ToHouseId = dto.ToHouseId,
-                RequestDate = DateTime.UtcNow,
+                RequestDate = DateTime.Now,
                 Status = "Pending",
                 RequestReason = dto.RequestReason,
                 CreatedBy = dto.CreatedBy,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 IsDeleted = false
             };
 
@@ -86,34 +86,62 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             if (transferRequest == null)
                 throw new InvalidOperationException("Transfer request not found");
 
-            transferRequest.Status = dto.Status;
-            transferRequest.DirectorNote = dto.DirectorNote;
-            transferRequest.ModifiedBy = dto.ModifiedBy;
-            transferRequest.ModifiedDate = DateTime.UtcNow;
-            transferRequest.ApprovedBy = dto.ApprovedBy;
-
             if (dto.Status == "Approved")
+            {
+                // Move to Transfer History
+                var transferHistory = new TransferHistory
+                {
+                    ChildId = transferRequest.ChildId,
+                    FromHouseId = transferRequest.FromHouseId,
+                    ToHouseId = transferRequest.ToHouseId,
+                    TransferDate = DateTime.Now,
+                    Status = "Completed",
+                    HandledBy = dto.ApprovedBy,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false
+                };
+
+                await _transferHistoryRepository.AddAsync(transferHistory);
+
+                // Update the child's house information
+                var child = await _childRepository.GetByIdAsync(transferRequest.ChildId);
+                child.HouseId = transferRequest.ToHouseId;
+                await _childRepository.UpdateAsync(child);
+
+                // Remove the request from transfer request if status is "Approved"
+                await _transferRequestRepository.RemoveAsync(transferRequest);
+            }
+            else if (dto.Status == "Rejected")
             {
                 var transferHistory = new TransferHistory
                 {
                     ChildId = transferRequest.ChildId,
                     FromHouseId = transferRequest.FromHouseId,
                     ToHouseId = transferRequest.ToHouseId,
-                    TransferDate = DateTime.UtcNow,
-                    Status = "Completed",
-                    HandledBy = dto.ApprovedBy,
-                    CreatedDate = DateTime.UtcNow,
-                    IsDeleted = false
+                    TransferDate = DateTime.Now,
+                    Status = "Rejected",
+                    HandledBy = dto.ModifiedBy,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                    RejectionReason = dto.DirectorNote
                 };
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
 
-                var child = await _childRepository.GetByIdAsync(transferRequest.ChildId);
-                child.HouseId = transferRequest.ToHouseId;
-                await _childRepository.UpdateAsync(child);
+                // Remove the transfer request
+                await _transferRequestRepository.RemoveAsync(transferRequest);
+            }
+            else
+            {
+                transferRequest.Status = dto.Status;
+                transferRequest.DirectorNote = dto.DirectorNote;
+                transferRequest.ModifiedBy = dto.ModifiedBy;
+                transferRequest.ModifiedDate = DateTime.Now;
+                transferRequest.ApprovedBy = dto.ApprovedBy;
+
+                await _transferRequestRepository.UpdateAsync(transferRequest);
             }
 
-            await _transferRequestRepository.UpdateAsync(transferRequest);
             return transferRequest;
         }
 
@@ -132,7 +160,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             else
             {
                 transferRequest.IsDeleted = true;
-                transferRequest.ModifiedDate = DateTime.UtcNow;
+                transferRequest.ModifiedDate = DateTime.Now;
                 await _transferRequestRepository.UpdateAsync(transferRequest);
             }
             return transferRequest;
@@ -149,7 +177,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             if (transferRequest.IsDeleted == true)
             {
                 transferRequest.IsDeleted = false;
-                transferRequest.ModifiedDate = DateTime.UtcNow;
+                transferRequest.ModifiedDate = DateTime.Now;
                 await _transferRequestRepository.UpdateAsync(transferRequest);
             }
             return transferRequest;

@@ -17,7 +17,7 @@ namespace ChildrenVillageSOS_API.Controllers
             _transferRequestService = transferRequestService;
         }
 
-        [HttpGet("GetAllTransferRequests")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<TransferRequest>>> GetAllTransferRequests()
         {
             var results = await _transferRequestService.GetAllTransferRequests();
