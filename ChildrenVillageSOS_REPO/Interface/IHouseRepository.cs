@@ -18,6 +18,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         //Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync();
         DataTable getHouse();
-        Task<HouseDetailsDTO> GetHouseDetailsWithChildrenAsync(string houseId);
+        Task<HouseDetailsDTO> GetHouseDetails(string houseId);
     }
 }

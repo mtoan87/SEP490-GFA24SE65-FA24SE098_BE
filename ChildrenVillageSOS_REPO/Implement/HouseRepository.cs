@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -207,10 +208,10 @@ namespace ChildrenVillageSOS_REPO.Implement
             return houseName;
         }
 
-        public async Task<HouseDetailsDTO> GetHouseDetailsWithChildrenAsync(string houseId)
+        public async Task<HouseDetailsDTO> GetHouseDetails(string houseId)
         {
             var house = await _context.Houses
-                .Include(h => h.Children.Where(c => !c.IsDeleted))
+                .Include(h => h.Children.Where(c => !c.IsDeleted))             
                 .FirstOrDefaultAsync(h => h.Id == houseId);
 
             if (house == null)
@@ -219,6 +220,19 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
 
             var currentMembers = house.Children.Count;
+
+            // Lấy danh sách Inventory thuộc về House
+            var inventoryList = await _context.Inventories
+                .Where(i => i.BelongsTo == "House" && i.BelongsToId == houseId)
+                .Select(i => new InventorySummaryDTO
+            {
+                Id = i.Id,
+                ItemName = i.ItemName,
+                Quantity = i.Quantity,
+                Purpose = i.Purpose ?? "Not Specified",
+                MaintenanceStatus = i.MaintenanceStatus,
+                LastInspectionDate = i.LastInspectionDate
+            }).ToListAsync();
 
             // Chuyển đổi danh sách Children thành ChildSummaryDTO
             var childrenList = house.Children.Select(c => new ChildSummaryDTO
@@ -236,11 +250,14 @@ namespace ChildrenVillageSOS_REPO.Implement
                 HouseName = house.HouseName,
                 HouseNumber = house.HouseNumber,
                 Location = house.Location,
+                Description = house.Description,
                 HouseOwner = house.HouseOwner ?? "Unknown",
+                HouseMember = house.HouseMember,
                 CurrentMembers = currentMembers,
                 FoundationDate = house.FoundationDate,
                 MaintenanceStatus = house.MaintenanceStatus,
-                Children = childrenList
+                Children = childrenList,
+                Inventory = inventoryList,
             };
 
             return result;

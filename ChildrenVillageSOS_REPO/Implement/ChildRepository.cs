@@ -1,7 +1,10 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -156,6 +159,73 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<ChildDetailsDTO> GetChildDetails(string childId)
+        {
+            var child = await _context.Children
+                .Include(c => c.House)
+                .Include(c => c.School)
+                .FirstOrDefaultAsync(c => c.Id == childId);
+
+            if (child == null)
+            {
+                throw new Exception("Child not found.");
+            }
+
+            var healthReports = await _context.HealthReports
+                .Select(hr => new HealthReportSummaryDTO
+                {
+                    Id = hr.Id,
+                    NutritionalStatus = hr.NutritionalStatus ?? "Not Specified",
+                    MedicalHistory = hr.MedicalHistory ?? "Not Specified",
+                    VaccinationStatus = hr.VaccinationStatus ?? "Not Specified",
+                    Weight = hr.Weight,
+                    Height = hr.Height,
+                    HealthStatus = hr.HealthStatus ?? "Not Specified",
+                    Illnesses = hr.Illnesses ?? "None",
+                    Allergies = hr.Allergies ?? "None"
+                })
+                .ToListAsync();
+
+            var academicReports = await _context.AcademicReports             
+                .Select(ar => new AcademicReportSummaryDTO
+                {
+                    Id = ar.Id,
+                    Diploma = ar.Diploma ?? "Not Specified",
+                    SchoolLevel = ar.SchoolLevel ?? "Not Specified",
+                    Gpa = ar.Gpa,
+                    Semester = ar.Semester ?? "Not Specified",
+                    AcademicYear = ar.AcademicYear ?? "Not Specified",
+                    Achievement = ar.Achievement ?? "Not Specified",
+                    SubjectDetails = _context.SubjectDetails
+                        .Where(sd => sd.AcademicReportId == ar.Id && !sd.IsDeleted)
+                        .Select(sd => new SubjectSummaryDTO
+                        {
+                            Id = sd.Id,
+                            SubjectName = sd.SubjectName ?? "Not Specified",
+                            Score = sd.Score,
+                            Remarks = sd.Remarks ?? "Not Specified"
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
+
+            var result = new ChildDetailsDTO
+            {
+                Id = child.Id,
+                ChildName = child.ChildName ?? "Unknown",
+                HealthStatus = child.HealthStatus ?? "Unknown",
+                Gender = child.Gender ?? "Unknown",
+                Dob = child.Dob,
+                Status = child.Status ?? "Unknown",
+                HouseName = child.House?.HouseName ?? "Unknown",
+                SchoolName = child.School?.SchoolName ?? "Unknown",
+                HealthReports = healthReports,
+                AcademicReports = academicReports
+            };
+
+            return result;
         }
     }
 }

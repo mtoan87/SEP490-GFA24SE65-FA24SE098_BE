@@ -20,5 +20,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<IEnumerable<Child>> GetChildrenForDemographics();
         Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync();
         Task<int> CountChildrenByHouseIdAsync(string houseId);
+        Task<ChildDetailsDTO> GetChildDetails(string childId);
     }
 }

@@ -28,6 +28,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync();
         Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId);
         DataTable getHouse();
-        Task<HouseDetailsDTO> GetHouseDetailsWithChildrenAsync(string houseId);
+        Task<HouseDetailsDTO> GetHouseDetails(string houseId);
     }
 }

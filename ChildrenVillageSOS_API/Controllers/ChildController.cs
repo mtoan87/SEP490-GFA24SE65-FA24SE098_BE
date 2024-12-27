@@ -59,6 +59,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(child);
         }
 
+        [HttpGet("GetChildDetails/{childId}")]
+        public async Task<IActionResult> GetChildDetails(string childId)
+        {
+            var childDetails = await _childService.GetChildDetails(childId);
+            return Ok(childDetails);
+        }
+
         [HttpGet("GetChildByHouseId/{Id}")]
         public async Task<IActionResult> GetChildByHouseIdAsync(string Id)
         {

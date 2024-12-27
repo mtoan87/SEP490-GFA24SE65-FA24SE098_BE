@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -140,6 +141,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<List<Child>> GetChildByHouseIdAsync(string houseId)
         {
             return await _childRepository.GetChildByHouseIdAsync(houseId);
+        }
+
+        public async Task<ChildDetailsDTO> GetChildDetails(string childId)
+        {
+            return await _childRepository.GetChildDetails(childId);
         }
 
         public async Task<ChildResponseDTO> GetChildByIdWithImg(string childid)

@@ -64,10 +64,10 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(house);
         }
 
-        [HttpGet("GetHouseDetailsWithChildren/{houseId}")]
-        public async Task<IActionResult> GetHouseDetailsWithChildrenAsync(string houseId)
+        [HttpGet("GetHouseDetails/{houseId}")]
+        public async Task<IActionResult> GetHouseDetails(string houseId)
         {
-            var houseDetails = await _houseService.GetHouseDetailsWithChildrenAsync(houseId);
+            var houseDetails = await _houseService.GetHouseDetails(houseId);
             return Ok(houseDetails);
         }
 
