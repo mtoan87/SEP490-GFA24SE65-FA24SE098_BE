@@ -49,7 +49,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _villageRepository.GetAllVillageIsDelete();
         }
-        public Task<Village[]> GetVillageByEventIDAsync(int eventId)
+        public Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId)
         {
             return _villageRepository.GetVillageByEventIDAsync(eventId);
         }
