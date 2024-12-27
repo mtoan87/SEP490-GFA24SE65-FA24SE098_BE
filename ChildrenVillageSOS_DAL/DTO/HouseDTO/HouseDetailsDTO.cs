@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,11 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public string? Location { get; set; }
 
+        public string? Description { get; set; }
+
         public string? HouseOwner { get; set; }
+
+        public int? HouseMember { get; set; }
 
         public int? CurrentMembers { get; set; }
 
@@ -25,6 +30,8 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public string MaintenanceStatus { get; set; } = null!;
 
-        public List<ChildSummaryDTO> Children { get; set; }
+        public List<ChildSummaryDTO> Children { get; set; } = new();
+
+        public List<InventorySummaryDTO> Inventory { get; set; } = new();
     }
 }
