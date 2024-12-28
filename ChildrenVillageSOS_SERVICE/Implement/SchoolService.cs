@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -13,10 +15,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class SchoolService : ISchoolService
     {
         private readonly ISchoolRepository _schoolRepository;
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
 
-        public SchoolService(ISchoolRepository schoolRepository)
+        public SchoolService(ISchoolRepository schoolRepository,
+            IImageService imageService,
+            IImageRepository imageRepository)
         {
             _schoolRepository = schoolRepository;
+            _imageService = imageService;
+            _imageRepository = imageRepository;
         }
 
         public async Task<IEnumerable<School>> GetAllSchools()
@@ -24,9 +32,46 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _schoolRepository.GetAllNotDeletedAsync();
         }
 
-        public async Task<School> GetSchoolById(int id)
+        public Task<SchoolResponseDTO[]> GetAllSchoolsIsDeleted()
+        {
+            return _schoolRepository.GetAllSchoolsIsDeleted();
+        }
+
+        public async Task<School> GetSchoolById(string id)
         {
             return await _schoolRepository.GetByIdAsync(id);
+        }
+
+        public async Task<SchoolResponseDTO> GetSchoolByIdWithImg(string schoolId)
+        {
+            return _schoolRepository.GetSchoolByIdWithImg(schoolId);
+        }
+
+        public async Task<IEnumerable<SchoolResponseDTO>> GetAllSchoolWithImg()
+        {
+            // Lấy tất cả các school không bị xóa từ repository, bao gồm liên kết tới hình ảnh
+            var schools = await _schoolRepository.GetAllNotDeletedAsync();
+
+            var schoolResponseDTOs = schools.Select(school => new SchoolResponseDTO
+            {
+                Id = school.Id,
+                SchoolName = school.SchoolName,
+                Address = school.Address,
+                SchoolType = school.SchoolType,
+                PhoneNumber = school.PhoneNumber,
+                Email = school.Email,
+                IsDeleted = school.IsDeleted,
+                CreatedBy = school.CreatedBy,
+                CreatedDate = school.CreatedDate,
+                ModifiedBy = school.ModifiedBy,
+                ModifiedDate = school.ModifiedDate,
+                ImageUrls = school.Images
+                    .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                    .Select(img => img.UrlPath)  // Lấy đường dẫn URL
+                    .ToArray() // Chuyển thành mảng
+            }).ToArray();
+
+            return schoolResponseDTOs;
         }
 
         public async Task<School> CreateSchool(CreateSchoolDTO createSchool)
@@ -44,10 +89,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             await _schoolRepository.AddAsync(newSchool);
+
+            // Upload danh sách ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadSchoolImage(createSchool.Img, newSchool.Id);
+
+            // Lưu thông tin các ảnh vào bảng Image
+            foreach (var url in imageUrls)
+            {
+                var image = new Image
+                {
+                    UrlPath = url,
+                    SchoolId = newSchool.Id, // Liên kết với School
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(image);
+            }
+
             return newSchool;
         }
 
-        public async Task<School> UpdateSchool(int id, UpdateSchoolDTO updateSchool)
+        public async Task<School> UpdateSchool(string id, UpdateSchoolDTO updateSchool)
         {
             var existingSchool = await _schoolRepository.GetByIdAsync(id);
             if (existingSchool == null)
@@ -63,11 +125,54 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingSchool.ModifiedBy = updateSchool.ModifiedBy;
             existingSchool.ModifiedDate = DateTime.Now;
 
+            var existingImages = await _imageRepository.GetBySchoolIdAsync(existingSchool.Id);
+
+            // Xóa các ảnh được yêu cầu xóa
+            if (updateSchool.ImgToDelete != null && updateSchool.ImgToDelete.Any())
+            {
+                foreach (var imageUrlToDelete in updateSchool.ImgToDelete)
+                {
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageUrlToDelete);
+                    if (imageToDelete != null)
+                    {
+                        imageToDelete.IsDeleted = true;
+                        imageToDelete.ModifiedDate = DateTime.Now;
+
+                        // Cập nhật trạng thái ảnh trong database
+                        await _imageRepository.UpdateAsync(imageToDelete);
+
+                        // Xóa ảnh khỏi Cloudinary
+                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "SchoolImages");
+                        if (isDeleted)
+                        {
+                            await _imageRepository.RemoveAsync(imageToDelete);
+                        }
+                    }
+                }
+            }
+
+            // Thêm các ảnh mới nếu có
+            if (updateSchool.Img != null && updateSchool.Img.Any())
+            {
+                var newImageUrls = await _imageService.UploadSchoolImage(updateSchool.Img, existingSchool.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        SchoolId = existingSchool.Id,
+                        CreatedDate = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
+
             await _schoolRepository.UpdateAsync(existingSchool);
             return existingSchool;
         }
 
-        public async Task<School> DeleteSchool(int id)
+        public async Task<School> DeleteSchool(string id)
         {
             var school = await _schoolRepository.GetByIdAsync(id);
             if (school == null)
@@ -88,7 +193,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return school;
         }
 
-        public async Task<School> RestoreSchool(int id)
+        public async Task<School> RestoreSchool(string id)
         {
             var school = await _schoolRepository.GetByIdAsync(id);
             if (school == null)

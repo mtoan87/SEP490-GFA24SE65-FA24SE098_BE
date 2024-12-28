@@ -16,5 +16,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HealthReport> UpdateHealthReport(int id, UpdateHealthReportDTO updateReport);
         Task<HealthReport> DeleteHealthReport(int id);
         Task<HealthReport> RestoreHealthReport(int id);
+        Task<HealthReportResponseDTO> GetHealthReportByIdWithImg(int id);
+        Task<HealthReportResponseDTO[]> GetAllHealthReportIsDeleteAsync();
+        Task<IEnumerable<HealthReportResponseDTO>> GetAllHealthReportWithImg();
     }
 }

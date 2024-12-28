@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.BookingDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using System;
@@ -11,6 +12,8 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IAcademicReportRepository : IRepositoryGeneric<AcademicReport>
     {
+        Task<AcademicReportResponseDTO[]> GetAllAcademicReportIsDeleteAsync();
+        AcademicReportResponseDTO GetAcademicReportByIdWithImg(int academicReportId);
         Task<List<AcademicReport>> GetAcademicPerformanceDistribution();
     }
 }

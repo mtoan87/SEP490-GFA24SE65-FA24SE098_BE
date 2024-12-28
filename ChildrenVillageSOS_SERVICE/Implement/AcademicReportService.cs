@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -16,16 +17,61 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class AcademicReportService : IAcademicReportService
     {
         private readonly IAcademicReportRepository _academicReportRepository;
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
 
-        public AcademicReportService(IAcademicReportRepository academicReportRepository)
+        public AcademicReportService(IAcademicReportRepository academicReportRepository,
+            IImageService imageService,
+            IImageRepository imageRepository)
         {
             _academicReportRepository = academicReportRepository;
+            _imageService = imageService;
+            _imageRepository = imageRepository;
         }
 
         public async Task<IEnumerable<AcademicReport>> GetAllAcademicReports()
         {
             return await _academicReportRepository.GetAllAsync();
         }
+
+        public Task<AcademicReportResponseDTO[]> GetAllAcademicReportIsDeleteAsync()
+        {
+            return _academicReportRepository.GetAllAcademicReportIsDeleteAsync();
+        }
+
+        public async Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg()
+        {
+            var academicReports = await _academicReportRepository.GetAllNotDeletedAsync();
+
+            var academicReportResponseDTOs = academicReports.Select(ar => new AcademicReportResponseDTO
+            {
+                Id = ar.Id,
+                Diploma = ar.Diploma,
+                SchoolLevel = ar.SchoolLevel,
+                ChildId = ar.ChildId,
+                SchoolId = ar.SchoolId,
+                Gpa = ar.Gpa,
+                SchoolReport = ar.SchoolReport,
+                Semester = ar.Semester,
+                AcademicYear = ar.AcademicYear,
+                Remarks = ar.Remarks,
+                Achievement = ar.Achievement,
+                Status = ar.Status,
+                Class = ar.Class,
+                Feedback = ar.Feedback,
+                IsDeleted = ar.IsDeleted,
+                CreatedBy = ar.CreatedBy,
+                CreatedDate = ar.CreatedDate,
+                ModifiedBy = ar.ModifiedBy,
+                ModifiedDate = ar.ModifiedDate,
+                ImageUrls = ar.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
+                                .Select(img => img.UrlPath)
+                                .ToArray()
+            }).ToArray();
+
+            return academicReportResponseDTOs;
+        }
+
 
         public async Task<AcademicReport> GetAcademicReportById(int id)
         {
@@ -35,6 +81,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Academic report with ID {id} not found!");
             }
             return report;
+        }
+
+        public async Task<AcademicReportResponseDTO> GetAcademicReportByIdWithImg(int id)
+        {
+            return _academicReportRepository.GetAcademicReportByIdWithImg(id);
         }
 
         public async Task<AcademicReport> CreateAcademicReport(CreateAcademicReportDTO createReport)
@@ -66,7 +117,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = false
 
             };
+
             await _academicReportRepository.AddAsync(newReport);
+
+            // Upload danh sách hình ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadAcademicReportImage(createReport.Img, newReport.Id);
+
+            // Lưu thông tin các hình ảnh vào bảng Image
+            foreach (var url in imageUrls)
+            {
+                var image = new Image
+                {
+                    UrlPath = url,
+                    AcademicReportId = newReport.Id, // Liên kết với AcademicReport
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(image);
+            }
+
             return newReport;
         }
 
@@ -92,7 +161,50 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             editReport.Class = updateReport.Class;
             editReport.Feedback = updateReport.Feedback;
             editReport.ModifiedBy = updateReport.ModifiedBy;
-            editReport.ModifiedDate = DateTime.Now;    
+            editReport.ModifiedDate = DateTime.Now;
+
+            var existingImages = await _imageRepository.GetByAcademicReportIdAsync(editReport.Id);
+
+            // Xóa các ảnh được yêu cầu xóa
+            if (updateReport.ImgToDelete != null && updateReport.ImgToDelete.Any())
+            {
+                foreach (var imageUrlToDelete in updateReport.ImgToDelete)
+                {
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageUrlToDelete);
+                    if (imageToDelete != null)
+                    {
+                        imageToDelete.IsDeleted = true;
+                        imageToDelete.ModifiedDate = DateTime.Now;
+
+                        // Cập nhật trạng thái ảnh trong database
+                        await _imageRepository.UpdateAsync(imageToDelete);
+
+                        // Xóa ảnh khỏi Cloudinary
+                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "AcademicReportImages");
+                        if (isDeleted)
+                        {
+                            await _imageRepository.RemoveAsync(imageToDelete);
+                        }
+                    }
+                }
+            }
+
+            // Thêm các ảnh mới nếu có
+            if (updateReport.Img != null && updateReport.Img.Any())
+            {
+                var newImageUrls = await _imageService.UploadAcademicReportImage(updateReport.Img, editReport.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        AcademicReportId = editReport.Id,
+                        CreatedDate = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
 
             await _academicReportRepository.UpdateAsync(editReport);
             return editReport;

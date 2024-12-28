@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ChildrenVillageSOS_DAL.DTO.HealthReportDTO
 {
-    public class UpdateHealthReportDTO
+    public class HealthReportResponseDTO
     {
+        public int Id { get; set; }
+
         public string? ChildId { get; set; }
 
         public string? NutritionalStatus { get; set; }
@@ -39,10 +40,16 @@ namespace ChildrenVillageSOS_DAL.DTO.HealthReportDTO
 
         public string? Status { get; set; }
 
+        public bool IsDeleted { get; set; }
+
+        public string? CreatedBy { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
         public string? ModifiedBy { get; set; }
 
-        public List<IFormFile>? Img { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
-        public List<string>? ImgToDelete { get; set; }
+        public string[] ImageUrls { get; set; } = new string[0];
     }
 }

@@ -24,6 +24,27 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(reports);
         }
 
+        [HttpGet("GetAllAcademicReportIsDeleteAsync")]
+        public async Task<IActionResult> GetAllAcademicReportIsDeleteAsync()
+        {
+            var reports = await _academicReportService.GetAllAcademicReportIsDeleteAsync();
+            return Ok(reports);
+        }
+
+        [HttpGet("GetAllAcademicReportWithImg")]
+        public async Task<IActionResult> GetAllAcademicReportWithImg()
+        {
+            var reports = await _academicReportService.GetAllAcademicReportWithImg();
+            return Ok(reports);
+        }
+
+        [HttpGet("GetAcademicReportByIdWithImg/{inventoryId}")]
+        public async Task<IActionResult> GetAcademicReportByIdWithImg(int inventoryId)
+        {
+            var reports = await _academicReportService.GetAcademicReportByIdWithImg(inventoryId);
+            return Ok(reports);
+        }
+
         [HttpGet("GetAcademicReportById/{id}")]
         public async Task<IActionResult> GetAcademicReportById(int id)
         {
@@ -73,7 +94,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreAcademicReport/{id}")]
+        [HttpPut("RestoreAcademicReport/{id}")]
         public async Task<IActionResult> RestoreAcademicReport(int id)
         {
             try

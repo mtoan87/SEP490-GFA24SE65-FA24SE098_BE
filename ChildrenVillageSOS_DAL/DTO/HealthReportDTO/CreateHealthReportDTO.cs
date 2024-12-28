@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,8 @@ namespace ChildrenVillageSOS_DAL.DTO.HealthReportDTO
         public string? Status { get; set; }
 
         public string? CreatedBy { get; set; }
+
+        public List<IFormFile>? Img { get; set; }
 
     }
 }
