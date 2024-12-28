@@ -11,10 +11,13 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     public interface ISchoolService
     {
         Task<IEnumerable<School>> GetAllSchools();
-        Task<School> GetSchoolById(int id);
+        Task<School> GetSchoolById(string id);
         Task<School> CreateSchool(CreateSchoolDTO createSchool);
-        Task<School> UpdateSchool(int id, UpdateSchoolDTO updateSchool);
-        Task<School> DeleteSchool(int id);
-        Task<School> RestoreSchool(int id);
+        Task<School> UpdateSchool(string id, UpdateSchoolDTO updateSchool);
+        Task<School> DeleteSchool(string id);
+        Task<School> RestoreSchool(string id);
+        Task<SchoolResponseDTO[]> GetAllSchoolsIsDeleted();
+        Task<SchoolResponseDTO> GetSchoolByIdWithImg(string schoolId);
+        Task<IEnumerable<SchoolResponseDTO>> GetAllSchoolWithImg();
     }
 }

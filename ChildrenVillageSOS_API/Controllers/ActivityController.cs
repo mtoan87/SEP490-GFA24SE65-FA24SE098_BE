@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,27 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var activities = await _activityService.GetAllActivities();
             return Ok(activities);
+        }
+
+        [HttpGet("GetAllActivityIsDeleteAsync")]
+        public async Task<IActionResult> GetAllActivityIsDeleteAsync()
+        {
+            var activity = await _activityService.GetAllActivityIsDeleteAsync();
+            return Ok(activity);
+        }
+
+        [HttpGet("GetAllActivityWithImg")]
+        public async Task<IActionResult> GetAllActivityWithImg()
+        {
+            var activity = await _activityService.GetAllActivityWithImg();
+            return Ok(activity);
+        }
+
+        [HttpGet("GetActivityByIdWithImg/{activityId}")]
+        public async Task<IActionResult> GetActivityByIdWithImg(int activityId)
+        {
+            var activity = await _activityService.GetActivityByIdWithImg(activityId);
+            return Ok(activity);
         }
 
         [HttpGet("GetActivityById/{id}")]
@@ -88,7 +110,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreActivity/{id}")]
+        [HttpPut("RestoreActivity/{id}")]
         public async Task<IActionResult> RestoreActivity(int id)
         {
             try

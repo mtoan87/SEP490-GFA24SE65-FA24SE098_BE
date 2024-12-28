@@ -27,22 +27,22 @@ namespace ChildrenVillageSOS_API.Controllers
         [HttpGet("GetAllInventoryIsDeleteAsync")]
         public async Task<IActionResult> GetAllInventoryIsDeleteAsync()
         {
-            var children = await _inventoryService.GetAllInventoryIsDeleteAsync();
-            return Ok(children);
+            var inventory = await _inventoryService.GetAllInventoryIsDeleteAsync();
+            return Ok(inventory);
         }
 
         [HttpGet("GetAllInventoryWithImg")]
         public async Task<IActionResult> GetAllInventoryWithImg()
         {
-            var children = await _inventoryService.GetAllInventoryWithImg();
-            return Ok(children);
+            var inventory = await _inventoryService.GetAllInventoryWithImg();
+            return Ok(inventory);
         }
 
         [HttpGet("GetInventoryByIdWithImg/{inventoryId}")]
         public async Task<IActionResult> GetInventoryByIdWithImg(int inventoryId)
         {
-            var child = await _inventoryService.GetInventoryByIdWithImg(inventoryId);
-            return Ok(child);
+            var inventory = await _inventoryService.GetInventoryByIdWithImg(inventoryId);
+            return Ok(inventory);
         }
 
         [HttpGet("GetInventoryById/{id}")]
@@ -101,7 +101,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreInventory/{id}")]
+        [HttpPut("RestoreInventory/{id}")]
         public async Task<IActionResult> RestoreInventory(int id)
         {
             try

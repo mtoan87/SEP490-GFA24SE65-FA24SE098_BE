@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IActivityRepository : IRepositoryGeneric<Activity>
     {
+        Task<ActivityResponseDTO[]> GetAllActivityIsDeleteAsync();
+        ActivityResponseDTO GetActivityByIdWithImg(int activityId);
 
     }
 }

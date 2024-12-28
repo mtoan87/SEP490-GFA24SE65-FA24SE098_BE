@@ -24,6 +24,27 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(reports);
         }
 
+        [HttpGet("GetAllInventoryIsDeleteAsync")]
+        public async Task<IActionResult> GetAllInventoryIsDeleteAsync()
+        {
+            var inventory = await _healthReportService.GetAllHealthReportIsDeleteAsync();
+            return Ok(inventory);
+        }
+
+        [HttpGet("GetAllInventoryWithImg")]
+        public async Task<IActionResult> GetAllInventoryWithImg()
+        {
+            var inventory = await _healthReportService.GetAllHealthReportWithImg();
+            return Ok(inventory);
+        }
+
+        [HttpGet("GetInventoryByIdWithImg/{id}")]
+        public async Task<IActionResult> GetInventoryByIdWithImg(int id)
+        {
+            var inventory = await _healthReportService.GetHealthReportByIdWithImg(id);
+            return Ok(inventory);
+        }
+
         [HttpGet("GetHealthReportById/{id}")]
         public async Task<IActionResult> GetHealthReportById(int id)
         {
@@ -73,7 +94,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreHealthReport/{id}")]
+        [HttpPut("RestoreHealthReport/{id}")]
         public async Task<IActionResult> RestoreHealthReport(int id)
         {
             try

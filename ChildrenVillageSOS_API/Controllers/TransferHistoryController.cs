@@ -72,7 +72,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPatch("RestoreTransferHistory/{id}")]
+        [HttpPut("RestoreTransferHistory/{id}")]
         public async Task<IActionResult> RestoreTransferHistory(int id)
         {
             try

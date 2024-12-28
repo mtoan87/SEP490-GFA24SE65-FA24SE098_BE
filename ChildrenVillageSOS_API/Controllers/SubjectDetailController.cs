@@ -78,7 +78,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreSubjectDetail/{id}")]
+        [HttpPut("RestoreSubjectDetail/{id}")]
         public async Task<IActionResult> RestoreSubjectDetail(int id)
         {
             try

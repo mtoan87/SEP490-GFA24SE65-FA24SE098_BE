@@ -69,7 +69,7 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPatch("RestoreChildProgress/{id}")]
+        [HttpPut("RestoreChildProgress/{id}")]
         public async Task<IActionResult> RestoreChildProgress(int id)
         {
             try

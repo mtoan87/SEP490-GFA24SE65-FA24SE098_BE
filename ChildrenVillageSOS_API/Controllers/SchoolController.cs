@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,8 +23,29 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(schools);
         }
 
+        [HttpGet("GetAllSchoolsIsDeleted")]
+        public async Task<IActionResult> GetAllSchoolsIsDeleted()
+        {
+            var school = await _schoolService.GetAllSchoolsIsDeleted();
+            return Ok(school);
+        } 
+
+        [HttpGet("GetAllSchoolWithImg")]
+        public async Task<IActionResult> GetAllSchoolWithImg()
+        {
+            var school = await _schoolService.GetAllSchoolWithImg();
+            return Ok(school);
+        }
+
+        [HttpGet("GetSchoolByIdWithImg")]
+        public async Task<IActionResult> GetSchoolByIdWithImg(string schoolId)
+        {
+            var school = await _schoolService.GetSchoolByIdWithImg(schoolId);
+            return Ok(school);
+        }
+
         [HttpGet("GetSchoolById/{id}")]
-        public async Task<IActionResult> GetSchoolById(int id)
+        public async Task<IActionResult> GetSchoolById(string id)
         {
             var school = await _schoolService.GetSchoolById(id);
             if (school == null)
@@ -46,7 +68,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateSchool/{id}")]
-        public async Task<IActionResult> UpdateSchool(int id, [FromForm] UpdateSchoolDTO updateSchool)
+        public async Task<IActionResult> UpdateSchool(string id, [FromForm] UpdateSchoolDTO updateSchool)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +87,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpDelete("DeleteSchool/{id}")]
-        public async Task<IActionResult> DeleteSchool(int id)
+        public async Task<IActionResult> DeleteSchool(string id)
         {
             try
             {
@@ -78,8 +100,8 @@ namespace ChildrenVillageSOS_API.Controllers
             }
         }
 
-        [HttpPost("RestoreSchool/{id}")]
-        public async Task<IActionResult> RestoreSchool(int id)
+        [HttpPut("RestoreSchool/{id}")]
+        public async Task<IActionResult> RestoreSchool(string id)
         {
             try
             {
