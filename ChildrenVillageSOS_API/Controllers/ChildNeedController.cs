@@ -46,7 +46,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateChildNeed/{id}")]
-        public async Task<IActionResult> UpdateChildNeed(int id, [FromBody] UpdateChildNeedsDTO updateChildNeed)
+        public async Task<IActionResult> UpdateChildNeed(int id, [FromForm] UpdateChildNeedsDTO updateChildNeed)
         {
             if (!ModelState.IsValid)
             {

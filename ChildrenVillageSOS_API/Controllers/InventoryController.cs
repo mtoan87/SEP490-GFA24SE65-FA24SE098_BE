@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(inventories);
         }
 
+        [HttpGet("GetAllInventoryIsDeleteAsync")]
+        public async Task<IActionResult> GetAllInventoryIsDeleteAsync()
+        {
+            var children = await _inventoryService.GetAllInventoryIsDeleteAsync();
+            return Ok(children);
+        }
+
         [HttpGet("GetAllInventoryWithImg")]
         public async Task<IActionResult> GetAllInventoryWithImg()
         {
@@ -30,6 +38,12 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(children);
         }
 
+        [HttpGet("GetInventoryByIdWithImg/{inventoryId}")]
+        public async Task<IActionResult> GetInventoryByIdWithImg(int inventoryId)
+        {
+            var child = await _inventoryService.GetInventoryByIdWithImg(inventoryId);
+            return Ok(child);
+        }
 
         [HttpGet("GetInventoryById/{id}")]
         public async Task<IActionResult> GetInventoryById(int id)
@@ -43,7 +57,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateInventory")]
-        public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDTO createInventory)
+        public async Task<IActionResult> CreateInventory([FromForm] CreateInventoryDTO createInventory)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +69,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateInventory/{id}")]
-        public async Task<IActionResult> UpdateInventory(int id, [FromBody] UpdateInventoryDTO updateInventory)
+        public async Task<IActionResult> UpdateInventory(int id, [FromForm] UpdateInventoryDTO updateInventory)
         {
             if (!ModelState.IsValid)
             {

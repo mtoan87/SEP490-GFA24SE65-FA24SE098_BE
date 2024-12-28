@@ -14,5 +14,10 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<List<Image>> GetByVillageIdAsync(string villageId);
         Task<List<Image>> GetByEventIdAsync(int eventId);
         Task<List<Image>> GetByUserAccountIdAsync(string userAccountId);
+        Task<List<Image>> GetByInventoryIdAsync(int inventoryId);
+        Task<List<Image>> GetByActivityIdAsync(int activityId);
+        Task<List<Image>> GetByHealthReportIdAsync(int healthReportId);
+        Task<List<Image>> GetByAcademicReportIdAsync(int academicReportId);
+        Task<List<Image>> GetBySchoolIdAsync(string schoolId);
     }
 }

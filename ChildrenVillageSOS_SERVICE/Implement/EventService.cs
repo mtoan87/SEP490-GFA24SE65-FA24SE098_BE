@@ -129,6 +129,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newEvent;
         }
+
         public async Task<Event> UpdateEvent(int id ,UpdateEventDTO updateEvent)
         {
             var editEvent = await _eventRepository.GetByIdAsync(id);

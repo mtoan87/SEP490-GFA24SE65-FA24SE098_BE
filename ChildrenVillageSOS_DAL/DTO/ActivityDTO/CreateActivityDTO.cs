@@ -36,5 +36,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ActivityDTO
         public string? Feedback { get; set; }
 
         public string? CreatedBy { get; set; }
+
+        public List<IFormFile>? Img { get; set; }
     }
 }
