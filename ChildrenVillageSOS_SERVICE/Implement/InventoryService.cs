@@ -24,6 +24,35 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _inventoryRepository.GetAllNotDeletedAsync();
         }
 
+        public async Task<IEnumerable<InventoryResponseDTO>> GetAllInventoryWithImg()
+        {
+            var inventories = await _inventoryRepository.GetAllNotDeletedAsync();
+
+            var inventoryResponseDTOs = inventories.Select(i => new InventoryResponseDTO
+            {
+                Id = i.Id,
+                ItemName = i.ItemName,
+                Description = i.Description,
+                Quantity = i.Quantity,
+                Purpose = i.Purpose,
+                BelongsTo = i.BelongsTo,
+                BelongsToId = i.BelongsToId,
+                PurchaseDate = i.PurchaseDate,
+                LastInspectionDate = i.LastInspectionDate,
+                MaintenanceStatus = i.MaintenanceStatus,
+                IsDeleted = i.IsDeleted,
+                CreatedBy = i.CreatedBy,
+                CreatedDate = i.CreatedDate,
+                ModifiedBy = i.ModifiedBy,
+                ModifiedDate = i.ModifiedDate,               
+                ImageUrls = i.Images.Where(img => !img.IsDeleted)
+                                     .Select(img => img.UrlPath)
+                                     .ToArray()
+            }).ToArray();
+
+            return inventoryResponseDTOs;
+        }
+
         public async Task<Inventory> GetInventoryById(int id)
         {
             return await _inventoryRepository.GetByIdAsync(id);

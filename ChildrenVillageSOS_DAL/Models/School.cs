@@ -30,4 +30,6 @@ public partial class School
     public virtual ICollection<AcademicReport> AcademicReports { get; set; } = new List<AcademicReport>();
 
     public virtual ICollection<Child> Children { get; set; } = new List<Child>();
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 }

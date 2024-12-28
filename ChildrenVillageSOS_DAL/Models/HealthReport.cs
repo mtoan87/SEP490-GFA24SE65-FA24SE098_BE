@@ -48,4 +48,6 @@ public partial class HealthReport
     public DateTime? ModifiedDate { get; set; }
 
     public virtual Child? Child { get; set; }
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 }
