@@ -146,13 +146,19 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<List<string>> UploadUserAccountImage(List<IFormFile> files, string userAccountId)
             => UploadImages(files, userAccountId, "UserAccount");
 
-        public Task<List<string>> UploadIventoryImage(List<IFormFile> files, string inventoryId)
-            => UploadImages(files, inventoryId, "Inventory");
+        public Task<List<string>> UploadInventoryImage(List<IFormFile> files, int inventoryId)
+            => UploadImages(files, inventoryId.ToString(), "Inventory");
 
-        public Task<List<string>> UploadActivityImage(List<IFormFile> files, string activityId)
-            => UploadImages(files, activityId, "Activity");
+        public Task<List<string>> UploadActivityImage(List<IFormFile> files, int activityId)
+            => UploadImages(files, activityId.ToString(), "Activity");
 
         public Task<List<string>> UploadSchoolImage(List<IFormFile> files, string schoolId)
             => UploadImages(files, schoolId, "School");
+
+        public Task<List<string>> UploadHealthReportImage(List<IFormFile> files, int healthReportId)
+            => UploadImages(files, healthReportId.ToString(), "HealthReport");
+
+        public Task<List<string>> UploadAcademicReportImage(List<IFormFile> files, int academicReportId)
+            => UploadImages(files, academicReportId.ToString(), "AcademicReport");
     }
 }

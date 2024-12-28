@@ -1,5 +1,8 @@
-﻿using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -13,15 +16,26 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class InventoryService : IInventoryService
     {
         private readonly IInventoryRepository _inventoryRepository;
+        private readonly IImageService _imageService;
+        private readonly IImageRepository _imageRepository;
 
-        public InventoryService(IInventoryRepository inventoryRepository)
+        public InventoryService(IInventoryRepository inventoryRepository,
+            IImageService imageService,
+            IImageRepository imageRepository)
         {
             _inventoryRepository = inventoryRepository;
+            _imageService = imageService;
+            _imageRepository = imageRepository;
         }
 
         public async Task<IEnumerable<Inventory>> GetAllInventories()
         {
             return await _inventoryRepository.GetAllNotDeletedAsync();
+        }
+
+        public Task<InventoryResponseDTO[]> GetAllInventoryIsDeleteAsync()
+        {
+            return _inventoryRepository.GetAllInventoryIsDeleteAsync();
         }
 
         public async Task<IEnumerable<InventoryResponseDTO>> GetAllInventoryWithImg()
@@ -58,6 +72,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _inventoryRepository.GetByIdAsync(id);
         }
 
+        public async Task<InventoryResponseDTO> GetInventoryByIdWithImg(int inventoryId)
+        {
+            return _inventoryRepository.GetInventoryByIdWithImg(inventoryId);
+        }
+
         public async Task<Inventory> CreateInventory(CreateInventoryDTO createInventory)
         {
             var newInventory = new Inventory
@@ -77,6 +96,23 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
 
             await _inventoryRepository.AddAsync(newInventory);
+
+            // Upload danh sách ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadInventoryImage(createInventory.Img, newInventory.Id);
+
+            // Lưu thông tin các ảnh vào bảng Image
+            foreach (var url in imageUrls)
+            {
+                var image = new Image
+                {
+                    UrlPath = url,
+                    InventoryId = newInventory.Id, // Liên kết với Inventory
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+                await _imageRepository.AddAsync(image);
+            }
+
             return newInventory;
         }
 
@@ -99,6 +135,50 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingInventory.MaintenanceStatus = updateInventory.MaintenanceStatus;
             existingInventory.ModifiedBy = updateInventory.ModifiedBy;
             existingInventory.ModifiedDate = DateTime.Now;
+
+            // Lấy danh sách ảnh hiện tại
+            var existingImages = await _imageRepository.GetByInventoryIdAsync(existingInventory.Id);
+
+            // Xóa các ảnh được yêu cầu xóa
+            if (updateInventory.ImgToDelete != null && updateInventory.ImgToDelete.Any())
+            {
+                foreach (var imageUrlToDelete in updateInventory.ImgToDelete)
+                {
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageUrlToDelete);
+                    if (imageToDelete != null)
+                    {
+                        imageToDelete.IsDeleted = true;
+                        imageToDelete.ModifiedDate = DateTime.Now;
+
+                        // Cập nhật trạng thái ảnh trong database
+                        await _imageRepository.UpdateAsync(imageToDelete);
+
+                        // Xóa ảnh khỏi Cloudinary
+                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "InventoryImages");
+                        if (isDeleted)
+                        {
+                            await _imageRepository.RemoveAsync(imageToDelete);
+                        }
+                    }
+                }
+            }
+
+            // Thêm các ảnh mới nếu có
+            if (updateInventory.Img != null && updateInventory.Img.Any())
+            {
+                var newImageUrls = await _imageService.UploadInventoryImage(updateInventory.Img, existingInventory.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        InventoryId = existingInventory.Id,
+                        CreatedDate = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
 
             await _inventoryRepository.UpdateAsync(existingInventory);
             return existingInventory;

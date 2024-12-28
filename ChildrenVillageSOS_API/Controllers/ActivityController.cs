@@ -37,7 +37,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateActivity")]
-        public async Task<IActionResult> CreateActivity([FromBody] CreateActivityDTO createActivity)
+        public async Task<IActionResult> CreateActivity([FromForm] CreateActivityDTO createActivity)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +56,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateActivity/{id}")]
-        public async Task<IActionResult> UpdateActivity(int id, [FromBody] UpdateActivityDTO updateActivity)
+        public async Task<IActionResult> UpdateActivity(int id, [FromForm] UpdateActivityDTO updateActivity)
         {
             if (!ModelState.IsValid)
             {

@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateSubjectDetail")]
-        public async Task<IActionResult> CreateSubjectDetail([FromBody] CreateSubjectDetailsDTO createSubjectDetail)
+        public async Task<IActionResult> CreateSubjectDetail([FromForm] CreateSubjectDetailsDTO createSubjectDetail)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateSubjectDetail/{id}")]
-        public async Task<IActionResult> UpdateSubjectDetail(int id, [FromBody] UpdateSubjectDetailsDTO updateSubjectDetail)
+        public async Task<IActionResult> UpdateSubjectDetail(int id, [FromForm] UpdateSubjectDetailsDTO updateSubjectDetail)
         {
             if (!ModelState.IsValid)
             {

@@ -17,5 +17,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Inventory> DeleteInventory(int id);
         Task<Inventory> RestoreInventory(int id);
         Task<IEnumerable<InventoryResponseDTO>> GetAllInventoryWithImg();
+        public Task<InventoryResponseDTO[]> GetAllInventoryIsDeleteAsync();
+        Task<InventoryResponseDTO> GetInventoryByIdWithImg(int inventoryId);
     }
 }

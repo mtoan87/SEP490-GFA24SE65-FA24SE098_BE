@@ -36,5 +36,9 @@ namespace ChildrenVillageSOS_DAL.DTO.ActivityDTO
         public string? Feedback { get; set; }
 
         public string? ModifiedBy { get; set; }
+
+        public List<IFormFile>? Img { get; set; }
+
+        public List<string>? ImgToDelete { get; set; }
     }
 }

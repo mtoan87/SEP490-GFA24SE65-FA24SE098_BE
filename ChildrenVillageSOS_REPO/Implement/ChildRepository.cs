@@ -58,9 +58,9 @@ namespace ChildrenVillageSOS_REPO.Implement
                     Status = x.Status,
                     ImageUrls = x.Images.Where(img => !img.IsDeleted)
                                      .Select(img => img.UrlPath)
-                                     .ToArray()               // Convert to array
+                                     .ToArray()
                 })
-                .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
+                .ToArrayAsync();
         }
 
         public ChildResponseDTO GetChildByIdWithImg(string childId)

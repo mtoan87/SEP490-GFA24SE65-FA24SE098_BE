@@ -34,7 +34,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPost("CreateSchool")]
-        public async Task<IActionResult> CreateSchool([FromBody] CreateSchoolDTO createSchool)
+        public async Task<IActionResult> CreateSchool([FromForm] CreateSchoolDTO createSchool)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut("UpdateSchool/{id}")]
-        public async Task<IActionResult> UpdateSchool(int id, [FromBody] UpdateSchoolDTO updateSchool)
+        public async Task<IActionResult> UpdateSchool(int id, [FromForm] UpdateSchoolDTO updateSchool)
         {
             if (!ModelState.IsValid)
             {
