@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,14 @@ namespace ChildrenVillageSOS_API.Controllers
             var inventories = await _inventoryService.GetAllInventories();
             return Ok(inventories);
         }
+
+        [HttpGet("GetAllInventoryWithImg")]
+        public async Task<IActionResult> GetAllInventoryWithImg()
+        {
+            var children = await _inventoryService.GetAllInventoryWithImg();
+            return Ok(children);
+        }
+
 
         [HttpGet("GetInventoryById/{id}")]
         public async Task<IActionResult> GetInventoryById(int id)

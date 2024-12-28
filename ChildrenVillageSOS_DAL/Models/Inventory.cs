@@ -34,4 +34,6 @@ public partial class Inventory
     public string? ModifiedBy { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 }

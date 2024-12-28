@@ -45,6 +45,8 @@ public partial class AcademicReport
 
     public virtual Child? Child { get; set; }
 
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
+
     public virtual School? School { get; set; }
 
     public virtual ICollection<SubjectDetail> SubjectDetails { get; set; } = new List<SubjectDetail>();
