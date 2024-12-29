@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         Task<IEnumerable<Donation>> GetAllDonations();
         Task<Donation> GetDonationById(int id);
+        Task<Donation> DonateNow(DonateDTO donateDTO);
         Task<Donation> CreateDonation(CreateDonationDTO createDonation);
         Task<Donation> UpdateDonation(int id, UpdateDonationDTO updateDonation);
         Task<Donation> DeleteDonation(int id);

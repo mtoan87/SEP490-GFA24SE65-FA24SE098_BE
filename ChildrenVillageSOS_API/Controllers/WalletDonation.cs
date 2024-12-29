@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,16 @@ namespace ChildrenVillageSOS_API.Controllers
                 return BadRequest(ModelState);
             }       
             var paymentUrl = await _paymentService.CreateFacilitiesWalletPayment(request);           
+            return Ok(new { url = paymentUrl });
+        }
+        [HttpPost("FacilitiesWallet")]
+        public async Task<IActionResult> DonateFacilitiesWallet([FromBody] DonateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var paymentUrl = await _paymentService.DonateFaciltiesWallet(request);
             return Ok(new { url = paymentUrl });
         }
         [HttpPost("DonateNecessitiesWallet")]

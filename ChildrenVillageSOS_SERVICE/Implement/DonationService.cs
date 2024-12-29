@@ -97,6 +97,28 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _donationRepository.AddAsync(donation);
             return donation;
         }
+
+        public async Task<Donation> DonateNow(DonateDTO donateDTO)
+        {
+            var donation = new Donation
+            {
+                UserName = donateDTO.UserName,
+                UserEmail = donateDTO.UserEmail,
+                Phone = donateDTO.Phone,
+                Address = donateDTO.Address,
+                DonationType = donateDTO.DonationType,
+                DateTime = donateDTO.DateTime,
+                Amount = donateDTO.Amount,
+                Description = donateDTO.Description,
+                IsDeleted = false,
+                ChildId = donateDTO.ChildId,
+                EventId = donateDTO.EventId,
+                Status = donateDTO.Status,
+                CreatedDate = DateTime.Now
+            };
+            await _donationRepository.AddAsync(donation);
+            return donation;
+        }
         public async Task<Donation> DeleteDonation(int id)
         {
             var donation = await _donationRepository.GetByIdAsync(id);
