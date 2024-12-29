@@ -163,6 +163,11 @@ namespace ChildrenVillageSOS_REPO.Implement
 
         public async Task<ChildDetailsDTO> GetChildDetails(string childId)
         {
+            if (string.IsNullOrEmpty(childId))
+            {
+                throw new ArgumentException("Child ID cannot be null or empty");
+            }
+
             var child = await _context.Children
                 .Include(c => c.House)
                 .Include(c => c.School)
@@ -174,6 +179,7 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
 
             var healthReports = await _context.HealthReports
+                .Where(hr => hr.ChildId == childId)
                 .Select(hr => new HealthReportSummaryDTO
                 {
                     Id = hr.Id,
@@ -188,7 +194,8 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToListAsync();
 
-            var academicReports = await _context.AcademicReports             
+            var academicReports = await _context.AcademicReports
+                .Where(ar => ar.ChildId == childId)
                 .Select(ar => new AcademicReportSummaryDTO
                 {
                     Id = ar.Id,

@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChildrenVillageSOS_API.Controllers
@@ -45,17 +46,17 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(children);
         }
 
-        [HttpGet("GetChildWithImg/{Id}")]
-        public async Task<IActionResult> GetChildWithImg(string Id)
+        [HttpGet("GetChildWithImg/{id}")]
+        public async Task<IActionResult> GetChildWithImg(string id)
         {
-            var child = await _childService.GetChildByIdWithImg(Id);
+            var child = await _childService.GetChildByIdWithImg(id);
             return Ok(child);
         }
 
-        [HttpGet("GetChildById/{Id}")]
-        public async Task<IActionResult> GetChildById(string Id)
+        [HttpGet("GetChildById/{id}")]
+        public async Task<IActionResult> GetChildById(string id)
         {
-            var child = await _childService.GetChildById(Id);
+            var child = await _childService.GetChildById(id);
             return Ok(child);
         }
 
@@ -66,10 +67,10 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(childDetails);
         }
 
-        [HttpGet("GetChildByHouseId/{Id}")]
-        public async Task<IActionResult> GetChildByHouseIdAsync(string Id)
+        [HttpGet("GetChildByHouseId/{id}")]
+        public async Task<IActionResult> GetChildByHouseIdAsync(string id)
         {
-            var child = await _childService.GetChildByHouseIdAsync(Id);
+            var child = await _childService.GetChildByHouseIdAsync(id);
             return Ok(child);
         }
 
@@ -82,7 +83,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateChild")]
+        [Route("UpdateChild/{id}")]
         public async Task<IActionResult> UpdateChild(string id, [FromForm] UpdateChildDTO updateChildDTO)
         {
             var updatedChild = await _childService.UpdateChild(id, updateChildDTO);
@@ -90,7 +91,7 @@ namespace ChildrenVillageSOS_API.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteChild")]
+        [Route("DeleteChild/{id}")]
         public async Task<IActionResult> DeleteChild(string id)
         {
             var deletedChild = await _childService.DeleteChild(id);
