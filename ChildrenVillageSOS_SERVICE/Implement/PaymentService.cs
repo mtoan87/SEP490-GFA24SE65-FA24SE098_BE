@@ -6,6 +6,7 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using CloudinaryDotNet.Core;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class PaymentService  : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IUserAccountRepository _userAccountRepository;
         private readonly IDonationService _donationService;
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
@@ -27,6 +29,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IIncomeRepository _incomeRepository;
         private readonly IConfiguration _configuration;
         public PaymentService(IPaymentRepository paymentRepository,
+            IUserAccountRepository userAccountRepository,
             IDonationService donationService,
             IConfiguration configuration,        
             IFacilitiesWalletRepository failitiesWalletRepository,
@@ -37,6 +40,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IIncomeRepository incomeRepository)
         {
             _paymentRepository = paymentRepository;
+            _userAccountRepository = userAccountRepository;
             _donationService = donationService;
             _configuration = configuration;
             _failitiesWalletRepository = failitiesWalletRepository;
@@ -114,12 +118,46 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return paymentUrl;
         }
 
-        public async Task<string> CreateFacilitiesWalletPayment(PaymentRequest paymentRequest)
+        public async Task<string> CreateFacilitiesWalletPayment(DonateRequest paymentRequest)
         {
+
             // Step 1: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = paymentRequest.UserAccountId,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
                 FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
@@ -129,7 +167,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = "Pending"
             };
 
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
+
+            //var donation = await _donationService.CreateDonationPayment(donationDto);
             var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -151,17 +192,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
 
-            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-
-            // Step 3: Update FacilitiesWallet Budget
-           
-            //if (facilitiesWallet != null)
-            //{
-            //    facilitiesWallet.Budget += paymentRequest.Amount;
-            //    await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
-            //}
-
-            // Step 4: Create Transaction
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);        
             var income = new Income
             {
                 FacilitiesWalletId = facilitiesWallet?.Id,
@@ -190,22 +221,159 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Return the VNPay URL for the user to complete the payment
             return paymentUrl;
         }
-        public async Task<string> CreateFoodStuffWalletPayment(PaymentRequest paymentRequest)
+
+        public async Task<string> DonateFaciltiesWallet(DonateRequest paymentRequest)
         {
-            // Step 1: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = paymentRequest.UserAccountId,
-                FoodStuffWalletId = 1,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
+                FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate food to SOS Children's Village",
+                Description = paymentRequest.Description,
                 IsDeleted = false,
                 Status = "Pending"
             };
 
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
+            var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
+
+            // Tạo URL thanh toán với VNPay
+            var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
+            var vnp_Url = _configuration["VNPay:Url"];
+            var vnp_TmnCode = _configuration["VNPay:TmnCode"];
+            var vnp_HashSecret = _configuration["VNPay:HashSecret"];
+
+            var vnpay = new VnPayLibrary();
+            vnpay.AddRequestData("vnp_Version", "2.1.0");
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString());
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, facilitiesWalletId {facilitiesWallet.Id}");
+            vnpay.AddRequestData("vnp_OrderType", "donation");
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
+            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
+            // Lưu thông tin vào Income và Payment
+            var income = new Income
+            {
+                FacilitiesWalletId = facilitiesWallet?.Id,
+                Amount = paymentRequest.Amount,
+                UserAccountId = paymentRequest.UserAccountId,
+                Receiveday = DateTime.Now,
+                Status = "Pending",
+                CreatedDate = DateTime.Now,
+                DonationId = donation.Id
+            };
+            await _incomeRepository.AddAsync(income);
+
+            var payment = new Payment
+            {
+                DonationId = donation.Id,
+                Amount = paymentRequest.Amount,
+                PaymentMethod = "Banking",
+                DateTime = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            await _paymentRepository.AddAsync(payment);
+
+            return paymentUrl;
+        }
+
+        public async Task<string> CreateFoodStuffWalletPayment(DonateRequest paymentRequest)
+        {
+
+            // Step 1: Create Donation
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
+            {
+                UserAccountId = paymentRequest.UserAccountId,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
+                FacilitiesWalletId = 1,
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = paymentRequest.Amount,
+                Description = paymentRequest.Description,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
             var foodWallet = await _foodStuffWalletRepository.GetWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -310,22 +478,58 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         }
 
-        public async Task<string> CreateHealthWalletPayment(PaymentRequest paymentRequest)
+        public async Task<string> CreateHealthWalletPayment(DonateRequest paymentRequest)
         {
+            
+
             // Step 1: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = paymentRequest.UserAccountId,
-                HealthWalletId = 1,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
+                FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate to health issues for SOS Children's Village",
+                Description = "Donate facilities for SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
 
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
 
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -386,22 +590,58 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Return the VNPay URL for the user to complete the payment
             return paymentUrl;
         }
-        public async Task<string> CreateSystemWalletPayment(PaymentRequest paymentRequest)
+        public async Task<string> CreateSystemWalletPayment(DonateRequest paymentRequest)
         {
+           
+
             // Step 1: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = paymentRequest.UserAccountId,
-                SystemWalletId = 1,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
+                FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donation to the SOS Children's Village System",
+                Description = "Donate facilities for SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
 
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
             var wallet = await _systemWalletRepository.GetWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -462,22 +702,56 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Return the VNPay URL for the user to complete the payment
             return paymentUrl;
         }
-        public async Task<string> CreateNecesstiesWalletPayment(PaymentRequest paymentRequest)
-        {
+        public async Task<string> CreateNecesstiesWalletPayment(DonateRequest  paymentRequest)
+        {            
             // Step 1: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(paymentRequest.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = paymentRequest.UserName;
+                userEmail = paymentRequest.UserEmail;
+                phone = paymentRequest.Phone;
+                address = paymentRequest.Address;
+            }
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = paymentRequest.UserAccountId,
-                NecessitiesWalletId = 1,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
+                FacilitiesWalletId = 1,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate necessities to SOS Children's Village",
+                Description = "Donate facilities for SOS Children's Village",
                 IsDeleted = false,
                 Status = "Pending"
             };
 
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            // Gửi donation
+            var donation = await _donationService.DonateNow(donationDto);
             var wallet = await _necessitiesWalletRepository.GetNecessitiesWalletByUserIdAsync("UA001");
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -538,5 +812,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Return the VNPay URL for the user to complete the payment
             return paymentUrl;
         }
+
+        
     }
 }

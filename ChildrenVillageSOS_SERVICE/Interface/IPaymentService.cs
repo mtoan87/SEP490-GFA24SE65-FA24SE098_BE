@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<Payment>> GetAllPayments();
         Task<Payment> GetPaymentById(int id);
         //Task<Payment> CreatePayment(CreatePaymentDTO createPayment);
+        Task<string> DonateFaciltiesWallet(DonateRequest paymentRequest);
         Task<Payment> UpdatePayment(int id, UpdatePaymentDTO updatePayment);
         Task<Payment> DeletePayment(int id);
         Task<string> CreatePayment(PaymentRequest paymentRequest);
