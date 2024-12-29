@@ -59,6 +59,16 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetDonationsByUserIdAsync(Id);
             return Ok(donation);
         }
+        [HttpGet("GetDonationsByUserAndEvent/user/{userId}/event/{eventId}")]
+        public async Task<IActionResult> GetDonationsByUserAndEvent(string userId, int eventId)
+        {
+            var result = await _donationService.GetDonationsByUserAndEventAsync(userId, eventId);
+
+            if (result == null)
+                return NotFound("No donations found for the given user and event.");
+
+            return Ok(result);
+        }
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetDonationById(int Id)
         {

@@ -37,6 +37,30 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _donationRepository.GetDonatedVillageByUserId(userAccountId);
         }
+
+        public async Task<object> GetDonationsByUserAndEventAsync(string userId, int eventId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new ArgumentException("User ID cannot be null or empty.");
+            if (eventId <= 0)
+                throw new ArgumentException("Event ID must be greater than zero.");
+
+            var donations = await _donationRepository.GetDonationsByUserAndEventAsync(userId, eventId);
+
+            if (!donations.Any())
+                return null;
+
+            return new
+            {
+                TotalAmount = donations.Sum(d => d.Amount),
+                DonationDetails = donations.Select(d => new
+                {
+                    d.Amount,
+                    d.DateTime
+                }).OrderBy(d => d.DateTime)
+            };
+        }
+
         public async Task<Donation> CreateDonation(CreateDonationDTO createDonation)
         {
             var donation = new Donation

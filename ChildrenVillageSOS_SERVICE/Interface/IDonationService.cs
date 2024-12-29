@@ -27,5 +27,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         DataTable getDonate();
 
         Task<List<Village>> GetDonatedVillageByUserId(string userAccountId);
+        Task<object> GetDonationsByUserAndEventAsync(string userId, int eventId);
     }
 }
