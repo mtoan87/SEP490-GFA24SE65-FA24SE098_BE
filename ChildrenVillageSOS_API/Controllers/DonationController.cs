@@ -3,6 +3,7 @@ using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,22 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetAllDonations();
             return Ok(donation);
         }
-
+        [HttpGet("ExportExcel")]
+        public ActionResult ExportExcel()
+        {
+            var _donateData = _donationService.getDonate();
+            
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.AddWorksheet(_donateData, "Donation Records");
+                
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DonationRecords.xlsx");
+                }
+            }
+        }
         [HttpGet("FormatDonation")]
         public IActionResult GetAllDonationsArray()
         {

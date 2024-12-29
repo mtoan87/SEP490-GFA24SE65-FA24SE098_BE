@@ -16,7 +16,7 @@ namespace ChildrenVillageSOS_API.Controllers
             _paymentService = paymentService;
         }
         [HttpPost("DonateFacilitiesWallet")]
-        public async Task<IActionResult> DonateFacilitiesWallet([FromBody] PaymentRequest request)
+        public async Task<IActionResult> DonateFacilitiesWallet([FromBody] DonateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -25,18 +25,9 @@ namespace ChildrenVillageSOS_API.Controllers
             var paymentUrl = await _paymentService.CreateFacilitiesWalletPayment(request);           
             return Ok(new { url = paymentUrl });
         }
-        [HttpPost("FacilitiesWallet")]
-        public async Task<IActionResult> DonateFacilitiesWallet([FromBody] DonateRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var paymentUrl = await _paymentService.DonateFaciltiesWallet(request);
-            return Ok(new { url = paymentUrl });
-        }
+       
         [HttpPost("DonateNecessitiesWallet")]
-        public async Task<IActionResult> DonateNecessitiesWallet([FromBody] PaymentRequest request)
+        public async Task<IActionResult> DonateNecessitiesWallet([FromBody] DonateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +37,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { url = paymentUrl });
         }
         [HttpPost("DonateFoodStuffWallet")]
-        public async Task<IActionResult> DonateFoodStuffWallet([FromBody] PaymentRequest request)
+        public async Task<IActionResult> DonateFoodStuffWallet([FromBody] DonateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +47,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { url = paymentUrl });
         }
         [HttpPost("DonateHealthWallet")]
-        public async Task<IActionResult> DonateHealthWallet([FromBody] PaymentRequest request)
+        public async Task<IActionResult> DonateHealthWallet([FromBody] DonateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +57,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(new { url = paymentUrl });
         }
         [HttpPost("DonateSystemWallet")]
-        public async Task<IActionResult> DonateSystemWallet([FromBody] PaymentRequest request)
+        public async Task<IActionResult> DonateSystemWallet([FromBody] DonateRequest request)
         {
             if (!ModelState.IsValid)
             {

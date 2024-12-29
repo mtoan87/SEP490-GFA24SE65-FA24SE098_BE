@@ -6,6 +6,7 @@ using ChildrenVillageSOS_SERVICE.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public FormatDonationResponseDTO[] GetAllDonationArray()
         {
             return _donationRepository.GetDonationArray();
+        }
+        public DataTable getDonate()
+        {
+            return _donationRepository.getDonate();
         }
 
         public async Task<List<Village>> GetDonatedVillageByUserId(string userAccountId)

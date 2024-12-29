@@ -4,6 +4,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,31 @@ namespace ChildrenVillageSOS_REPO.Implement
     {
         public DonationRepository(SoschildrenVillageDbContext context) : base(context)
         {
+        }
+        public DataTable getDonate()
+        {
+            DataTable dt = new DataTable();
+            dt.TableName = "DonationData";
+            dt.Columns.Add("UserName", typeof(string));
+            dt.Columns.Add("Amount", typeof(decimal));
+            dt.Columns.Add("DateTime", typeof(DateTime));
+
+            // Truy vấn dữ liệu từ bảng Donation
+            var donations = this._context.Donations.ToList();
+
+            if (donations.Count > 0)
+            {
+                donations.ForEach(donation =>
+                {
+                    dt.Rows.Add(
+                        donation.UserName,
+                        donation.Amount,
+                        donation.DateTime
+                    );
+                });
+            }
+
+            return dt;
         }
         public async Task<List<Donation>> GetDonationsByUserIdAsync(string userId)
         {
