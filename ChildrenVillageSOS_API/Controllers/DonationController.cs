@@ -29,11 +29,11 @@ namespace ChildrenVillageSOS_API.Controllers
         public ActionResult ExportExcel()
         {
             var _donateData = _donationService.getDonate();
-            
+
             using (XLWorkbook wb = new XLWorkbook())
             {
                 wb.AddWorksheet(_donateData, "Donation Records");
-                
+
                 using (MemoryStream ms = new MemoryStream())
                 {
                     wb.SaveAs(ms);
@@ -59,13 +59,23 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetDonationsByUserIdAsync(Id);
             return Ok(donation);
         }
-        [HttpGet("GetDonationsByUserAndEvent/user/{userId}/event/{eventId}")]
+        [HttpGet("GetDonationsByUserAndEvent/{userId}/{eventId}")]
         public async Task<IActionResult> GetDonationsByUserAndEvent(string userId, int eventId)
         {
             var result = await _donationService.GetDonationsByUserAndEventAsync(userId, eventId);
 
             if (result == null)
                 return NotFound("No donations found for the given user and event.");
+
+            return Ok(result);
+        }
+        [HttpGet("GetDonationsByUserAndChildAsync/{userId}/{childId}")]
+        public async Task<IActionResult> GetDonationsByUserAndChildAsync(string userId, string childId)
+        {
+            var result = await _donationService.GetDonationsByUserAndChildAsync(userId, childId);
+
+            if (result == null)
+                return NotFound("No donations found for the given user and child.");
 
             return Ok(result);
         }
