@@ -162,7 +162,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate facilities for SOS Children's Village",
+                Description = paymentRequest.Description,
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -190,7 +190,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, facilitiesWalletId {facilitiesWallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
-            vnpay.AddRequestData("vnp_TxnRef", donation.Id.ToString());
+           
+            string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
+            vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
+            
 
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);        
             var income = new Income
@@ -635,7 +638,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate facilities for SOS Children's Village",
+                Description = paymentRequest.Description,
                 IsDeleted = false,
                 Status = "Pending"
             };
@@ -745,7 +748,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate facilities for SOS Children's Village",
+                Description = paymentRequest.Description,
                 IsDeleted = false,
                 Status = "Pending"
             };

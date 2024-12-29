@@ -106,7 +106,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<Donation> DonateNow(DonateDTO donateDTO)
         {
             var donation = new Donation
-            {
+            {   
+                FacilitiesWalletId = donateDTO.FacilitiesWalletId,
+                SystemWalletId = donateDTO.SystemWalletId,
+                NecessitiesWalletId = donateDTO.NecessitiesWalletId,
+                FoodStuffWalletId = donateDTO.FoodStuffWalletId,
+                HealthWalletId = donateDTO.HealthWalletId,
+                UserAccountId= donateDTO.UserAccountId,
                 UserName = donateDTO.UserName,
                 UserEmail = donateDTO.UserEmail,
                 Phone = donateDTO.Phone,
