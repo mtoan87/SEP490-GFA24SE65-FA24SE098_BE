@@ -17,5 +17,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<List<Village>> GetDonatedVillageByUserId(string userAccountId);
         FormatDonationResponseDTO[] GetDonationArray();
         Task<List<Donation>> GetDonationsByUserAndEventAsync(string userId, int eventId);
+        Task<List<Donation>> GetDonationsByUserAndChildAsync(string userId, string childId);
     }
 }

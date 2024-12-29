@@ -61,6 +61,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
         }
 
+        public async Task<object> GetDonationsByUserAndChildAsync(string userId, string childId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new ArgumentException("User ID cannot be null or empty.");
+            if (string.IsNullOrEmpty(childId))
+                throw new ArgumentException("Child ID cannot be null or empty.");
+
+            var donations = await _donationRepository.GetDonationsByUserAndChildAsync(userId, childId);
+
+            if (!donations.Any())
+                return null;
+
+            return new
+            {
+                TotalAmount = donations.Sum(d => d.Amount),
+                DonationDetails = donations.Select(d => new
+                {
+                    d.Amount,
+                    d.DateTime
+                }).OrderBy(d => d.DateTime)
+            };
+        }
+
         public async Task<Donation> CreateDonation(CreateDonationDTO createDonation)
         {
             var donation = new Donation
