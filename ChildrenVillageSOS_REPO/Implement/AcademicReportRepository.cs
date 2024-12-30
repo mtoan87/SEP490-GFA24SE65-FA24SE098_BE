@@ -97,7 +97,8 @@ namespace ChildrenVillageSOS_REPO.Implement
         public async Task<List<AcademicReport>> GetAcademicPerformanceDistribution()
         {
             return await _context.AcademicReports
-                .Where(x => x.Diploma != null && x.SchoolReport != null)
+                //.Where(x => x.Diploma != null && x.SchoolReport != null)
+                .Where(x => x.SchoolLevel != null && x.SchoolReport != null)
                 .ToListAsync();
         }
     }

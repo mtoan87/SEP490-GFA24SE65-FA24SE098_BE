@@ -24,7 +24,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(inventories);
         }
 
-        [HttpGet("GetAllInventoryIsDeleteAsync")]
+        [HttpGet("GetAllInventoryIsDelete")]
         public async Task<IActionResult> GetAllInventoryIsDeleteAsync()
         {
             var inventory = await _inventoryService.GetAllInventoryIsDeleteAsync();
