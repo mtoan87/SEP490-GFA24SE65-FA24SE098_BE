@@ -23,7 +23,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(activities);
         }
 
-        [HttpGet("GetAllActivityIsDeleteAsync")]
+        [HttpGet("GetAllActivityIsDelete")]
         public async Task<IActionResult> GetAllActivityIsDeleteAsync()
         {
             var activity = await _activityService.GetAllActivityIsDeleteAsync();

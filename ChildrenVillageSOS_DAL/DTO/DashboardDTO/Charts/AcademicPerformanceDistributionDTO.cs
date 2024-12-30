@@ -8,7 +8,8 @@ namespace ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts
 {
     public class AcademicPerformanceDistributionDTO
     {
-        public string Diploma { get; set; }
+        //public string Diploma { get; set; }
+        public string SchoolLevel { get; set; }
         public int ExcellentCount { get; set; }
         public int VeryGoodCount { get; set; }
         public int GoodCount { get; set; }

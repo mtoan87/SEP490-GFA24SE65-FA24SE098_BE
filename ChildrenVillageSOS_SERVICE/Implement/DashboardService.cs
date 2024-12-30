@@ -107,26 +107,26 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var reports = await _academicReportRepository.GetAcademicPerformanceDistribution();
 
-            var primaryReports = reports.Where(r => r.Diploma == "Primary School").ToList();
-            var secondaryReports = reports.Where(r => r.Diploma == "Secondary School").ToList();
-            var highSchoolReports = reports.Where(r => r.Diploma == "High School").ToList();
+            var primaryReports = reports.Where(r => r.SchoolLevel == "Elementary School").ToList();
+            var secondaryReports = reports.Where(r => r.SchoolLevel == "Middle  School").ToList();
+            var highSchoolReports = reports.Where(r => r.SchoolLevel == "High School").ToList();
 
             var result = new List<AcademicPerformanceDistributionDTO>
         {
-            CalculateDistribution(primaryReports, "Primary School"),
-            CalculateDistribution(secondaryReports, "Secondary School"),
+            CalculateDistribution(primaryReports, "Elementary School"),
+            CalculateDistribution(secondaryReports, "Middle School"),
             CalculateDistribution(highSchoolReports, "High School")
         };
 
             return result;
         }
 
-        private AcademicPerformanceDistributionDTO CalculateDistribution(List<AcademicReport> reports, string diploma)
+        private AcademicPerformanceDistributionDTO CalculateDistribution(List<AcademicReport> reports, string schoolLevel)
         {
             int total = reports.Count;
             if (total == 0) return new AcademicPerformanceDistributionDTO
             {
-                Diploma = diploma,
+                SchoolLevel = schoolLevel,
                 ExcellentCount = 0,
                 VeryGoodCount = 0,
                 GoodCount = 0,
@@ -147,7 +147,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return new AcademicPerformanceDistributionDTO
             {
-                Diploma = diploma,
+                SchoolLevel = schoolLevel,
                 ExcellentCount = excellent,
                 VeryGoodCount = veryGood,
                 GoodCount = good,
