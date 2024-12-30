@@ -32,15 +32,12 @@ namespace ChildrenVillageSOS_API.Controllers
         public ActionResult ExportExcel()
         {
             var _expenseData = _expenseService.getExpense();
-            var _houseData = _houseService.getHouse();
-            var _userdata = _userAccountService.getUser();
-            var _villagedata = _villageService.getVillage();
+           
             using (XLWorkbook wb = new XLWorkbook())
             {
                 wb.AddWorksheet(_expenseData, "Expense Records");
-                wb.AddWorksheet(_userdata);
-                wb.AddWorksheet(_houseData);
-                wb.AddWorksheet(_villagedata);
+               
+                
                 using(MemoryStream ms = new MemoryStream())
                 {
                     wb.SaveAs(ms);

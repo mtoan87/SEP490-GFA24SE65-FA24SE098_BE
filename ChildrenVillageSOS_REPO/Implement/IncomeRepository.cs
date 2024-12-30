@@ -56,7 +56,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                         walletName, // Gán tên ví vào cột Wallet
                         item.Receiveday,
                         item.Status,
-                        item.UserAccount.UserName
+                        item.Donation?.UserName
                     );
                 });
             }
