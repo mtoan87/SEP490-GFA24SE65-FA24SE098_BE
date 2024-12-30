@@ -25,6 +25,16 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = await _donationService.GetAllDonations();
             return Ok(donation);
         }
+        [HttpGet("event/{eventId}")]
+        public async Task<IActionResult> GetDonationsByEvent(int eventId)
+        {
+            var donations = await _donationService.GetDonationsByEventAsync(eventId);
+            if (donations == null || donations.Length == 0)
+            {
+                return NotFound(new { Message = "No donations found for this event." });
+            }
+            return Ok(donations);
+        }
         [HttpGet("ExportExcel")]
         public ActionResult ExportExcel()
         {

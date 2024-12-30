@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IDonationService
     {
+        Task<DonationResponseDTO[]> GetDonationsByEventAsync(int eventId);
         Task<IEnumerable<Donation>> GetAllDonations();
         Task<Donation> GetDonationById(int id);
         Task<Donation> DonateNow(DonateDTO donateDTO);
@@ -25,7 +26,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<int> GetTotalDonationsByYear(int year);
         Task<List<DonationResponseDTO>> GetDonationsByUserIdAsync(string userId);
         DataTable getDonate();
-
         Task<List<Village>> GetDonatedVillageByUserId(string userAccountId);
         Task<object> GetDonationsByUserAndEventAsync(string userId, int eventId);
         Task<object> GetDonationsByUserAndChildAsync(string userId, string childId);

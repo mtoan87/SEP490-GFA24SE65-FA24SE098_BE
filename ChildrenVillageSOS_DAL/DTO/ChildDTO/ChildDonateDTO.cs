@@ -8,7 +8,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 {
     public class ChildDonateDTO
     {
-        public string UserAccountId { get; set; }
+        public string? UserAccountId { get; set; }
         public decimal? Amount { get; set; }
     }
 }

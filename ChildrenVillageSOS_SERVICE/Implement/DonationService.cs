@@ -125,7 +125,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _donationRepository.AddAsync(donation);
             return donation;
         }
+        public async Task<DonationResponseDTO[]> GetDonationsByEventAsync(int eventId)
+        {
+            var donations = await _donationRepository.GetDonationsByEventIdAsync(eventId);
 
+            // Map to DTO and include EventCode
+            return donations.Select(d => new DonationResponseDTO
+            {
+               
+                UserName = d.UserName,
+                UserEmail = d.UserEmail,
+                Phone = d.Phone,
+                Address = d.Address,
+                Amount = d.Amount,
+                DateTime = d.DateTime,
+                DonationType = d.DonationType,
+                Description = d.Description,
+                EventCode = d.Event?.EventCode // Map EventCode from related Event entity
+            }).ToArray();
+        }
         public async Task<Donation> DonateNow(DonateDTO donateDTO)
         {
             var donation = new Donation

@@ -11,6 +11,10 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
     {
         public int Id { get; set; }
 
+        public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
+        public long? Phone { get; set; }
+        public string? Address { get; set; }
         public string UserAccountId { get; set; }
 
         public string DonationType { get; set; }
@@ -24,7 +28,7 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
         public string Status { get; set; }
 
         public bool IsDeleted { get; set; }
-
+        public string? EventCode { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }

@@ -16,6 +16,13 @@ namespace ChildrenVillageSOS_REPO.Implement
         public DonationRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+        public async Task<List<Donation>> GetDonationsByEventIdAsync(int eventId)
+        {
+            return await _context.Donations
+                .Include(d => d.Event) // Ensure Event is loaded
+                .Where(d => d.EventId == eventId && !d.IsDeleted)
+                .ToListAsync();
+        }
         public DataTable getDonate()
         {
             DataTable dt = new DataTable();

@@ -9,7 +9,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 {
     public class EventDonateDTO
     {
-        public string UserAccountId { get; set; }
+        public string? UserAccountId { get; set; }
         public decimal? Amount { get; set; }
        
         

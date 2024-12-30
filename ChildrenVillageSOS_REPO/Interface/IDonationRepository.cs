@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IDonationRepository : IRepositoryGeneric<Donation>
     {
+        Task<List<Donation>> GetDonationsByEventIdAsync(int eventId);
         DataTable getDonate();
         Task<List<Donation>> GetDonationsByUserIdAsync(string userId);
         Task<List<DonationResponseDTO>> GetDonationsByUserId(string userId);

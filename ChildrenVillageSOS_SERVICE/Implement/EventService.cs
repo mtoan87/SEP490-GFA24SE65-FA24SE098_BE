@@ -18,6 +18,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 {
     public class EventService : IEventService
     {
+        private readonly IUserAccountRepository _userAccountRepository;
         private readonly IEventRepository _eventRepository;        
         private readonly IPaymentRepository _paymentRepository;       
         private readonly IImageService _imageService;
@@ -26,6 +27,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
         public EventService(IEventRepository eventRepository,
+            IUserAccountRepository userAccountRepository,
             IImageService imageService,
             IImageRepository imageRepository,          
             IPaymentRepository paymentRepository,          
@@ -33,6 +35,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IDonationService donationService,           
             IIncomeRepository incomeRepository)
         {
+            _userAccountRepository = userAccountRepository;
             _eventRepository = eventRepository;
             _imageService = imageService;
             _imageRepository = imageRepository;         
@@ -214,19 +217,44 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             if (newTotalAmount > (editEvent.AmountLimit ?? 0))
             {
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
-            }          
+            }
             var donationDto = new CreateDonationPayment
             {
                 UserAccountId = updateEvent.UserAccountId,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = updateEvent.Amount ?? 0,
-                Description = $"Donation for Event: {editEvent.Name}",
+                Description = $"Donation for Event: {editEvent.EventCode}",
                 IsDeleted = false,
                 Status = "Pending",
                 EventId = id
             };
-            var donation = await _donationService.CreateDonationPayment(donationDto);           
+            var donation = await _donationService.CreateDonationPayment(donationDto);
+
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+
+            //var user = await _userAccountRepository.GetByIdAsync(updateEvent.UserAccountId);
+
+
+
+            //// Tạo đối tượng DonationDTO
+            //var donationDto = new DonateDTO
+            //{
+            //    UserAccountId = updateEvent.UserAccountId,
+            //    UserName = user.UserName,
+            //    UserEmail = user.UserEmail,
+            //    Phone = user.Phone,
+            //    Address = user.Address,
+            //    FacilitiesWalletId = 1,
+            //    DonationType = "Online",
+            //    DateTime = DateTime.Now,
+            //    Amount = updateEvent.Amount ?? 0,
+            //    Description = editEvent.EventCode,
+            //    IsDeleted = false,
+            //    Status = "Pending"
+            //};
+            //var donation = await _donationService.DonateNow(donationDto);
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];
