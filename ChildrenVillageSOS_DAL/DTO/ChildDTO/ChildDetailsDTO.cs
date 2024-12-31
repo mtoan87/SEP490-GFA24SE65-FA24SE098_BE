@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildProgressDTO;
 using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,6 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public string SchoolName { get; set; }
         public List<HealthReportSummaryDTO> HealthReports { get; set; }
         public List<AcademicReportSummaryDTO> AcademicReports { get; set; }
+        public List<ChildProgressSummaryDTO> ChildProgresses { get; set; }
     }
 }

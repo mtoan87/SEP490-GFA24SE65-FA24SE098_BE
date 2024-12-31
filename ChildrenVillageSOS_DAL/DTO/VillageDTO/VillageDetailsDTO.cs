@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
         public int TotalHouseOwners { get; set; }
         public int TotalMatureChildren { get; set; }
         public List<HouseSummaryDTO> Houses { get; set; }
+        public List<ActivitySummaryDTO> Activities { get; set; }
     }
 }
