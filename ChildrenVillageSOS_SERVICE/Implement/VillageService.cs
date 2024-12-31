@@ -95,9 +95,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _villageRepository.GetByIdAsync(villageId);
         }
 
-        public async Task<VillageDetailsDTO> GetVillageDetailsWithHousesAsync(string villageId)
+        public async Task<VillageDetailsDTO> GetVillageDetails(string villageId)
         {
-            return await _villageRepository.GetVillageDetailsWithHousesAsync(villageId);
+            return await _villageRepository.GetVillageDetails(villageId);
         }
 
         public async Task<VillageResponseDTO> GetVillageByIdWithImg(string villageId)

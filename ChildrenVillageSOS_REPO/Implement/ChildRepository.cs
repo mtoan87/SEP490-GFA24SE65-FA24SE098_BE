@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
 using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildProgressDTO;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
@@ -218,6 +219,21 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToListAsync();
 
+            var childProgresses = await _context.ChildProgresses
+                .Where(cp => cp.ChildId == childId && !cp.IsDeleted)
+                .Select(cp => new ChildProgressSummaryDTO
+                {
+                    Id = cp.Id,
+                    Description = cp.Description ?? "Not Specified",
+                    Date = cp.Date,
+                    Category = cp.Category ?? "Not Specified",
+                    EventId = cp.EventId,
+                    ActivityId = cp.ActivityId,
+                    EventName = cp.Event != null ? cp.Event.Name : "No Event",
+                    ActivityName = cp.Activity != null ? cp.Activity.ActivityName : "No Activity"
+                })
+                .ToListAsync();
+
             var result = new ChildDetailsDTO
             {
                 Id = child.Id,
@@ -229,7 +245,8 @@ namespace ChildrenVillageSOS_REPO.Implement
                 HouseName = child.House?.HouseName ?? "Unknown",
                 SchoolName = child.School?.SchoolName ?? "Unknown",
                 HealthReports = healthReports,
-                AcademicReports = academicReports
+                AcademicReports = academicReports,
+                ChildProgresses = childProgresses,
             };
 
             return result;

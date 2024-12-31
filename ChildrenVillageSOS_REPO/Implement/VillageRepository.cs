@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
@@ -220,17 +221,33 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .ToListAsync();
         }
 
-        public async Task<VillageDetailsDTO> GetVillageDetailsWithHousesAsync(string villageId)
+        public async Task<VillageDetailsDTO> GetVillageDetails(string villageId)
         {
             var village = await _context.Villages
                 .Include(v => v.Houses.Where(h => !h.IsDeleted))
-                .ThenInclude(h => h.Children.Where(c => !c.IsDeleted))
+                .ThenInclude(h => h.Children.Where(c => !c.IsDeleted))            
                 .FirstOrDefaultAsync(v => v.Id == villageId);
 
             if (village == null)
             {
                 throw new Exception("Village not found.");
             }
+
+            var activities = await _context.Activities
+                .Where(a => a.LocationId == villageId && !a.IsDeleted)
+                .Select(a => new ActivitySummaryDTO
+            {
+                Id = a.Id,
+                ActivityName = a.ActivityName,
+                Description = a.Description,
+                StartDate = a.StartDate,
+                EndDate = a.EndDate,
+                Address = a.Address,
+                ActivityType = a.ActivityType,
+                Organizer = a.Organizer,
+                Status = a.Status,
+
+            }).ToListAsync();
 
             var totalHouses = village.Houses.Count;
             var totalChildren = village.Houses.Sum(h => h.Children.Count);
@@ -266,6 +283,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 Houses = housesArray,
                 TotalHouseOwners = totalHouseOwners,
                 TotalMatureChildren = totalMatureChildren,
+                Activities = activities
             };
 
             return result;
