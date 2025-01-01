@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -218,43 +219,74 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
             }
-            var donationDto = new CreateDonationPayment
-            {
-                UserAccountId = updateEvent.UserAccountId,
-                DonationType = "Online",
-                DateTime = DateTime.Now,
-                Amount = updateEvent.Amount ?? 0,
-                Description = $"Donation for Event: {editEvent.EventCode}",
-                IsDeleted = false,
-                Status = "Pending",
-                EventId = id
-            };
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            //var donationDto = new CreateDonationPayment
+            //{
+            //    UserAccountId = updateEvent.UserAccountId,
+            //    DonationType = "Online",
+            //    DateTime = DateTime.Now,
+            //    Amount = updateEvent.Amount ?? 0,
+            //    Description = $"Donation for Event: {editEvent.EventCode}",
+            //    IsDeleted = false,
+            //    Status = "Pending",
+            //    EventId = id
+            //};
+            //var donation = await _donationService.CreateDonationPayment(donationDto);
 
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
 
-            //var user = await _userAccountRepository.GetByIdAsync(updateEvent.UserAccountId);
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(updateEvent.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(updateEvent.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = updateEvent.UserName;
+                userEmail = updateEvent.UserEmail;
+                phone = updateEvent.Phone;
+                address = updateEvent.Address;
+            }
 
 
 
-            //// Tạo đối tượng DonationDTO
-            //var donationDto = new DonateDTO
-            //{
-            //    UserAccountId = updateEvent.UserAccountId,
-            //    UserName = user.UserName,
-            //    UserEmail = user.UserEmail,
-            //    Phone = user.Phone,
-            //    Address = user.Address,
-            //    FacilitiesWalletId = 1,
-            //    DonationType = "Online",
-            //    DateTime = DateTime.Now,
-            //    Amount = updateEvent.Amount ?? 0,
-            //    Description = editEvent.EventCode,
-            //    IsDeleted = false,
-            //    Status = "Pending"
-            //};
-            //var donation = await _donationService.DonateNow(donationDto);
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
+            {
+                FoodStuffWalletId = editEvent.FoodStuffWalletId,
+                FacilitiesWalletId = editEvent.FacilitiesWalletId,
+                NecessitiesWalletId = editEvent.NecessitiesWalletId,
+                HealthWalletId = editEvent.HealthWalletId,
+                UserAccountId = updateEvent.UserAccountId,
+                EventCode = editEvent.EventCode,
+                EventId = editEvent.Id,
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,               
+                DonationType = "Online",
+                DateTime = DateTime.Now,
+                Amount = updateEvent.Amount ?? 0,
+                Description = updateEvent.Description,
+                IsDeleted = false,
+                Status = "Pending"
+            };
+            var donation = await _donationService.DonateNow(donationDto);
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];

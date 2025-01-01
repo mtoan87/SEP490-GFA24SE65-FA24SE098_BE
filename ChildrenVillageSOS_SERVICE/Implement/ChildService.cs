@@ -19,6 +19,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 {
     public class ChildService : IChildService
     {
+        private readonly IUserAccountRepository _userAccountRepository;
         private readonly IChildRepository _childRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IImageService _imageService;
@@ -34,6 +35,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
 
         public ChildService(IChildRepository childRepository,
+            IUserAccountRepository userAccountRepository,
             IImageService imageService,
             IImageRepository imageRepository,                   
             IPaymentRepository paymentRepository,              
@@ -46,6 +48,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IHealthWalletRepository healthWalletRepository,
             IIncomeRepository incomeRepository)
         {
+            _userAccountRepository = userAccountRepository;
             _childRepository = childRepository;
             _imageService = imageService;
             _imageRepository = imageRepository;         
@@ -220,29 +223,62 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
             }
 
-           
-            await _childRepository.UpdateAsync(editChild);
+
+
 
             // Step 4: Create Donation
-            var donationDto = new CreateDonationPayment
+            string? userName, userEmail, address;
+            long? phone;
+
+            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
+            if (!string.IsNullOrEmpty(updateChild.UserAccountId))
+            {
+                var user = await _userAccountRepository.GetByIdAsync(updateChild.UserAccountId);
+                if (user != null)
+                {
+                    userName = user.UserName;
+                    userEmail = user.UserEmail;
+                    phone = user.Phone;
+                    address = user.Address;
+                }
+                else
+                {
+                    throw new Exception("User not found.");
+                }
+            }
+            else
+            {
+                // Lấy thông tin từ request
+                userName = updateChild.UserName;
+                userEmail = updateChild.UserEmail;
+                phone = updateChild.Phone;
+                address = updateChild.Address;
+            }
+
+
+
+            // Tạo đối tượng DonationDTO
+            var donationDto = new DonateDTO
             {
                 UserAccountId = updateChild.UserAccountId,
-                FacilitiesWalletId = editChild.FacilitiesWalletId,
+                ChildId = editChild.Id,
+               
+                UserName = userName,
+                UserEmail = userEmail,
+                Phone = phone,
+                Address = address,
                 FoodStuffWalletId = editChild.FoodStuffWalletId,
+                FacilitiesWalletId = editChild.FacilitiesWalletId,
                 NecessitiesWalletId = editChild.NecessitiesWalletId,
-                SystemWalletId = editChild.SystemWalletId,
                 HealthWalletId = editChild.HealthWalletId,
                 DonationType = "Online",
                 DateTime = DateTime.Now,
                 Amount = updateChild.Amount ?? 0,
-                Description = $"Donation for Child: {editChild.ChildName}",
+                Description = updateChild.Description,
                 IsDeleted = false,
-                Status = "Pending",
-                ChildId = id
-
+                Status = "Pending"
             };
-
-            var donation = await _donationService.CreateDonationPayment(donationDto);
+            var donation = await _donationService.DonateNow(donationDto);
 
             // Step 5: Create VNPay URL for payment
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];

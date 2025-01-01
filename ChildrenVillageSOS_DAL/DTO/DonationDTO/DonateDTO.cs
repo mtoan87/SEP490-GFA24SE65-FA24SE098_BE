@@ -8,6 +8,7 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
 {
     public class DonateDTO
     {
+
         public string? UserAccountId { get; set; }
         public string? UserName { get; set; }
 
@@ -20,7 +21,7 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
         public int? EventId { get; set; }
 
         public string? ChildId { get; set; }
-
+        public string? EventCode { get; set; }
         public int? FacilitiesWalletId { get; set; }
 
         public int? SystemWalletId { get; set; }

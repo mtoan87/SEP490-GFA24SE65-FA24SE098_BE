@@ -148,6 +148,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var donation = new Donation
             {   
+                EventCode = donateDTO.EventCode,
                 FacilitiesWalletId = donateDTO.FacilitiesWalletId,
                 SystemWalletId = donateDTO.SystemWalletId,
                 NecessitiesWalletId = donateDTO.NecessitiesWalletId,
