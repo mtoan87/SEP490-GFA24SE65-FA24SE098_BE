@@ -19,5 +19,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<SchoolResponseDTO[]> GetAllSchoolsIsDeleted();
         Task<SchoolResponseDTO> GetSchoolByIdWithImg(string schoolId);
         Task<IEnumerable<SchoolResponseDTO>> GetAllSchoolWithImg();
+        Task<SchoolDetailsDTO> GetSchoolDetails(string schoolId);
     }
 }

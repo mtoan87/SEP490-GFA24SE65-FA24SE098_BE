@@ -24,22 +24,22 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(reports);
         }
 
-        [HttpGet("GetAllInventoryIsDeleteAsync")]
-        public async Task<IActionResult> GetAllInventoryIsDeleteAsync()
+        [HttpGet("GetAllHealthReportIsDelete")]
+        public async Task<IActionResult> GetAllHealthReportIsDeleteAsync()
         {
             var inventory = await _healthReportService.GetAllHealthReportIsDeleteAsync();
             return Ok(inventory);
         }
 
-        [HttpGet("GetAllInventoryWithImg")]
-        public async Task<IActionResult> GetAllInventoryWithImg()
+        [HttpGet("GetAllHealthReportWithImg")]
+        public async Task<IActionResult> GetAllHealthReportWithImg()
         {
             var inventory = await _healthReportService.GetAllHealthReportWithImg();
             return Ok(inventory);
         }
 
-        [HttpGet("GetInventoryByIdWithImg/{id}")]
-        public async Task<IActionResult> GetInventoryByIdWithImg(int id)
+        [HttpGet("GetHealthReportByIdWithImg/{id}")]
+        public async Task<IActionResult> GetHealthReportByIdWithImg(int id)
         {
             var inventory = await _healthReportService.GetHealthReportByIdWithImg(id);
             return Ok(inventory);
