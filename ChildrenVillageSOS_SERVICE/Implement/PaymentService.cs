@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -159,12 +160,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
                 Description = paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString()
             };
 
             // Gửi donation
@@ -202,7 +203,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -213,11 +214,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString()
             };
             await _paymentRepository.AddAsync(payment);
 
@@ -264,12 +265,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
                 Description = paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString()
             };
 
             // Gửi donation
@@ -305,7 +306,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 UserAccountId = paymentRequest.UserAccountId,
                 Receiveday = DateTime.Now,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -315,11 +316,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
@@ -367,12 +368,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
                 Description = paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
 
             // Gửi donation
@@ -415,7 +416,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -426,11 +427,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
@@ -523,12 +524,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
-                Description = "Donate facilities for SOS Children's Village",
+                Description =paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
 
             // Gửi donation
@@ -571,7 +572,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -582,11 +583,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
@@ -635,12 +636,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
                 Description = paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString()
             };
 
             // Gửi donation
@@ -683,7 +684,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -694,11 +695,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
@@ -745,12 +746,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Phone = phone,
                 Address = address,
                 FacilitiesWalletId = 1,
-                DonationType = "Online",
+                DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
                 Description = paymentRequest.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
 
             // Gửi donation
@@ -793,7 +794,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
-                Status = "Pending",
+                Status = IncomeStatus.Pending.ToString(),
                 CreatedDate = DateTime.Now,
                 DonationId = donation.Id
             };
@@ -804,11 +805,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = paymentRequest.Amount,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),   
             };
             await _paymentRepository.AddAsync(payment);
 

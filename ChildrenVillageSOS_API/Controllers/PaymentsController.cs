@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_API.Model;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -102,7 +103,7 @@ namespace ChildrenVillageSOS_API.Controllers
                 {
                     return NotFound($"Donate with Id:{vnp_TxnRef} not found!");
                 }
-                if (donation.Status == "Paid")
+                if (donation.Status == DonateStatus.Paid.ToString())
                 {
                     return BadRequest(new
                     {
@@ -228,9 +229,9 @@ namespace ChildrenVillageSOS_API.Controllers
                 if (vnp_ResponseCode == "00") 
                 {
                    
-                    donation.Status = "Paid";
-                    payment.Status = "Paid";
-                    income.Status = "Completed";
+                    donation.Status = DonateStatus.Paid.ToString();
+                    payment.Status = DonateStatus.Paid.ToString();
+                    income.Status = IncomeStatus.Complete.ToString();
                     await _incomeRepository.UpdateAsync(income);
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);
@@ -246,9 +247,9 @@ namespace ChildrenVillageSOS_API.Controllers
                 }
                 else
                 {                  
-                    donation.Status = "Cancelled";
-                    payment.Status = "Cancelled";
-                    income.Status = "Cancelled";
+                    donation.Status = DonateStatus.Cancelled.ToString();
+                    payment.Status = DonateStatus.Cancelled.ToString();
+                    income.Status = IncomeStatus.Cancelled.ToString();
                     await _incomeRepository.UpdateAsync(income);
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);                

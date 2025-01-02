@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -271,12 +272,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FacilitiesWalletId = editChild.FacilitiesWalletId,
                 NecessitiesWalletId = editChild.NecessitiesWalletId,
                 HealthWalletId = editChild.HealthWalletId,
-                DonationType = "Online",
+                DonationType = DonateType.Child.ToString(),
                 DateTime = DateTime.Now,
                 Amount = updateChild.Amount ?? 0,
                 Description = updateChild.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             var donation = await _donationService.DonateNow(donationDto);
 
@@ -328,7 +329,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = editChild.NecessitiesWalletId,
                 Amount = updateChild.Amount ?? 0,
                 Receiveday = DateTime.Now,
-                Status = "Completed",
+                Status = IncomeStatus.Pending.ToString(),
                 DonationId = donation.Id
             };
             await _incomeRepository.AddAsync(income);
@@ -338,62 +339,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = updateChild.Amount ?? 0,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
             return paymentUrl;
         }
-        private async Task UpdateFacilitiesWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _failitiesWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _failitiesWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateFoodStuffWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _foodStuffWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _foodStuffWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateNecessitiesWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _necessitiesWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _necessitiesWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateHealthWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _healthWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _healthWalletRepository.UpdateAsync(wallet);
-            }
-        }
-        private async Task UpdateSystemWalletBudget(int walletId, decimal amount)
-        {
-            var wallet = await _systemWalletRepository.GetByIdAsync(walletId);
-            if (wallet != null)
-            {
-                wallet.Budget += amount;
-                await _systemWalletRepository.UpdateAsync(wallet);
-            }
-        }
-
         public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
         {
             var existingChild = await _childRepository.GetByIdAsync(id);

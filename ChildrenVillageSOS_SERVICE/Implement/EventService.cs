@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -279,12 +280,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserEmail = userEmail,
                 Phone = phone,
                 Address = address,               
-                DonationType = "Online",
+                DonationType = DonateType.Event.ToString(),
                 DateTime = DateTime.Now,
                 Amount = updateEvent.Amount ?? 0,
                 Description = updateEvent.Description,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             var donation = await _donationService.DonateNow(donationDto);
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
@@ -326,7 +327,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = editEvent.NecessitiesWalletId,
                 Amount = updateEvent.Amount ?? 0,
                 Receiveday = DateTime.Now,
-                Status = "Complete",
+                Status = IncomeStatus.Pending.ToString(),
                 DonationId = donation.Id
             };
             await _incomeRepository.AddAsync(income);
@@ -335,11 +336,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 DonationId = donation.Id,
                 Amount = updateEvent.Amount ?? 0,
-                PaymentMethod = "Banking",
+                PaymentMethod = PaymentMethod.Banking.ToString(),
                 DateTime = DateTime.Now,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending"
+                Status = DonateStatus.Pending.ToString(),
             };
             await _paymentRepository.AddAsync(payment);
 
