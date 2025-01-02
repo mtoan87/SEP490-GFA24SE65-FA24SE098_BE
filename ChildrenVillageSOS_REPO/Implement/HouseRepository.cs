@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     dt.Rows.Add(
                         item.Id,
                         item.HouseName,
-                        item.HouseNumber,                     
+                        item.HouseNumber,
                         item.Location,
                         item.Description,
                         item.HouseMember,
@@ -211,7 +212,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         public async Task<HouseDetailsDTO> GetHouseDetails(string houseId)
         {
             var house = await _context.Houses
-                .Include(h => h.Children.Where(c => !c.IsDeleted))             
+                .Include(h => h.Children.Where(c => !c.IsDeleted))
                 .FirstOrDefaultAsync(h => h.Id == houseId);
 
             if (house == null)
@@ -221,21 +222,63 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             var currentMembers = house.Children.Count;
 
-            // Lấy danh sách Inventory thuộc về House
+            // Get the list of Inventory belonging to House
             var inventoryList = await _context.Inventories
                 .Where(i => i.BelongsTo == "House" && i.BelongsToId == houseId)
                 .Select(i => new InventorySummaryDTO
-            {
-                Id = i.Id,
-                ItemName = i.ItemName,
-                Quantity = i.Quantity,
-                Purpose = i.Purpose ?? "Not Specified",
-                MaintenanceStatus = i.MaintenanceStatus,
-                LastInspectionDate = i.LastInspectionDate
-            }).ToListAsync();
+                {
+                    Id = i.Id,
+                    ItemName = i.ItemName,
+                    Quantity = i.Quantity,
+                    Purpose = i.Purpose ?? "Not Specified",
+                    MaintenanceStatus = i.MaintenanceStatus,
+                    LastInspectionDate = i.LastInspectionDate
+                }).ToListAsync();
 
-            // Chuyển đổi danh sách Children thành ChildSummaryDTO
-            var childrenList = house.Children.Select(c => new ChildSummaryDTO
+            // Calculate age
+            var children = house.Children.ToList();
+            var ageGroups = new Dictionary<string, int>
+                {
+                    { "0-5", 0 },
+                    { "6-10", 0 },
+                    { "11-15", 0 },
+                    { "16-18", 0 }
+                };
+            var totalAge = 0;
+            var maleCount = 0;
+            var femaleCount = 0;
+
+            foreach (var child in children)
+            {
+                var age = AgeCalculator.CalculateAge(child.Dob);
+                totalAge += age;
+
+                // Calculate age group
+                var ageGroup = AgeCalculator.GetAgeGroup(child.Dob);
+                var ageGroupLabel = AgeCalculator.GetAgeGroupLabel(ageGroup);
+                if (!string.IsNullOrEmpty(ageGroupLabel))
+                {
+                    ageGroups[ageGroupLabel]++;
+                }
+
+                // Count children gender
+                if (child.Gender?.ToLower() == "male")
+                {
+                    maleCount++;
+                }
+                else if (child.Gender?.ToLower() == "female")
+                {
+                    femaleCount++;
+                }
+            }
+
+            var averageAge = children.Count > 0 ? (double)totalAge / children.Count : 0;
+
+            var achievementCount = await _context.AcademicReports
+                .Where(ar => house.Children.Select(c => c.Id).Contains(ar.ChildId))
+                .CountAsync();
+         
+            var childrenList = children.Select(c => new ChildSummaryDTO
             {
                 Id = c.Id,
                 ChildName = c.ChildName ?? "Unknown",
@@ -258,6 +301,11 @@ namespace ChildrenVillageSOS_REPO.Implement
                 MaintenanceStatus = house.MaintenanceStatus,
                 Children = childrenList,
                 Inventory = inventoryList,
+                AgeGroups = ageGroups.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                AverageAge = averageAge,
+                MaleCount = maleCount,
+                FemaleCount = femaleCount,
+                AchievementCount = achievementCount
             };
 
             return result;

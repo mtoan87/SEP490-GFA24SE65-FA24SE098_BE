@@ -33,5 +33,15 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
         public List<ChildSummaryDTO> Children { get; set; } = new();
 
         public List<InventorySummaryDTO> Inventory { get; set; } = new();
+
+        public Dictionary<string, int> AgeGroups { get; set; }
+
+        public double AverageAge { get; set; }
+
+        public int MaleCount { get; set; }
+
+        public int FemaleCount { get; set; }
+
+        public int AchievementCount { get; set; }
     }
 }
