@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,13 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var school = await _schoolService.GetAllSchoolWithImg();
             return Ok(school);
+        }
+
+        [HttpGet("GetSchoolDetails/{schoolId}")]
+        public async Task<IActionResult> GetSchoolDetails(string schoolId)
+        {
+            var schoolDetails = await _schoolService.GetSchoolDetails(schoolId);
+            return Ok(schoolDetails);
         }
 
         [HttpGet("GetSchoolByIdWithImg")]

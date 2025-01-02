@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -35,6 +36,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<SchoolResponseDTO[]> GetAllSchoolsIsDeleted()
         {
             return _schoolRepository.GetAllSchoolsIsDeleted();
+        }
+        
+        public async Task<SchoolDetailsDTO> GetSchoolDetails(string schoolId)
+        {
+            return await _schoolRepository.GetSchoolDetails(schoolId);
         }
 
         public async Task<School> GetSchoolById(string id)
