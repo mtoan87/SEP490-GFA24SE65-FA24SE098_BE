@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatistics();
         //Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatisticsByDateRange(DateTime startDate, DateTime endDate);
         Task<List<AcademicPerformanceDistributionDTO>> GetAcademicPerformanceDistribution();
+        Task<ChildTrendResponseDTO> GetChildTrendsAsync();
     }
 }

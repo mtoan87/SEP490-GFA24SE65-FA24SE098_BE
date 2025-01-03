@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -158,6 +159,20 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 GoodPercentage = Math.Round((double)good / total * 100, 2),
                 AveragePercentage = Math.Round((double)average / total * 100, 2),
                 BelowAveragePercentage = Math.Round((double)belowAverage / total * 100, 2)
+            };
+        }
+
+        public async Task<ChildTrendResponseDTO> GetChildTrendsAsync()
+        {
+            var data2022 = await _childRepository.GetChildTrendsByYearAsync(2022);
+            var data2023 = await _childRepository.GetChildTrendsByYearAsync(2023);
+            var data2024 = await _childRepository.GetChildTrendsByYearAsync(2024);
+
+            return new ChildTrendResponseDTO
+            {
+                Data2022 = data2022,
+                Data2023 = data2023,
+                Data2024 = data2024
             };
         }
     }
