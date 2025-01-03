@@ -23,5 +23,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<List<Child>> GetChildByHouseIdAsync(string houseId);
         Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync();
         Task<ChildDetailsDTO> GetChildDetails(string childId);
+        Task<ChildResponseDTO[]> GetChildByHouseId(string houseId);
     }
 }

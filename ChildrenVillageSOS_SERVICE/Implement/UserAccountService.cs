@@ -79,6 +79,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newUser;
         }
+        public async Task<UserResponseDTO> GetUserByIdArray(string userid)
+        {
+            return _userAccountRepository.GetUserByIdArray(userid);
+        }
         public async Task<UserAccount> UpdateUser(string id, UpdateUserDTO updateUser)
         {
             var updaUser = await _userAccountRepository.GetByIdAsync(id);

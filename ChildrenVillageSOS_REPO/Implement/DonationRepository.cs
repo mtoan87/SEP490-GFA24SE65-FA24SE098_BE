@@ -62,6 +62,10 @@ namespace ChildrenVillageSOS_REPO.Implement
             {
                 Id = d.Id,
                 UserAccountId = d.UserAccountId,
+                UserName = d.UserName,
+                UserEmail = d.UserEmail,
+                Phone = d.Phone,
+                Address = d.Address,
                 DonationType = d.DonationType,
                 DateTime = d.DateTime,
                 Amount = d.Amount,

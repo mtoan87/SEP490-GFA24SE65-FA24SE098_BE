@@ -36,6 +36,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var user = await _userAccountService.GetUserById(Id);
             return Ok(user);
         }
+        [HttpGet("GetUserByIdFormat/{Id}")]
+        public async Task<IActionResult> GetUserByIdArray(string Id)
+        {
+            var user = await _userAccountService.GetUserByIdArray(Id);
+            return Ok(user);
+        }
         [HttpPost]
         [Route("CreateUser")]
         public async Task<ActionResult<UserAccount>> CreateUser([FromForm] CreateUserDTO creUserDTO)
