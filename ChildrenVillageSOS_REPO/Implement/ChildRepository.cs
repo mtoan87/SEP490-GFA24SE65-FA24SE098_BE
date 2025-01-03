@@ -33,7 +33,36 @@ namespace ChildrenVillageSOS_REPO.Implement
                                  .Where(e => !e.IsDeleted) // Nếu cần, lọc các sự kiện không bị xóa
                                  .ToListAsync();
         }
-
+        public async Task<ChildResponseDTO[]> GetChildByHouseId(string houseId)
+        {
+            return await _context.Children
+                .Where(x => x.HouseId == houseId && !x.IsDeleted) // Ensure the event is not deleted
+                .Select(x => new ChildResponseDTO
+                {
+                    Id = x.Id,
+                    ChildName = x.ChildName,
+                    HealthStatus = x.HealthStatus,
+                    HouseId = x.HouseId,
+                    SchoolId = x.SchoolId,
+                    FacilitiesWalletId = x.FacilitiesWalletId,
+                    SystemWalletId = x.SystemWalletId,
+                    FoodStuffWalletId = x.FoodStuffWalletId,
+                    HealthWalletId = x.HealthWalletId,
+                    NecessitiesWalletId = x.NecessitiesWalletId,
+                    Amount = x.Amount ?? 0,
+                    CurrentAmount = x.CurrentAmount ?? 0,
+                    AmountLimit = x.AmountLimit ?? 0,
+                    Gender = x.Gender,
+                    Dob = x.Dob,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate,
+                    Status = x.Status,
+                    ImageUrls = x.Images.Where(img => !img.IsDeleted)
+                                        .Select(img => img.UrlPath)
+                                        .ToArray()
+                })
+                .ToArrayAsync();
+        }
         public async Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync()
         {
             return await _context.Children

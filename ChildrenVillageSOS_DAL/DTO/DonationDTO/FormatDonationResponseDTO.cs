@@ -9,6 +9,11 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
     public class FormatDonationResponseDTO
     {
         public int Id { get; set; }
+        public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
+        public long? Phone { get; set; }
+        public string? Address { get; set; }
+
         public int? FacilitiesWalletId { get; set; }
 
         public int? SystemWalletId { get; set; }

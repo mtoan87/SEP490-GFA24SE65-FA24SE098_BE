@@ -79,7 +79,30 @@ namespace ChildrenVillageSOS_REPO.Implement
                                  .OrderByDescending(u => u.Id)
                                  .FirstOrDefaultAsync();
         }
-
+        public UserResponseDTO GetUserByIdArray(string userid)
+        {
+            var userDetails = _context.UserAccounts
+                .Where(u => u.Id == userid && !u.IsDeleted)
+                .Select(u => new UserResponseDTO
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    UserEmail = u.UserEmail,
+                    Password = u.Password,
+                    Phone = u.Phone,
+                    Address = u.Address,
+                    Dob = u.Dob,
+                    Gender = u.Gender,
+                    Country = u.Country,
+                    Status = u.Status,
+                    RoleId = u.RoleId,
+                    IsDeleted = u.IsDeleted,
+                    CreatedDate = u.CreatedDate,
+                    ModifiedDate = u.ModifiedDate
+                })
+                .FirstOrDefault();
+            return userDetails;
+        }
         public async Task<UserResponseDTO[]> GetAllUserIsDeletedAsync()
         {
             return await _context.UserAccounts
