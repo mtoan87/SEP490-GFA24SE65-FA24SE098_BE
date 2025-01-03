@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Models;
 using System;
@@ -21,5 +22,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync();
         Task<int> CountChildrenByHouseIdAsync(string houseId);
         Task<ChildDetailsDTO> GetChildDetails(string childId);
+        Task<List<ChildTrendDTO>> GetChildTrendsByYearAsync(int year);
     }
 }

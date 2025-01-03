@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -160,6 +161,13 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> GetAcademicPerformanceDistribution()
         {
             var result = await _dashboardService.GetAcademicPerformanceDistribution();
+            return Ok(result);
+        }
+
+        [HttpGet("child-trends")]
+        public async Task<IActionResult> GetChildTrends()
+        {
+            var result = await _dashboardService.GetChildTrendsAsync();
             return Ok(result);
         }
     }

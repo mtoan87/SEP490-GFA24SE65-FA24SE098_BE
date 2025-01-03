@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
 using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.ChildProgressDTO;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
@@ -159,6 +160,22 @@ namespace ChildrenVillageSOS_REPO.Implement
                     Gender = x.Gender
                 })
                 .AsNoTracking()
+                .ToListAsync();
+        }
+
+        // Dashboard phần Child Trends
+        public async Task<List<ChildTrendDTO>> GetChildTrendsByYearAsync(int year)
+        {
+            return await _context.Children
+                .Where(c => c.CreatedDate.HasValue && c.CreatedDate.Value.Year == year)
+                .GroupBy(c => c.CreatedDate.Value.Month)
+                .Select(g => new ChildTrendDTO
+                {
+                    Month = g.Key.ToString(),
+                    Year = year,
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Month)
                 .ToListAsync();
         }
 
