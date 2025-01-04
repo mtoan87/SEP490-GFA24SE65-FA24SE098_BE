@@ -14,7 +14,7 @@ namespace ChildrenVillageSOS_DAL.DTO.DonationDTO
 
         public string? UserEmail { get; set; }
 
-        public long? Phone { get; set; }
+        public string? Phone { get; set; }
 
         public string? Address { get; set; }
 

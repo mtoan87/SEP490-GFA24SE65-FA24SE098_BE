@@ -13,7 +13,7 @@ public partial class UserAccount
 
     public string? Password { get; set; }
 
-    public long? Phone { get; set; }
+    public string? Phone { get; set; }
 
     public string? Address { get; set; }
 

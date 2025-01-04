@@ -234,7 +234,7 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
 
             var activities = await _context.Activities
-                .Where(a => a.LocationId == villageId && !a.IsDeleted)
+                .Where(a => a.VillageId == villageId && !a.IsDeleted)
                 .Select(a => new ActivitySummaryDTO
             {
                 Id = a.Id,

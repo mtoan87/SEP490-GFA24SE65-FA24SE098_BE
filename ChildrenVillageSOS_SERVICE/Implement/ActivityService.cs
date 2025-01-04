@@ -49,7 +49,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 StartDate = a.StartDate,
                 EndDate = a.EndDate,
                 Address = a.Address,
-                LocationId = a.LocationId,
+                LocationId = a.VillageId,
                 ActivityType = a.ActivityType,
                 TargetAudience = a.TargetAudience,
                 Organizer = a.Organizer,
@@ -90,7 +90,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 StartDate = createActivity.StartDate,
                 EndDate = createActivity.EndDate,
                 Address = createActivity.Address,
-                LocationId = createActivity.LocationId,
+                VillageId = createActivity.LocationId,
                 ActivityType = createActivity.ActivityType,
                 TargetAudience = createActivity.TargetAudience,
                 Organizer = createActivity.Organizer,
@@ -137,7 +137,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingActivity.StartDate = updateActivity.StartDate;
             existingActivity.EndDate = updateActivity.EndDate;
             existingActivity.Address = updateActivity.Address;
-            existingActivity.LocationId = updateActivity.LocationId;
+            existingActivity.VillageId = updateActivity.LocationId;
             existingActivity.ActivityType = updateActivity.ActivityType;
             existingActivity.TargetAudience = updateActivity.TargetAudience;
             existingActivity.Organizer = updateActivity.Organizer;

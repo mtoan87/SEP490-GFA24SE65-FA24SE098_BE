@@ -39,6 +39,8 @@ public partial class Village
 
     public DateTime? ModifiedDate { get; set; }
 
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
+
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();

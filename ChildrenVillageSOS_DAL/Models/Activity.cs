@@ -17,7 +17,7 @@ public partial class Activity
 
     public string? Address { get; set; }
 
-    public string? LocationId { get; set; }
+    public string? VillageId { get; set; }
 
     public string? ActivityType { get; set; }
 
@@ -48,4 +48,6 @@ public partial class Activity
     public virtual Event? Event { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
+
+    public virtual Village? Village { get; set; }
 }

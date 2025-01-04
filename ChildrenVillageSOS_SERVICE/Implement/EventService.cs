@@ -237,7 +237,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
 
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(updateEvent.UserAccountId))

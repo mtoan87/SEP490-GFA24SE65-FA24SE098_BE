@@ -13,7 +13,7 @@ public partial class Donation
 
     public string? UserEmail { get; set; }
 
-    public long? Phone { get; set; }
+    public string? Phone { get; set; }
 
     public string? Address { get; set; }
 
@@ -37,7 +37,7 @@ public partial class Donation
 
     public decimal Amount { get; set; }
 
-    public string? Description { get; set; } 
+    public string? Description { get; set; }
 
     public string? Status { get; set; }
 

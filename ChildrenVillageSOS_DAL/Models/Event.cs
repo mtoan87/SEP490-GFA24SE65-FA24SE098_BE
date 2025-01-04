@@ -7,14 +7,6 @@ public partial class Event
 {
     public int Id { get; set; }
 
-    public string? UserName { get; set; }
-
-    public string? UserEmail { get; set; }
-
-    public long? Phone { get; set; }
-
-    public string? Address { get; set; }
-
     public string? Name { get; set; }
 
     public string? Description { get; set; }
@@ -62,6 +54,8 @@ public partial class Event
     public virtual ICollection<ChildProgress> ChildProgresses { get; set; } = new List<ChildProgress>();
 
     public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+
+    public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
     public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 

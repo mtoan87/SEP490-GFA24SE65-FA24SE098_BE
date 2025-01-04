@@ -124,7 +124,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
            
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
@@ -229,7 +229,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<string> DonateFaciltiesWallet(DonateRequest paymentRequest)
         {
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
@@ -332,7 +332,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Step 1: Create Donation
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
@@ -488,7 +488,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Step 1: Create Donation
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
@@ -600,7 +600,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Step 1: Create Donation
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))
@@ -710,7 +710,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {            
             // Step 1: Create Donation
             string? userName, userEmail, address;
-            long? phone;
+            string? phone;
 
             // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(paymentRequest.UserAccountId))

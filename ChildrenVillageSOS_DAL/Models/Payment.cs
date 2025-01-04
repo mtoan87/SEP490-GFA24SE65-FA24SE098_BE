@@ -17,7 +17,7 @@ public partial class Payment
 
     public decimal Amount { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

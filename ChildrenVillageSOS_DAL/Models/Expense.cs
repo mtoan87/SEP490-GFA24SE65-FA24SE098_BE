@@ -17,6 +17,8 @@ public partial class Expense
 
     public int? SystemWalletId { get; set; }
 
+    public string? ExpenseType { get; set; }
+
     public int? FacilitiesWalletId { get; set; }
 
     public int? FoodStuffWalletId { get; set; }
@@ -25,13 +27,25 @@ public partial class Expense
 
     public int? NecessitiesWalletId { get; set; }
 
+    public string? RequestedBy { get; set; }
+
+    public string? ApprovedBy { get; set; }
+
     public string? HouseId { get; set; }
+
+    public string? ChildId { get; set; }
+
+    public int? EventId { get; set; }
 
     public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual Child? Child { get; set; }
+
+    public virtual Event? Event { get; set; }
 
     public virtual FacilitiesWallet? FacilitiesWallet { get; set; }
 
