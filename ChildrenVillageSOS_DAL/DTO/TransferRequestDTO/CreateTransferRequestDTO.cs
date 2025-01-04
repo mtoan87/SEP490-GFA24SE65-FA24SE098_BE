@@ -18,11 +18,7 @@ namespace ChildrenVillageSOS_DAL.DTO.TransferRequestDTO
 
         public string Status { get; set; } = null!;
 
-        public string? DirectorNote { get; set; }
-
         public string? RequestReason { get; set; }
-
-        public string? ApprovedBy { get; set; }
 
         public string? CreatedBy { get; set; }
 

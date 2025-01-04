@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferRequestDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -61,6 +62,24 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 var toHouse = await _houseRepository.GetByIdAsync(dto.ToHouseId);
                 if (toHouse == null)
                     throw new InvalidOperationException("To House not found");
+
+                // Check if ToHouseId matches FromHouseId
+                if (dto.ToHouseId == dto.FromHouseId)
+                {
+                    throw new InvalidOperationException("The destination house cannot be the same as the current house");
+                }
+
+                // Check if ToHouseId matches child's HouseId
+                if (dto.ToHouseId == child.HouseId)
+                {
+                    throw new InvalidOperationException("The child is already in the specified destination house");
+                }
+
+                // Check the current number of members of the house HouseMother want to move to
+                if (toHouse.CurrentMembers >= 10)
+                {
+                    throw new InvalidOperationException("The destination house has reached its maximum capacity of 10 members");
+                }
             }
 
             var transferRequest = new TransferRequest
@@ -69,7 +88,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FromHouseId = dto.FromHouseId,
                 ToHouseId = dto.ToHouseId,
                 RequestDate = DateTime.Now,
-                Status = "Pending",
+                Status = TransferStatus.Pending.ToString(),
                 RequestReason = dto.RequestReason,
                 CreatedBy = dto.CreatedBy,
                 CreatedDate = DateTime.Now,
@@ -82,20 +101,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto)
         {
+            // Lấy thông tin chi tiết TransferRequest
             var transferRequest = await _transferRequestRepository.GetTransferRequestWithDetails(id);
             if (transferRequest == null)
                 throw new InvalidOperationException("Transfer request not found");
 
-            if (dto.Status == "Approved")
+            // Kiểm tra trạng thái hiện tại của TransferRequest
+            if (transferRequest.Status == TransferStatus.Approved.ToString())
+                throw new InvalidOperationException("Cannot update an approved transfer request");
+
+            if (transferRequest.Status == TransferStatus.Rejected.ToString())
+                throw new InvalidOperationException("Cannot update a rejected transfer request");
+
+            // Nếu trạng thái là Approved
+            if (dto.Status == TransferStatus.Approved.ToString())
             {
-                // Move to Transfer History
+                // Thêm vào TransferHistory
                 var transferHistory = new TransferHistory
                 {
                     ChildId = transferRequest.ChildId,
                     FromHouseId = transferRequest.FromHouseId,
                     ToHouseId = transferRequest.ToHouseId,
                     TransferDate = DateTime.Now,
-                    Status = "Completed",
+                    Status = TransferStatus.Completed.ToString(),
                     HandledBy = dto.ApprovedBy,
                     CreatedDate = DateTime.Now,
                     IsDeleted = false
@@ -103,15 +131,19 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
 
-                // Update the child's house information
+                // Cập nhật thông tin nhà của trẻ
                 var child = await _childRepository.GetByIdAsync(transferRequest.ChildId);
                 child.HouseId = transferRequest.ToHouseId;
                 await _childRepository.UpdateAsync(child);
 
-                // Remove the request from transfer request if status is "Approved"
+                // Xóa TransferRequest khỏi hệ thống
                 await _transferRequestRepository.RemoveAsync(transferRequest);
+
+                return transferRequest;
             }
-            else if (dto.Status == "Rejected")
+
+            // Nếu trạng thái là Rejected
+            if (dto.Status == TransferStatus.Rejected.ToString())
             {
                 var transferHistory = new TransferHistory
                 {
@@ -119,7 +151,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     FromHouseId = transferRequest.FromHouseId,
                     ToHouseId = transferRequest.ToHouseId,
                     TransferDate = DateTime.Now,
-                    Status = "Rejected",
+                    Status = TransferStatus.Rejected.ToString(),
                     HandledBy = dto.ModifiedBy,
                     CreatedDate = DateTime.Now,
                     IsDeleted = false,
@@ -128,19 +160,23 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
 
-                // Remove the transfer request
+                // Xóa TransferRequest khỏi hệ thống
                 await _transferRequestRepository.RemoveAsync(transferRequest);
-            }
-            else
-            {
-                transferRequest.Status = dto.Status;
-                transferRequest.DirectorNote = dto.DirectorNote;
-                transferRequest.ModifiedBy = dto.ModifiedBy;
-                transferRequest.ModifiedDate = DateTime.Now;
-                transferRequest.ApprovedBy = dto.ApprovedBy;
 
-                await _transferRequestRepository.UpdateAsync(transferRequest);
+                return transferRequest;
             }
+
+            // Nếu trạng thái không phải Approved hoặc Rejected, cho phép chỉnh sửa
+            transferRequest.FromHouseId = dto.FromHouseId;
+            transferRequest.ToHouseId = dto.ToHouseId;
+            transferRequest.RequestReason = dto.RequestReason;
+            transferRequest.Status = dto.Status;
+            transferRequest.DirectorNote = dto.DirectorNote;
+            transferRequest.ModifiedBy = dto.ModifiedBy;
+            transferRequest.ModifiedDate = DateTime.Now;
+            transferRequest.ApprovedBy = dto.ApprovedBy;
+
+            await _transferRequestRepository.UpdateAsync(transferRequest);
 
             return transferRequest;
         }
