@@ -57,6 +57,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var donation = _donationService.GetAllDonationArray();
             return Ok(donation);
         }
+        [HttpGet("FormatDonationIsDeleted")]
+        public IActionResult GetAllDonationsIsDeleteArray()
+        {
+            var donation = _donationService.GetAllDonationIsDeleteAsync();
+            return Ok(donation);
+        }
         [HttpGet("GetDonatedVillageByUserId")]
         public async Task<IActionResult> getDonatedVillageByUserId(string userId)
         {
@@ -110,14 +116,14 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(donation);
         }
 
-        [HttpPut("{Id}/{isDeleted}")]
+        [HttpPut("Restore/{Id}")]
         public async Task<IActionResult> RestoreDonation(int Id)
         {
             await _donationService.RestoreDonation(Id);
             return Ok();
         }
 
-        [HttpDelete("{Id}")]
+        [HttpPut("Delete/{Id}")]
         public async Task<IActionResult> DeleteDonation(int Id)
         {
             var donation = await _donationService.DeleteDonation(Id);
