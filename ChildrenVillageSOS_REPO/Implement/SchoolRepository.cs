@@ -84,6 +84,7 @@ namespace ChildrenVillageSOS_REPO.Implement
             // Truy xuất thông tin trường học
             var school = await _context.Schools
                 .Include(s => s.Children.Where(c => !c.IsDeleted && c.SchoolId == schoolId))
+                    .ThenInclude(c => c.AcademicReports.OrderByDescending(ar => ar.AcademicYear).ThenByDescending(ar => ar.Semester))
                 .FirstOrDefaultAsync(s => s.Id == schoolId);
 
             if (school == null)
@@ -91,17 +92,20 @@ namespace ChildrenVillageSOS_REPO.Implement
                 throw new Exception("School not found.");
             }
 
-            // Số lượng trẻ đang theo học
             var currentStudents = school.Children.Count;
 
             // Lấy danh sách trẻ đang theo học và chuyển đổi sang DTO
-            var childrenList = school.Children.Select(c => new ChildSummaryDTO
+            var childrenList = school.Children.Select(c =>
             {
-                Id = c.Id,
-                ChildName = c.ChildName ?? "Unknown",
-                HealthStatus = c.HealthStatus ?? "Unknown",
-                Gender = c.Gender ?? "Unknown",
-                Dob = c.Dob
+                var latestAcademicReport = c.AcademicReports.FirstOrDefault();
+                return new ChildSummaryDTO
+                {
+                    Id = c.Id,
+                    ChildName = c.ChildName ?? "Unknown",
+                    AcademicYear = latestAcademicReport?.AcademicYear ?? "Unknown",
+                    Semester = latestAcademicReport?.Semester ?? "Unknown",
+                    Class = latestAcademicReport?.Class ?? "Unknown"
+                };
             }).ToList();
 
             // Tạo DTO kết quả

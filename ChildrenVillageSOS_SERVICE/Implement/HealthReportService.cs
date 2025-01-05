@@ -224,7 +224,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Health report with ID {id} not found!");
             }
 
-            await _healthReportRepository.RemoveAsync(report);
+            if (report.IsDeleted)
+            {
+
+                await _healthReportRepository.RemoveAsync(report);
+            }
+            else
+            {
+
+                report.IsDeleted = true;
+                await _healthReportRepository.UpdateAsync(report);
+            }
+
             return report;
         }
 
@@ -233,11 +244,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var report = await _healthReportRepository.GetByIdAsync(id);
             if (report == null)
             {
-                throw new Exception($"Health report with ID {id} not found");
+                throw new Exception($"Health report with ID {id} not found!");
             }
 
             if (report.IsDeleted)
             {
+                // Khôi phục bằng cách đặt lại IsDeleted = false
                 report.IsDeleted = false;
                 await _healthReportRepository.UpdateAsync(report);
             }

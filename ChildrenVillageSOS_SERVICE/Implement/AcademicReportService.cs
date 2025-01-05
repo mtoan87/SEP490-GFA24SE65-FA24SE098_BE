@@ -217,7 +217,19 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Academic report with ID {id} not found!");
             }
-            await _academicReportRepository.RemoveAsync(report);
+
+            if (report.IsDeleted)
+            {
+                // Hard delete nếu báo cáo đã bị soft delete
+                await _academicReportRepository.RemoveAsync(report);
+            }
+            else
+            {
+                // Soft delete (đặt IsDeleted = true)
+                report.IsDeleted = true;
+                await _academicReportRepository.UpdateAsync(report);
+            }
+
             return report;
         }
 
@@ -226,11 +238,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var report = await _academicReportRepository.GetByIdAsync(id);
             if (report == null)
             {
-                throw new Exception($"Academic report with ID {id} not found");
+                throw new Exception($"Academic report with ID {id} not found!");
             }
 
             if (report.IsDeleted)
             {
+                // Khôi phục bằng cách đặt lại IsDeleted = false
                 report.IsDeleted = false;
                 await _academicReportRepository.UpdateAsync(report);
             }
