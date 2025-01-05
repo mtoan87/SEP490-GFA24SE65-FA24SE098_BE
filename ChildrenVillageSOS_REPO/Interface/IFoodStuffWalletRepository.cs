@@ -12,5 +12,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<FoodStuffWallet> GetWalletByUserIdAsync(string userAccountId);
         FoodWalletReponseDTO[] GetAllToArray();
+        Task<decimal> GetWalletBudgetByUserIdAsync(string userAccountId);
     }
 }

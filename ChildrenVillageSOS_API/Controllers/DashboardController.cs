@@ -1,10 +1,12 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
@@ -192,6 +194,30 @@ namespace ChildrenVillageSOS_API.Controllers
                 {
                     Success = false,
                     Message = "Error occur when getting data",
+                    Error = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("wallet-distribution")]
+        public async Task<ActionResult<WalletDistributionDTO>> GetWalletDistribution(string userAccountId)
+        {
+            try
+            {
+                var data = await _dashboardService.GetWalletDistributionAsync(userAccountId);
+                return Ok(new ApiResponse<WalletDistributionDTO>
+                {
+                    Success = true,
+                    Message = "Get wallet distribution data success",
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<WalletDistributionDTO>
+                {
+                    Success = false,
+                    Message = "Error occur when getting wallet distribution data",
                     Error = ex.Message
                 });
             }
