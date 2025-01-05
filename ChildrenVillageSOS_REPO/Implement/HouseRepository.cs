@@ -106,6 +106,10 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return house;
         }
+        public House? GetHouseByUserAccountId(string userAccountId)
+        {
+            return _context.Houses.FirstOrDefault(h => h.UserAccountId == userAccountId && !h.IsDeleted);
+        }
         //public async Task<HouseResponseDTO[]> GetAllHouseAsync()
         //{
         //    return await _context.Houses

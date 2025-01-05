@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IHouseService
     {
+        House? GetHouseByUserAccountId(string userAccountId);
         Task<IEnumerable<House>> GetAllHouses();
         Task<House> GetHouseById(string id);
         Task<House> CreateHouse(CreateHouseDTO createHouse);
