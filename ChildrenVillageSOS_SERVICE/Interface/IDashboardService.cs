@@ -24,5 +24,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<List<AcademicPerformanceDistributionDTO>> GetAcademicPerformanceDistribution();
         Task<ChildTrendResponseDTO> GetChildTrendsAsync();
         Task<IncomeExpenseChartDTO> GetIncomeExpenseComparisonAsync(int year);
+        Task<WalletDistributionDTO> GetWalletDistributionAsync(string userAccountId);
     }
 }

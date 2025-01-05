@@ -11,5 +11,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<SystemWallet> GetWalletByUserIdAsync(string userAccountId);
         SystemWallet[] GetSystemWalletsArray();
+        Task<decimal> GetWalletBudgetByUserIdAsync(string userAccountId);
     }
 }

@@ -25,6 +25,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IAcademicReportRepository _academicReportRepository;
         private readonly IIncomeRepository _incomeRepository;
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IFoodStuffWalletRepository _foodStuffWalletRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IFacilitiesWalletRepository _facilitiesWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly ISystemWalletRepository _systemWalletRepository;
 
         public DashboardService(
             IChildRepository childRepository,
@@ -34,7 +39,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IPaymentRepository paymentRepository,
             IAcademicReportRepository academicReportRepository,
             IIncomeRepository incomeRepository,
-            IExpenseRepository expenseRepository)
+            IExpenseRepository expenseRepository,
+            IFoodStuffWalletRepository foodStuffWalletRepository,
+            IHealthWalletRepository healthWalletRepository,
+            IFacilitiesWalletRepository facilitiesWalletRepository,
+            INecessitiesWalletRepository necessitiesWalletRepository,
+            ISystemWalletRepository systemWalletRepository)
         {
             _childRepository = childRepository;
             _userAccountRepository = userAccountRepository;
@@ -44,6 +54,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _academicReportRepository = academicReportRepository;
             _incomeRepository = incomeRepository;
             _expenseRepository = expenseRepository;
+            _foodStuffWalletRepository = foodStuffWalletRepository;
+            _healthWalletRepository = healthWalletRepository;
+            _facilitiesWalletRepository = facilitiesWalletRepository;
+            _necessitiesWalletRepository = necessitiesWalletRepository;
+            _systemWalletRepository = systemWalletRepository;
         }
 
         //TopStatCards
@@ -225,6 +240,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return result;
+        }
+
+        public async Task<WalletDistributionDTO> GetWalletDistributionAsync(string userAccountId)
+        {
+            var foodStuffBudget = await _foodStuffWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
+            var healthBudget = await _healthWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
+            var facilitiesBudget = await _facilitiesWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
+            var necessitiesBudget = await _necessitiesWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
+            var systemBudget = await _systemWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
+
+            var totalBudget = foodStuffBudget + healthBudget + facilitiesBudget +
+                             necessitiesBudget + systemBudget;
+
+            return new WalletDistributionDTO
+            {
+                FoodStuffPercentage = totalBudget == 0 ? 0 : Math.Round((foodStuffBudget / totalBudget) * 100, 2),
+                HealthPercentage = totalBudget == 0 ? 0 : Math.Round((healthBudget / totalBudget) * 100, 2),
+                FacilitiesPercentage = totalBudget == 0 ? 0 : Math.Round((facilitiesBudget / totalBudget) * 100, 2),
+                NecessitiesPercentage = totalBudget == 0 ? 0 : Math.Round((necessitiesBudget / totalBudget) * 100, 2),
+                SystemPercentage = totalBudget == 0 ? 0 : Math.Round((systemBudget / totalBudget) * 100, 2)
+            };
         }
     }
 }

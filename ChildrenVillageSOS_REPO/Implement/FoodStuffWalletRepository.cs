@@ -34,5 +34,13 @@ namespace ChildrenVillageSOS_REPO.Implement
                 }).ToArray();
             return foodstuff;
         }
+
+        public async Task<decimal> GetWalletBudgetByUserIdAsync(string userAccountId)
+        {
+            return await _context.FoodStuffWallets
+                .Where(w => w.UserAccountId == userAccountId)
+                .Select(w => w.Budget)
+                .FirstOrDefaultAsync();
+        }
     }
 }

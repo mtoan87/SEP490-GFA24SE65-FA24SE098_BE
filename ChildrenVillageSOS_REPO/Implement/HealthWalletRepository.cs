@@ -25,5 +25,13 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             return _context.HealthWallets.ToArray();
         }
+
+        public async Task<decimal> GetWalletBudgetByUserIdAsync(string userAccountId)
+        {
+            return await _context.FoodStuffWallets
+                .Where(w => w.UserAccountId == userAccountId)
+                .Select(w => w.Budget)
+                .FirstOrDefaultAsync();
+        }
     }
 }
