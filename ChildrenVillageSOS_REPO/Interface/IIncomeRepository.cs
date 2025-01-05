@@ -19,5 +19,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Income[] GetIncomeByHealthWalletId(int id);
         Income[] GetIncomeByNecessilitiesWalletId(int id);
         Income[] GetIncomeBySystemWalletId(int id);
+        Task<IEnumerable<Income>> GetIncomesByYear(int year);
     }
 }

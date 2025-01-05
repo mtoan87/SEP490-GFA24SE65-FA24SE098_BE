@@ -1,7 +1,9 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChildrenVillageSOS_API.Controllers
@@ -169,6 +171,30 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var result = await _dashboardService.GetChildTrendsAsync();
             return Ok(result);
+        }
+
+        [HttpGet("income-expense/{year}")]
+        public async Task<ActionResult<IncomeExpenseChartDTO>> GetIncomeExpenseComparison(int year)
+        {
+            try
+            {
+                var data = await _dashboardService.GetIncomeExpenseComparisonAsync(year);
+                return Ok(new ApiResponse<IncomeExpenseChartDTO>
+                {
+                    Success = true,
+                    Message = "Get data success",
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<IncomeExpenseChartDTO>
+                {
+                    Success = false,
+                    Message = "Error occur when getting data",
+                    Error = ex.Message
+                });
+            }
         }
     }
 }
