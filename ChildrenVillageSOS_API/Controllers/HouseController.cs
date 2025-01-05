@@ -35,7 +35,7 @@ namespace ChildrenVillageSOS_API.Controllers
             var houses = await _houseService.GetAllHouses();
             return Ok(houses);
         }
-        [HttpGet("getHouseByAccountId")]
+        [HttpGet("GetHouseByAccountId")]
         public  IActionResult getHouseByAccountId(string userAccountId)
         {
             var houses =  _houseService.GetHouseByUserAccountId(userAccountId);

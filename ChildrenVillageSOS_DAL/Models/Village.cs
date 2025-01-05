@@ -11,6 +11,8 @@ public partial class Village
 
     public DateTime? EstablishedDate { get; set; }
 
+    public decimal? ExpenseAmount { get; set; }
+
     public double? Area { get; set; }
 
     public int? TotalHouses { get; set; }

@@ -11,6 +11,8 @@ public partial class House
 
     public int? HouseNumber { get; set; }
 
+    public decimal? ExpenseAmount { get; set; }
+
     public string? Location { get; set; }
 
     public string? Description { get; set; }
