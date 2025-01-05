@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         FormatDonationResponseDTO[] GetDonationArray();
         Task<List<Donation>> GetDonationsByUserAndEventAsync(string userId, int eventId);
         Task<List<Donation>> GetDonationsByUserAndChildAsync(string userId, string childId);
+        Task<DonationTrendsDTO> GetDonationTrendsByYear(int year);
     }
 }

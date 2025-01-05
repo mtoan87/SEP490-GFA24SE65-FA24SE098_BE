@@ -69,5 +69,19 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return result;
         }
+
+        public async Task<IEnumerable<Booking>> GetBookingsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            // Chuyển đổi DateTime thành DateOnly để so sánh
+            var start = DateOnly.FromDateTime(startDate);
+            var end = DateOnly.FromDateTime(endDate);
+
+            return await _context.Bookings
+                .Where(b => b.IsDeleted != true &&
+                            b.Visitday.HasValue && // Chỉ kiểm tra nếu Visitday có giá trị
+                            b.Visitday.Value >= start &&
+                            b.Visitday.Value <= end)
+                .ToListAsync();
+        }
     }
 }

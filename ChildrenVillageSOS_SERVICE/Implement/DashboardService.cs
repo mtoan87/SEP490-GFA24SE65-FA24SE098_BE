@@ -9,6 +9,7 @@ using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IFacilitiesWalletRepository _facilitiesWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
         private readonly ISystemWalletRepository _systemWalletRepository;
+        private readonly IBookingRepository _bookingRepository;
+        private readonly IDonationRepository _donationRepository;
 
         public DashboardService(
             IChildRepository childRepository,
@@ -44,7 +47,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IHealthWalletRepository healthWalletRepository,
             IFacilitiesWalletRepository facilitiesWalletRepository,
             INecessitiesWalletRepository necessitiesWalletRepository,
-            ISystemWalletRepository systemWalletRepository)
+            ISystemWalletRepository systemWalletRepository,
+            IBookingRepository bookingRepository,
+            IDonationRepository donationRepository)
         {
             _childRepository = childRepository;
             _userAccountRepository = userAccountRepository;
@@ -59,6 +64,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _facilitiesWalletRepository = facilitiesWalletRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _systemWalletRepository = systemWalletRepository;
+            _bookingRepository = bookingRepository;
+            _donationRepository = donationRepository;
         }
 
         //TopStatCards
@@ -242,6 +249,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return result;
         }
 
+        // Wallet Distribution
         public async Task<WalletDistributionDTO> GetWalletDistributionAsync(string userAccountId)
         {
             var foodStuffBudget = await _foodStuffWalletRepository.GetWalletBudgetByUserIdAsync(userAccountId);
@@ -261,6 +269,82 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesPercentage = totalBudget == 0 ? 0 : Math.Round((necessitiesBudget / totalBudget) * 100, 2),
                 SystemPercentage = totalBudget == 0 ? 0 : Math.Round((systemBudget / totalBudget) * 100, 2)
             };
+        }
+
+        // Donation Trends
+        public async Task<DonationTrendsDTO> GetDonationTrendsByYear(int year)
+        {
+            return await _donationRepository.GetDonationTrendsByYear(year);
+        }
+
+        // Booking Trends
+        public async Task<BookingTrendsDTO> GetBookingTrendsAsync(string timeFrame)
+        {
+            var result = new BookingTrendsDTO { TimeFrame = timeFrame };
+            DateTime startDate, endDate;
+
+            switch (timeFrame.ToLower())
+            {
+                case "week":
+                    // Get last 7 days data
+                    endDate = DateTime.Today;
+                    startDate = endDate.AddDays(-6);
+
+                    var weeklyBookings = await _bookingRepository.GetBookingsByDateRange(startDate, endDate);
+
+                    for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                    {
+                        result.Labels.Add(date.ToString("dd/MM"));
+                        result.BookingCounts.Add(weeklyBookings.Count(b =>
+                            b.Visitday == DateOnly.FromDateTime(date)));
+                    }
+                    break;
+
+                case "month":
+                    // Get current month data by weeks
+                    var currentDate = DateTime.Today;
+                    startDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+                    endDate = startDate.AddMonths(1).AddDays(-1);
+
+                    var monthlyBookings = await _bookingRepository.GetBookingsByDateRange(startDate, endDate);
+
+                    // Group by week
+                    var weeks = monthlyBookings
+                        .GroupBy(b => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
+                            b.Visitday.Value.ToDateTime(TimeOnly.MinValue),
+                            CalendarWeekRule.FirstDay,
+                            DayOfWeek.Monday))
+                        .OrderBy(g => g.Key)
+                        .ToList();
+
+                    foreach (var week in weeks)
+                    {
+                        result.Labels.Add($"Week {week.Key}");
+                        result.BookingCounts.Add(week.Count());
+                    }
+                    break;
+
+                case "year":
+                    // Get current year data by months
+                    var currentYear = DateTime.Today.Year;
+                    startDate = new DateTime(currentYear, 1, 1);
+                    endDate = new DateTime(currentYear, 12, 31);
+
+                    var yearlyBookings = await _bookingRepository.GetBookingsByDateRange(startDate, endDate);
+
+                    for (int month = 1; month <= 12; month++)
+                    {
+                        result.Labels.Add($"Month {month}");
+                        result.BookingCounts.Add(yearlyBookings.Count(b =>
+                            b.Visitday.Value.Month == month));
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid timeframe. Use 'week', 'month', or 'year'.");
+            }
+
+            return result;
         }
     }
 }
