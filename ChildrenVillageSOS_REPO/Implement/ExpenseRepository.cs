@@ -119,5 +119,11 @@ namespace ChildrenVillageSOS_REPO.Implement
             return dt;
         }
 
+        public async Task<IEnumerable<Expense>> GetExpensesByYear(int year)
+        {
+            return await _context.Expenses
+                .Where(x => !x.IsDeleted && x.Expenseday.Value.Year == year)
+                .ToListAsync();
+        }
     }
 }

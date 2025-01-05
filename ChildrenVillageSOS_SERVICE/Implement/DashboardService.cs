@@ -23,9 +23,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IVillageRepository _villageRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IAcademicReportRepository _academicReportRepository;
+        private readonly IIncomeRepository _incomeRepository;
+        private readonly IExpenseRepository _expenseRepository;
 
-        public DashboardService(IChildRepository childRepository, IUserAccountRepository userAccountRepository, IEventRepository eventRepository, 
-            IVillageRepository villageRepository, IPaymentRepository paymentRepository, IAcademicReportRepository academicReportRepository)
+        public DashboardService(
+            IChildRepository childRepository,
+            IUserAccountRepository userAccountRepository,
+            IEventRepository eventRepository,          
+            IVillageRepository villageRepository,
+            IPaymentRepository paymentRepository,
+            IAcademicReportRepository academicReportRepository,
+            IIncomeRepository incomeRepository,
+            IExpenseRepository expenseRepository)
         {
             _childRepository = childRepository;
             _userAccountRepository = userAccountRepository;
@@ -33,6 +42,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _villageRepository = villageRepository;
             _paymentRepository = paymentRepository;
             _academicReportRepository = academicReportRepository;
+            _incomeRepository = incomeRepository;
+            _expenseRepository = expenseRepository;
         }
 
         //TopStatCards
@@ -55,7 +66,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         //Charts
 
-        //Phan bo lang va nha
+        //Village & House Distribution
         public async Task<IEnumerable<VillageHouseDistributionDTO>> GetVillageHouseDistribution()
         {
             var villages = await _villageRepository.GetVillagesWithHouses();
@@ -68,7 +79,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             .OrderByDescending(v => v.HouseCount); // Sắp xếp theo số lượng nhà giảm dần
         }
 
-
+        //Children Demographic
         public async Task<List<ChildrenDemographicsDTO>> GetChildrenDemographics()
         {
             var children = await _childRepository.GetChildrenForDemographics();
@@ -103,7 +114,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         //    return await _paymentRepository.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
         //}
 
-        // Academic Performance Distribution Dashboard
+        // Academic Performance Distribution
         public async Task<List<AcademicPerformanceDistributionDTO>> GetAcademicPerformanceDistribution()
         {
             var reports = await _academicReportRepository.GetAcademicPerformanceDistribution();
@@ -162,6 +173,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
         }
 
+        // Child Trends
         public async Task<ChildTrendResponseDTO> GetChildTrendsAsync()
         {
             var data2022 = await _childRepository.GetChildTrendsByYearAsync(2022);
@@ -174,6 +186,45 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Data2023 = data2023,
                 Data2024 = data2024
             };
+        }
+
+        public async Task<IncomeExpenseChartDTO> GetIncomeExpenseComparisonAsync(int year)
+        {
+            var result = new IncomeExpenseChartDTO();
+
+            // Lấy dữ liệu Income theo tháng
+            var incomes = await _incomeRepository.GetIncomesByYear(year);
+            var monthlyIncomes = incomes
+                .GroupBy(x => x.Receiveday.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    Total = g.Sum(x => x.Amount ?? 0)
+                })
+                .OrderBy(x => x.Month)
+                .ToList();
+
+            // Lấy dữ liệu Expense theo tháng
+            var expenses = await _expenseRepository.GetExpensesByYear(year);
+            var monthlyExpenses = expenses
+                .GroupBy(x => x.Expenseday.Value.Month)
+                .Select(g => new
+                {
+                    Month = g.Key,
+                    Total = g.Sum(x => x.ExpenseAmount)
+                })
+                .OrderBy(x => x.Month)
+                .ToList();
+
+            // Tạo dữ liệu cho 12 tháng
+            for (int month = 1; month <= 12; month++)
+            {
+                result.Labels.Add($"Month {month}");
+                result.IncomeData.Add(monthlyIncomes.FirstOrDefault(x => x.Month == month)?.Total ?? 0);
+                result.ExpenseData.Add(monthlyExpenses.FirstOrDefault(x => x.Month == month)?.Total ?? 0);
+            }
+
+            return result;
         }
     }
 }

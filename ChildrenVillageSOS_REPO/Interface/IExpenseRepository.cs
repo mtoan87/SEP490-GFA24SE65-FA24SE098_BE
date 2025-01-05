@@ -18,5 +18,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Expense[] GetExpenseByNecessilitiesWalletId(int id);
         Expense[] GetExpenseBySystemWalletId(int id);
         DataTable getExpense();
+        Task<IEnumerable<Expense>> GetExpensesByYear(int year);
     }
 }

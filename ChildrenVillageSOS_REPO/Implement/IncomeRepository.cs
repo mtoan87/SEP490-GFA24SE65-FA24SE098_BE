@@ -122,5 +122,11 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(i => i.SystemWalletId == id && !i.IsDeleted)
                 .ToArray();
         }
+        public async Task<IEnumerable<Income>> GetIncomesByYear(int year)
+        {
+            return await _context.Incomes
+                .Where(x => !x.IsDeleted && x.Receiveday.Year == year)
+                .ToListAsync();
+        }
     }
 }
