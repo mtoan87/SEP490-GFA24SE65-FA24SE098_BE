@@ -25,5 +25,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<ChildTrendResponseDTO> GetChildTrendsAsync();
         Task<IncomeExpenseChartDTO> GetIncomeExpenseComparisonAsync(int year);
         Task<WalletDistributionDTO> GetWalletDistributionAsync(string userAccountId);
+        Task<BookingTrendsDTO> GetBookingTrendsAsync(string timeFrame);
+        Task<DonationTrendsDTO> GetDonationTrendsByYear(int year);
     }
 }

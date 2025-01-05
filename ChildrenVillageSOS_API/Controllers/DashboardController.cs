@@ -222,5 +222,36 @@ namespace ChildrenVillageSOS_API.Controllers
                 });
             }
         }
+
+        [HttpGet("booking-trends/{timeFrame}")]
+        public async Task<ActionResult<BookingTrendsDTO>> GetBookingTrends(string timeFrame)
+        {
+            try
+            {
+                var data = await _dashboardService.GetBookingTrendsAsync(timeFrame);
+                return Ok(new ApiResponse<BookingTrendsDTO>
+                {
+                    Success = true,
+                    Message = "Get data success",
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<BookingTrendsDTO>
+                {
+                    Success = false,
+                    Message = "Error occur when getting wallet distribution data",
+                    Error = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("donation-trends/{year}")]
+        public async Task<IActionResult> GetDonationTrends(int year)
+        {
+            var trends = await _dashboardService.GetDonationTrendsByYear(year);
+            return Ok(trends);
+        }
     }
 }

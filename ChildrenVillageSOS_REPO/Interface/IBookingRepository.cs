@@ -14,5 +14,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId);
 
         Task<BookingResponse[]> GetAllBookingsAsync();
+        Task<IEnumerable<Booking>> GetBookingsByDateRange(DateTime startDate, DateTime endDate);
     }
 }

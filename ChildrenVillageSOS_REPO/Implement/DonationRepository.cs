@@ -1,4 +1,6 @@
-﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Helper;
+using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -123,6 +125,61 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Select(d => d.Event.Village)
                 .Distinct()
                 .ToListAsync();
+        }
+
+        public async Task<DonationTrendsDTO> GetDonationTrendsByYear(int year)
+        {
+            var monthlyTrends = await _context.Donations
+                .Where(d => d.DateTime.Year == year && !d.IsDeleted)
+                .GroupBy(d => new {
+                    Month = d.DateTime.Month,
+                    DonationType = d.DonationType
+                })
+                .Select(g => new {
+                    Month = g.Key.Month,
+                    DonationType = g.Key.DonationType,
+                    Amount = g.Sum(d => d.Amount)
+                })
+                .ToListAsync();
+
+            // Khởi tạo chi tiết cho 12 tháng
+            var monthlyDetails = Enumerable.Range(1, 12)
+                .Select(month => new MonthlyDonationDetail
+                {
+                    Month = month,
+                    EventAmount = 0,
+                    ChildAmount = 0,
+                    WalletAmount = 0,
+                    TotalAmount = 0
+                })
+                .ToList();
+
+            // Điền dữ liệu từ query
+            foreach (var trend in monthlyTrends)
+            {
+                var monthDetail = monthlyDetails.First(m => m.Month == trend.Month);
+
+                switch (trend.DonationType)
+                {
+                    case "Event":
+                        monthDetail.EventAmount = trend.Amount;
+                        break;
+                    case "Child":
+                        monthDetail.ChildAmount = trend.Amount;
+                        break;
+                    case "Wallet":
+                        monthDetail.WalletAmount = trend.Amount;
+                        break;
+                }
+
+                monthDetail.TotalAmount += trend.Amount;
+            }
+
+            return new DonationTrendsDTO
+            {
+                Year = year,
+                MonthlyDetails = monthlyDetails
+            };
         }
     }
 }
