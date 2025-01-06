@@ -17,6 +17,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync();
         Task<TotalEventsStatDTO> GetTotalEventsStatAsync();
         //KPI
+        decimal GetCostPerChild();
         decimal GetBudgetUtilizationPercentage();
         object GetMonthlyEfficiency();
         //Charts

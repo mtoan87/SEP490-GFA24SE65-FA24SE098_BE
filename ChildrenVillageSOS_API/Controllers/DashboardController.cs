@@ -102,6 +102,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var stat = _dashboardService.GetBudgetUtilizationPercentage();
             return Ok(stat);
         }
+        [HttpGet("cost-per-child")]
+        public IActionResult GetCostPerChild()
+        {
+            var stat = _dashboardService.GetCostPerChild();
+            return Ok(stat);
+        }
         // Dashboard Top statistic card
         [HttpGet("active-children")]
         public async Task<IActionResult> GetActiveChildrenStat()

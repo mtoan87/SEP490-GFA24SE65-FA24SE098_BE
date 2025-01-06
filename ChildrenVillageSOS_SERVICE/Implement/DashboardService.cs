@@ -347,6 +347,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return result;
         }
+        public decimal GetCostPerChild()
+        {
+            return _expenseRepository.GetCostPerChild();
+        }
         public decimal GetBudgetUtilizationPercentage()
         {
             return _expenseRepository.GetBudgetUtilizationPercentage();

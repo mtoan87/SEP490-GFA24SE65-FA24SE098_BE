@@ -115,7 +115,16 @@ namespace ChildrenVillageSOS_REPO.Implement
             return utilizationPercentage;
         }
 
+        public decimal GetCostPerChild()
+        {
+            // Lọc bản ghi Expense có ExpenseType là "Regular" và ChildId không null, lấy bản ghi đầu tiên
+            var regularExpense = _context.Expenses
+                .Where(exp => exp.ExpenseType == "Regular" && exp.ChildId != null)
+                .FirstOrDefault();
 
+            // Nếu tìm thấy bản ghi, trả về ExpenseAmount, nếu không, trả về 0
+            return regularExpense?.ExpenseAmount ?? 0;
+        }
 
         public DataTable getExpense()
         {

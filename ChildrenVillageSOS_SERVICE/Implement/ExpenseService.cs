@@ -72,6 +72,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _expenseRepository.GetByIdAsync(id);
         }
+
         public async Task<Expense> UpdateExpense(int id, UpdateExpenseDTO updateExpense)
         {
             var updExpense = await _expenseRepository.GetByIdAsync(id);

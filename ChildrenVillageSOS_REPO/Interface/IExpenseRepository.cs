@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IExpenseRepository : IRepositoryGeneric<Expense>
     {
+        decimal GetCostPerChild();
         decimal GetBudgetUtilizationPercentage();
         decimal GetMonthlyExpense(int year, int month);
         ExpenseResponseDTO[] GetAllExpenses();
