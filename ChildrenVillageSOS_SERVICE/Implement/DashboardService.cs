@@ -297,7 +297,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         result.Labels.Add(date.ToString("dd/MM"));
                         result.BookingCounts.Add(weeklyBookings.Count(b =>
-                            b.Visitday == DateOnly.FromDateTime(date)));
+                            b.Visitday == DateOnly.FromDateTime(date) && b.Status == "Confirmed"));
                     }
                     break;
 
@@ -311,6 +311,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Group by week
                     var weeks = monthlyBookings
+                        .Where(b => b.Status == "Confirmed")
                         .GroupBy(b => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
                             b.Visitday.Value.ToDateTime(TimeOnly.MinValue),
                             CalendarWeekRule.FirstDay,
@@ -337,7 +338,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         result.Labels.Add($"Month {month}");
                         result.BookingCounts.Add(yearlyBookings.Count(b =>
-                            b.Visitday.Value.Month == month));
+                            b.Visitday.Value.Month == month && b.Status == "Confirmed"));
                     }
                     break;
 
