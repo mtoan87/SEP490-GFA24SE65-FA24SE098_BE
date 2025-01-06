@@ -38,6 +38,13 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(results);
         }
 
+        [HttpGet("GetTransferRequestsWithDetails")]
+        public async Task<ActionResult<IEnumerable<TransferRequest>>> GetAllTransferRequestsWithDetails()
+        {
+            var results = await _transferRequestService.GetAllTransferRequestsWithDetails();
+            return Ok(results);
+        }
+
         [HttpPost("CreateTransferRequest")]
         public async Task<ActionResult<TransferRequest>> CreateTransferRequest([FromForm] CreateTransferRequestDTO dto)
         {
