@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_API.Model;
 using ChildrenVillageSOS_DAL.DTO;
+using ChildrenVillageSOS_DAL.DTO.AuthDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
@@ -59,6 +60,13 @@ namespace ChildrenVillageSOS_API.Controllers
                 RoleId = (int)roleId,
                 UserId = account.Id
             });
+        }
+
+        [HttpPost("Login Google")]
+        public async Task<IActionResult> LoginGoogleAsync(LoginGoogleDTO loginGoogleDto)
+        {
+            var result = await _customerService.LoginWithGoogle(loginGoogleDto.GoogleToken);
+            return Ok(result);
         }
 
         private string GenerateJSONWebToken(UserAccount userInfo)

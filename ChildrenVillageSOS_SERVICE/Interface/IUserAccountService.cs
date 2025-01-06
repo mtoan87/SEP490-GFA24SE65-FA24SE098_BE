@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.UserDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.AuthDTO;
+using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<UserAccount> Login(string email, string password);
         Task<UserResponseDTO[]> GetAllUserIsDeletedAsync();
         Task<UserResponseDTO> GetUserByIdArray(string userid);
+        Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken);
     }
 }

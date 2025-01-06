@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.AuthDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -6,6 +7,8 @@ using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using Google.Apis.Oauth2.v2.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -232,6 +235,55 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<UserResponseDTO[]> GetAllUserIsDeletedAsync()
         {
             return _userAccountRepository.GetAllUserIsDeletedAsync();
+        }
+
+        public async Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken)
+        {
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync("https://oauth2.googleapis.com/tokeninfo?id_token=" + googleToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var userInfoJson = JObject.Parse(json);
+                var userInfo = new Userinfo
+                {
+                    Id = userInfoJson["sub"]?.ToString(),
+                    Email = userInfoJson["email"]?.ToString(),
+                };
+
+                var existAccount = await _userAccountRepository.GetAsync(x => x.UserEmail == userInfo.Email);
+                if (existAccount is not null)
+                {
+                    return new GetAuthTokenDTO()
+                    {
+                        AccessToken = googleToken
+                    };
+                }
+
+                var allUserId = await _userAccountRepository.Entities().Select(u => u.Id).ToListAsync();
+                string newUserId = IdGenerator.GenerateId(allUserId, "UA");
+                var newAccount = new UserAccount
+                {
+                    Id = newUserId,
+                    UserEmail = userInfo.Email!,
+                    RoleId = 2,
+                    Status = "Active",
+                    CreatedDate = DateTime.Now,
+                };
+                await _userAccountRepository.AddAsync(newAccount);
+                await _userAccountRepository.SaveChangesAsync();
+
+                return new GetAuthTokenDTO()
+                {
+                    AccessToken = googleToken
+                };
+            }
+
+            return new GetAuthTokenDTO()
+            {
+                AccessToken = null
+            };
         }
     }
 }
