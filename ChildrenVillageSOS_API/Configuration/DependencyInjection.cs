@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.Helpers;
+using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Implement;
@@ -39,6 +40,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IChildProgressRepository, ChildProgressRepository>();
             services.AddScoped<ITransferRequestRepository, TransferRequestRepository>();
             services.AddScoped<ITransferHistoryRepository, TransferHistoryRepository>();
+            services.AddSingleton<AppConfiguration>();
             return services;
         }
 

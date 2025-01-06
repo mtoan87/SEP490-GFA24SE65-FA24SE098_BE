@@ -26,5 +26,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<bool> RestoreAsync(T entity);
         Task<T> FindAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
+        Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
     }
 }
