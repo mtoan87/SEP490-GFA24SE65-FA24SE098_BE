@@ -19,7 +19,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ActivityDTO
 
         public string? Address { get; set; }
 
-        public string? LocationId { get; set; }
+        public string? VillageId { get; set; }
 
         public string? ActivityType { get; set; }
 

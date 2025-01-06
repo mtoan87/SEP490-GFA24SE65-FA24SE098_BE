@@ -102,7 +102,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         public async Task<List<Image>> GetBySchoolIdAsync(string schoolId)
         {
             return await _dbContext.Images
-                .Where(img => img.HouseId == schoolId && img.IsDeleted == false)
+                .Where(img => img.SchoolId == schoolId && img.IsDeleted == false)
                 .ToListAsync();
         }
 
