@@ -131,14 +131,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingSchool.ModifiedBy = updateSchool.ModifiedBy;
             existingSchool.ModifiedDate = DateTime.Now;
 
+            // Lấy danh sách ảnh hiện tại
             var existingImages = await _imageRepository.GetBySchoolIdAsync(existingSchool.Id);
 
             // Xóa các ảnh được yêu cầu xóa
             if (updateSchool.ImgToDelete != null && updateSchool.ImgToDelete.Any())
             {
-                foreach (var imageUrlToDelete in updateSchool.ImgToDelete)
+                foreach (var imageIdToDelete in updateSchool.ImgToDelete)
                 {
-                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageUrlToDelete);
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageIdToDelete);
                     if (imageToDelete != null)
                     {
                         imageToDelete.IsDeleted = true;
@@ -167,7 +168,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         UrlPath = newImageUrl,
                         SchoolId = existingSchool.Id,
-                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now,
                         IsDeleted = false,
                     };
                     await _imageRepository.AddAsync(newImage);

@@ -195,7 +195,17 @@ namespace ChildrenVillageSOS_REPO.Implement
         // Dashboard phần Child Trends
         public async Task<List<ChildTrendDTO>> GetChildTrendsByYearAsync(int year)
         {
-            return await _context.Children
+            // Danh sách mặc định 12 tháng với Count = 0
+            var allMonths = Enumerable.Range(1, 12)
+                .Select(month => new ChildTrendDTO
+                {
+                    Month = month.ToString(),
+                    Year = year,
+                    Count = 0
+                })
+                .ToList();
+
+            var actualData = await _context.Children
                 .Where(c => c.CreatedDate.HasValue && c.CreatedDate.Value.Year == year)
                 .GroupBy(c => c.CreatedDate.Value.Month)
                 .Select(g => new ChildTrendDTO
@@ -204,8 +214,19 @@ namespace ChildrenVillageSOS_REPO.Implement
                     Year = year,
                     Count = g.Count()
                 })
-                .OrderBy(x => x.Month)
                 .ToListAsync();
+
+            // Kết hợp dữ liệu thực tế với danh sách mặc định
+            foreach (var data in actualData)
+            {
+                var monthData = allMonths.FirstOrDefault(m => m.Month == data.Month);
+                if (monthData != null)
+                {
+                    monthData.Count = data.Count;
+                }
+            }
+
+            return allMonths.OrderBy(x => int.Parse(x.Month)).ToList();
         }
 
         public async Task<ChildDetailsDTO> GetChildDetails(string childId)

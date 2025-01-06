@@ -199,15 +199,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         // Child Trends
         public async Task<ChildTrendResponseDTO> GetChildTrendsAsync()
         {
-            var data2022 = await _childRepository.GetChildTrendsByYearAsync(2022);
             var data2023 = await _childRepository.GetChildTrendsByYearAsync(2023);
             var data2024 = await _childRepository.GetChildTrendsByYearAsync(2024);
+            var data2025 = await _childRepository.GetChildTrendsByYearAsync(2025);
 
             return new ChildTrendResponseDTO
             {
-                Data2022 = data2022,
                 Data2023 = data2023,
-                Data2024 = data2024
+                Data2024 = data2024,
+                Data2025 = data2025
             };
         }
 

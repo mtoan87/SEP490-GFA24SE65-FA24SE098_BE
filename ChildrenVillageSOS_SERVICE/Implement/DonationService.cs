@@ -277,5 +277,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return totalDonations;
         }
+        public FormatDonationResponseDTO[] GetAllDonationIsDeleteAsync()
+        {
+            return _donationRepository.GetDonationIsDeleteArray();
+        }
     }
 }
