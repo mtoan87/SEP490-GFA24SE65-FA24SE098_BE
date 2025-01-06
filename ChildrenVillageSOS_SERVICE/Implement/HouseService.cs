@@ -73,7 +73,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     MaintenanceStatus = house.MaintenanceStatus,
                     CreatedBy = house.CreatedBy,
                     ModifiedBy = house.ModifiedBy,
-                    RoleName = house.RoleName,
+                   
                     IsDeleted = false,
                     CreatedDate = house.CreatedDate,
                     ModifiedDate = house.ModifiedDate,
@@ -124,7 +124,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = "Active", // Nếu không được cung cấp, mặc định là "Active"
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
-                RoleName = createHouse.RoleName,
+              
                 FoundationDate = createHouse.FoundationDate,
                 LastInspectionDate = createHouse.LastInspectionDate,
                 MaintenanceStatus = createHouse.MaintenanceStatus,
@@ -182,7 +182,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;
-            existingHouse.RoleName = updateHouse.RoleName;
+           
             existingHouse.FoundationDate = updateHouse.FoundationDate;
             existingHouse.LastInspectionDate = updateHouse.LastInspectionDate;
             existingHouse.MaintenanceStatus = updateHouse.MaintenanceStatus;

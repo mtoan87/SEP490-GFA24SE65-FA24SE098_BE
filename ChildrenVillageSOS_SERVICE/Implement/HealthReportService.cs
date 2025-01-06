@@ -59,7 +59,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FollowUpDate = hr.FollowUpDate,
                 Illnesses = hr.Illnesses,
                 Allergies = hr.Allergies,
-                HealthCertificate = hr.HealthCertificate,
+                
                 Status = hr.Status,
                 IsDeleted = hr.IsDeleted,
                 CreatedBy = hr.CreatedBy,
@@ -114,7 +114,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FollowUpDate = createReport.FollowUpDate,
                 Illnesses = createReport.Illnesses,
                 Allergies = createReport.Allergies,
-                HealthCertificate = createReport.HealthCertificate,
+                
                 Status = createReport.Status,
                 CreatedBy = createReport.CreatedBy,
                 CreatedDate = DateTime.Now,
@@ -163,7 +163,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingReport.FollowUpDate = updateReport.FollowUpDate;
             existingReport.Illnesses = updateReport.Illnesses;
             existingReport.Allergies = updateReport.Allergies;
-            existingReport.HealthCertificate = updateReport.HealthCertificate;
+           
             existingReport.Status = updateReport.Status;
             existingReport.ModifiedBy = updateReport.ModifiedBy;
             existingReport.ModifiedDate = DateTime.Now;

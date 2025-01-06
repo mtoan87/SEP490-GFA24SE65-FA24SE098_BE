@@ -45,7 +45,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     FollowUpDate = hr.FollowUpDate,
                     Illnesses = hr.Illnesses,
                     Allergies = hr.Allergies,
-                    HealthCertificate = hr.HealthCertificate,
+                  
                     Status = hr.Status,
                     IsDeleted = hr.IsDeleted,
                     CreatedBy = hr.CreatedBy,
@@ -80,7 +80,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     FollowUpDate = hr.FollowUpDate,
                     Illnesses = hr.Illnesses,
                     Allergies = hr.Allergies,
-                    HealthCertificate = hr.HealthCertificate,
+                  
                     Status = hr.Status,
                     IsDeleted = hr.IsDeleted,
                     CreatedBy = hr.CreatedBy,

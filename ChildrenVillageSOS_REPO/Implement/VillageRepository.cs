@@ -44,7 +44,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     UserAccountId = v.UserAccountId,
                     CreatedBy = v.CreatedBy,
                     ModifiedBy = v.ModifiedBy,
-                    RoleName = v.RoleName,
+                    
                     IsDeleted = v.IsDeleted,
                     CreatedDate = v.CreatedDate,
                     ModifiedDate = v.ModifiedDate,
@@ -76,7 +76,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     UserAccountId = v.UserAccountId,
                     CreatedBy = v.CreatedBy,
                     ModifiedBy = v.ModifiedBy,
-                    RoleName = v.RoleName,
+                    
                     IsDeleted = v.IsDeleted,
                     CreatedDate = v.CreatedDate,
                     ModifiedDate = v.ModifiedDate,
@@ -145,7 +145,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     UserAccountId = village.UserAccountId,
                     CreatedBy = village.CreatedBy,
                     ModifiedBy = village.ModifiedBy,
-                    RoleName = village.RoleName,
+                   
                     IsDeleted = village.IsDeleted,
                     CreatedDate = village.CreatedDate,
                     ModifiedDate = village.ModifiedDate,

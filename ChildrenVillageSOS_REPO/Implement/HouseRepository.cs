@@ -85,7 +85,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     MaintenanceStatus = house.MaintenanceStatus,
                     CreatedBy = house.CreatedBy,
                     ModifiedBy = house.ModifiedBy,
-                    RoleName = house.RoleName,
+                  
                     CreatedDate = house.CreatedDate,
                     ModifiedDate = house.ModifiedDate,
                     ImageUrls = house.Images.Where(img => !img.IsDeleted) // Lọc các ảnh không bị xóa
@@ -156,7 +156,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     MaintenanceStatus = h.MaintenanceStatus,
                     CreatedBy = h.CreatedBy,
                     ModifiedBy = h.ModifiedBy,
-                    RoleName = h.RoleName,
+                   
                     IsDeleted = h.IsDeleted,
                     ImageUrls = h.Images
                         .Where(i => !i.IsDeleted)  // Exclude deleted images
@@ -187,7 +187,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     MaintenanceStatus = h.MaintenanceStatus,
                     CreatedBy = h.CreatedBy,
                     ModifiedBy = h.ModifiedBy,
-                    RoleName = h.RoleName,
+                   
                     IsDeleted = h.IsDeleted,
                     ImageUrls = h.Images
                         .Where(i => !i.IsDeleted)  // Exclude deleted images

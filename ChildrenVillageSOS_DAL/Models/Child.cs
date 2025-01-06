@@ -37,21 +37,15 @@ public partial class Child
 
     public string? Status { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public string? CreatedBy { get; set; }
 
     public string? ModifiedBy { get; set; }
 
-    public string? RoleName { get; set; }
-
-    public bool IsDeleted { get; set; }
-
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
-
-    public string? BirthCertificate { get; set; }
-
-    public string? CitizenIdentification { get; set; }
 
     public virtual ICollection<AcademicReport> AcademicReports { get; set; } = new List<AcademicReport>();
 

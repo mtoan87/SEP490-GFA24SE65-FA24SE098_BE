@@ -41,7 +41,7 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public string? ModifiedBy { get; set; }
 
-        public string? RoleName { get; set; }
+      
 
         public bool? IsDeleted { get; set; }
 

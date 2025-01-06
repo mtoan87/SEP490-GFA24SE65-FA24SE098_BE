@@ -35,8 +35,7 @@ namespace ChildrenVillageSOS_DAL.DTO.HealthReportDTO
 
         public string? Allergies { get; set; }
 
-        public string? HealthCertificate { get; set; }
-
+     
         public string? Status { get; set; }
 
         public string? ModifiedBy { get; set; }

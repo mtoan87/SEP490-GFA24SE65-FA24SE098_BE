@@ -77,7 +77,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserAccountId = village.UserAccountId,
                 CreatedBy = village.CreatedBy,
                 ModifiedBy = village.ModifiedBy,
-                RoleName = village.RoleName,
+              
                 IsDeleted = village.IsDeleted,
                 CreatedDate = village.CreatedDate,
                 ModifiedDate = village.ModifiedDate,

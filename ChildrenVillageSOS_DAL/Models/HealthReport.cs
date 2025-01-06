@@ -33,8 +33,6 @@ public partial class HealthReport
 
     public string? Allergies { get; set; }
 
-    public string? HealthCertificate { get; set; }
-
     public string? Status { get; set; }
 
     public bool IsDeleted { get; set; }

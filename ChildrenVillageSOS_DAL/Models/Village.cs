@@ -33,8 +33,6 @@ public partial class Village
 
     public string? ModifiedBy { get; set; }
 
-    public string? RoleName { get; set; }
-
     public bool IsDeleted { get; set; }
 
     public DateTime? CreatedDate { get; set; }

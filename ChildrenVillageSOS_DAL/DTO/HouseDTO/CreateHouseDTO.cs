@@ -37,7 +37,7 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public string? CreatedBy { get; set; }
 
-        public string? RoleName { get; set; }
+        
 
         public List<IFormFile> Img { get; set; }
     }
