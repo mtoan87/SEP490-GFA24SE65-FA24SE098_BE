@@ -1,5 +1,7 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
+using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +13,8 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IExpenseRepository : IRepositoryGeneric<Expense>
     {
+        decimal GetBudgetUtilizationPercentage();
+        decimal GetMonthlyExpense(int year, int month);
         ExpenseResponseDTO[] GetAllExpenses();
         Expense[] GetExpenseByFacilitiesWalletId(int id);
         Expense[] GetExpenseByFoodWalletId(int id);

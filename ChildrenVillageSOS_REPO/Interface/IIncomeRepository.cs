@@ -1,5 +1,7 @@
-﻿using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
+using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IIncomeRepository : IRepositoryGeneric<Income>
     {
+        decimal GetMonthlyIncome(int year, int month);
         Task<Income> GetIncomeByDonationIdAsync(int donationId);
         DataTable getIncome();
         IncomeResponseDTO[] GetAllIncome();

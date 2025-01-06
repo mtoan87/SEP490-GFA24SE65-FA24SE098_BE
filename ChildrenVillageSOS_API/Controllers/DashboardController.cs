@@ -40,7 +40,7 @@ namespace ChildrenVillageSOS_API.Controllers
             _necessitiesWalletService = necessitiesWalletService;
             _dashboardService = dashboardService;
         }
-       
+
         //[HttpGet("TotalFacilitiesWalletBudget")]
         //public async Task<IActionResult> TotalFacilitiesWalletBudget()
         //{
@@ -90,7 +90,18 @@ namespace ChildrenVillageSOS_API.Controllers
         //    return Ok(new { Year = year, TotalDonations = totalDonations });
         //}
 
-
+        [HttpGet("efficiency-by-month")]
+        public  IActionResult GetEfficiencyByMonth()
+        {
+            var stat =  _dashboardService.GetMonthlyEfficiency();
+            return Ok(stat);
+        }
+        [HttpGet("budget-utilization")]
+        public IActionResult GetBudgetUtilizationPercentage()
+        {
+            var stat = _dashboardService.GetBudgetUtilizationPercentage();
+            return Ok(stat);
+        }
         // Dashboard Top statistic card
         [HttpGet("active-children")]
         public async Task<IActionResult> GetActiveChildrenStat()

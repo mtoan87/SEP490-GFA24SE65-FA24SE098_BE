@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Helpers;
@@ -346,5 +347,36 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return result;
         }
+        public decimal GetBudgetUtilizationPercentage()
+        {
+            return _expenseRepository.GetBudgetUtilizationPercentage();
+        }
+
+        public object GetMonthlyEfficiency()
+        {
+            // Get current year and month
+            var currentYear = DateTime.Now.Year;
+            var currentMonth = DateTime.Now.Month;
+
+            // Get total income and expense for the current month and year
+            var totalIncome = _incomeRepository.GetMonthlyIncome(currentYear, currentMonth);
+            var totalExpense = _expenseRepository.GetMonthlyExpense(currentYear, currentMonth);
+
+            // Calculate efficiency
+            decimal efficiency = 0;
+            if (totalIncome > 0)
+            {
+                efficiency = (totalExpense / totalIncome) * 100;
+            }
+
+            // Return result
+            return new
+            {              
+                Efficiency = Math.Round(efficiency, 2) // Round to 2 decimal places
+            };
+        }
+
     }
+
 }
+

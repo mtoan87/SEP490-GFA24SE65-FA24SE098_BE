@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
+using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,9 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return expenses;
         }
+
+        
+
         public Expense[] GetExpenseByFacilitiesWalletId(int id)
         {
             return _context.Expenses
@@ -70,6 +74,48 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(i => i.SystemWalletId == id && !i.IsDeleted)
                 .ToArray();
         }
+
+
+
+
+        public decimal GetMonthlyExpense(int year, int month)
+        {
+            var totalExpense = _context.Expenses
+                .Where(e => !e.IsDeleted &&
+                            e.Expenseday.HasValue &&
+                            e.Expenseday.Value.Year == year &&
+                            e.Expenseday.Value.Month == month)
+                .Sum(e => e.ExpenseAmount);
+
+            return totalExpense;
+        }
+        public decimal GetBudgetUtilizationPercentage()
+        {
+            // Tính toán ngày bắt đầu và kết thúc cho giữa tháng hiện tại và tháng trước
+            DateTime currentDate = DateTime.Now;
+
+            DateTime firstDayOfCurrentMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+            DateTime middleOfCurrentMonth = firstDayOfCurrentMonth.AddDays((currentDate.Day - 1) / 2);
+
+            DateTime firstDayOfPreviousMonth = firstDayOfCurrentMonth.AddMonths(-1);
+            DateTime middleOfPreviousMonth = firstDayOfPreviousMonth.AddDays((firstDayOfPreviousMonth.AddMonths(1).Day - 1) / 2);
+
+            // Lấy tổng chi phí trong tháng hiện tại và tháng trước
+            var currentMonthExpense = _context.Expenses
+                .Where(exp => exp.Expenseday >= middleOfCurrentMonth && exp.Expenseday <= currentDate)
+                .Sum(exp => exp.ExpenseAmount);
+
+            var previousMonthExpense = _context.Expenses
+                .Where(exp => exp.Expenseday >= middleOfPreviousMonth && exp.Expenseday <= firstDayOfPreviousMonth.AddMonths(1).AddDays(-1))
+                .Sum(exp => exp.ExpenseAmount);
+
+            // Tính tỷ lệ sử dụng ngân sách từ chi phí tháng hiện tại so với tháng trước
+            decimal utilizationPercentage = (currentMonthExpense / previousMonthExpense) * 100;
+
+            return utilizationPercentage;
+        }
+
+
 
         public DataTable getExpense()
         {
@@ -125,5 +171,6 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(x => !x.IsDeleted && x.Expenseday.Value.Year == year)
                 .ToListAsync();
         }
+        
     }
 }

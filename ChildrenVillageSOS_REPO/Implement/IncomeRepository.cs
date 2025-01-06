@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
+using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -128,5 +129,18 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(x => !x.IsDeleted && x.Receiveday.Year == year)
                 .ToListAsync();
         }
+        public decimal GetMonthlyIncome(int year, int month)
+        {
+            var totalIncome = _context.Incomes
+                .Where(i => !i.IsDeleted &&
+                            i.Receiveday.Year == year &&
+                            i.Receiveday.Month == month)
+                .Sum(i => i.Amount ?? 0);
+
+            return totalIncome;
+        }
     }
+
+   
 }
+
