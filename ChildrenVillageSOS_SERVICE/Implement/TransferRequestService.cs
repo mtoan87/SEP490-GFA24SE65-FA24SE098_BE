@@ -37,9 +37,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return request;
         }
 
-        public async Task<IEnumerable<TransferRequest>> GetAllTransferRequests()
+        public async Task<IEnumerable<TransferRequest>> GetAllTransferRequestsWithDetails()
         {
             return await _transferRequestRepository.GetAllTransferRequestsWithDetails();
+        }
+
+        public async Task<IEnumerable<TransferRequest>> GetAllTransferRequests()
+        {
+            return await _transferRequestRepository.GetAllNotDeletedAsync();
         }
 
         public async Task<IEnumerable<TransferRequest>> GetTransferRequestsByHouse(string houseId)

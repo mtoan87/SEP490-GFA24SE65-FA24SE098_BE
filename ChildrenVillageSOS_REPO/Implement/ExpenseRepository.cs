@@ -111,6 +111,7 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             // Tính tỷ lệ sử dụng ngân sách từ chi phí tháng hiện tại so với tháng trước
             decimal utilizationPercentage = (currentMonthExpense / previousMonthExpense) * 100;
+            utilizationPercentage = Math.Round(utilizationPercentage, 2);
 
             return utilizationPercentage;
         }
