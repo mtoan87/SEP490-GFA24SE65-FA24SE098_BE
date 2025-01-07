@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IIncomeRepository : IRepositoryGeneric<Income>
     {
+        decimal GetTotalIncomeAmount();
         decimal GetMonthlyIncome(int year, int month);
         Task<Income> GetIncomeByDonationIdAsync(int donationId);
         DataTable getIncome();

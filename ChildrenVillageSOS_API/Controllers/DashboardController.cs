@@ -90,6 +90,25 @@ namespace ChildrenVillageSOS_API.Controllers
         //    return Ok(new { Year = year, TotalDonations = totalDonations });
         //}
 
+        // Dashboard KPI card
+        [HttpGet("total-donates")]
+        public IActionResult CalculateTotalIncome()
+        {
+            var stat = _dashboardService.GetTotalDonateAmount();
+            return Ok(stat);
+        }
+        [HttpGet("total-incomes")]
+        public IActionResult TotalIncome()
+        {
+            var stat = _dashboardService.TotalIncome();
+            return Ok(stat);
+        }
+        [HttpGet("total-expenses")]
+        public IActionResult TotalExpense()
+        {
+            var stat = _dashboardService.TotalExpense();
+            return Ok(stat);
+        }
         [HttpGet("efficiency-by-month")]
         public  IActionResult GetEfficiencyByMonth()
         {
@@ -108,6 +127,7 @@ namespace ChildrenVillageSOS_API.Controllers
             var stat = _dashboardService.GetCostPerChild();
             return Ok(stat);
         }
+
         // Dashboard Top statistic card
         [HttpGet("active-children")]
         public async Task<IActionResult> GetActiveChildrenStat()

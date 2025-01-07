@@ -18,6 +18,12 @@ namespace ChildrenVillageSOS_REPO.Implement
         public DonationRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+        public decimal GetTotalDonateAmount()
+        {
+            return _context.Donations
+                .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
+                .Sum(e => e.Amount);
+        }
         public async Task<List<Donation>> GetDonationsByEventIdAsync(int eventId)
         {
             return await _context.Donations
@@ -207,6 +213,61 @@ namespace ChildrenVillageSOS_REPO.Implement
                 Year = year,
                 MonthlyDetails = monthlyDetails
             };
+        }
+
+        public async Task<DonationDetailsDTO> GetDonationDetails(int donationId)
+        {
+            var donation = await _context.Donations
+                .Include(d => d.FacilitiesWallet)
+                .Include(d => d.SystemWallet)
+                .Include(d => d.FoodStuffWallet)
+                .Include(d => d.HealthWallet)
+                .Include(d => d.NecessitiesWallet)
+                .Include(d => d.Child)
+                .Include(d => d.Event)
+                .FirstOrDefaultAsync(d => d.Id == donationId && !d.IsDeleted);
+
+            if (donation == null)
+            {
+                throw new Exception("Donation not found.");
+            }
+
+            string? targetName = donation.DonationType switch
+            {
+                "Wallet" => GetWalletName(donation),
+                "Child" => donation.Child?.ChildName ?? "Unknown Child",
+                "Event" => donation.Event?.Name ?? "Unknown Event",
+                _ => "Unknown Target"
+            };
+
+            var result = new DonationDetailsDTO
+            {
+                Id = donation.Id,
+                UserName = donation.UserName ?? "Anonymous",
+                UserEmail = donation.UserEmail,
+                Phone = donation.Phone,
+                Address = donation.Address,
+                DonationType = donation.DonationType,
+                TargetName = targetName,
+                EventCode = donation.DonationType == "Event" ? donation.Event?.EventCode : null,
+                Amount = donation.Amount,
+                DateTime = donation.DateTime,
+                Description = donation.Description,
+                Status = donation.Status
+            };
+
+            return result;
+        }
+
+        // Helper method to get the wallet name
+        private string GetWalletName(Donation donation)
+        {
+            if (donation.FacilitiesWallet != null) return "Facilities Wallet";
+            if (donation.SystemWallet != null) return "System Wallet";
+            if (donation.FoodStuffWallet != null) return "FoodStuff Wallet";
+            if (donation.HealthWallet != null) return "Health Wallet";
+            if (donation.NecessitiesWallet != null) return "Necessities Wallet";
+            return "Unknown Wallet";
         }
     }
 }

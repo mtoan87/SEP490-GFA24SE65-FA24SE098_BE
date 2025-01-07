@@ -18,6 +18,12 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             
         }
+        public decimal GetTotalIncomeAmount()
+        {
+            return _context.Incomes
+                .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
+                .Sum(e => e.Amount);
+        }
 
         public DataTable getIncome()
         {
@@ -135,7 +141,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(i => !i.IsDeleted &&
                             i.Receiveday.Year == year &&
                             i.Receiveday.Month == month)
-                .Sum(i => i.Amount ?? 0);
+                .Sum(i => i.Amount);
 
             return totalIncome;
         }

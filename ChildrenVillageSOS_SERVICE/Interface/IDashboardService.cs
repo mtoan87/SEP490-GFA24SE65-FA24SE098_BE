@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync();
         Task<TotalEventsStatDTO> GetTotalEventsStatAsync();
         //KPI
+        decimal TotalExpense();
+        decimal TotalIncome();
+        decimal GetTotalDonateAmount();
         decimal GetCostPerChild();
         decimal GetBudgetUtilizationPercentage();
         object GetMonthlyEfficiency();

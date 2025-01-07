@@ -8,7 +8,7 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
 {
     public class UpdateIncomeDTO
     {
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
 
       
              

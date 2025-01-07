@@ -149,7 +149,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Store the old income amount for later adjustment
-            decimal oldIncomeAmount = updIncome.Amount ?? 0;
+            decimal oldIncomeAmount = updIncome.Amount;
             updIncome.Amount = updateIncome.Amount;  // Update the new income amount
             updIncome.ModifiedDate = DateTime.Now;
 
@@ -163,7 +163,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     wallet.Budget -= oldIncomeAmount;
 
                     // Add the new income to the wallet
-                    wallet.Budget += updateIncome.Amount ?? 0;
+                    wallet.Budget += updateIncome.Amount;
 
                     // Update the wallet balance
                     await _failitiesWalletRepository.UpdateAsync(wallet);
@@ -176,7 +176,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 if (wallet != null)
                 {
                     wallet.Budget -= oldIncomeAmount;
-                    wallet.Budget += updateIncome.Amount ?? 0;
+                    wallet.Budget += updateIncome.Amount;
                     await _foodStuffWalletRepository.UpdateAsync(wallet);
                 }
             }
@@ -187,7 +187,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 if (wallet != null)
                 {
                     wallet.Budget -= oldIncomeAmount;
-                    wallet.Budget += updateIncome.Amount ?? 0;
+                    wallet.Budget += updateIncome.Amount;
                     await _healthWalletRepository.UpdateAsync(wallet);
                 }
             }
@@ -198,7 +198,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 if (wallet != null)
                 {
                     wallet.Budget -= oldIncomeAmount;
-                    wallet.Budget += updateIncome.Amount ?? 0;
+                    wallet.Budget += updateIncome.Amount;
                     await _systemWalletRepository.UpdateAsync(wallet);
                 }
             }
@@ -209,7 +209,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 if (wallet != null)
                 {
                     wallet.Budget -= oldIncomeAmount;
-                    wallet.Budget += updateIncome.Amount ?? 0;
+                    wallet.Budget += updateIncome.Amount;
                     await _necessitiesWalletRepository.UpdateAsync(wallet);
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -24,6 +25,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _donationRepository.GetDonationsByUserId(userId);
         }
+
+        public async Task<DonationDetailsDTO> GetDonationDetails(int donationId)
+        {
+            return await _donationRepository.GetDonationDetails(donationId);
+        }
+
         public FormatDonationResponseDTO[] GetAllDonationArray()
         {
             return _donationRepository.GetDonationArray();

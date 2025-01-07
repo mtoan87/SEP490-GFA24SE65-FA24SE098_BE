@@ -129,6 +129,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     ToHouseId = transferRequest.ToHouseId,
                     TransferDate = DateTime.Now,
                     Status = TransferStatus.Completed.ToString(),
+                    Notes = dto.DirectorNote,
                     HandledBy = dto.ApprovedBy,
                     CreatedDate = DateTime.Now,
                     IsDeleted = false

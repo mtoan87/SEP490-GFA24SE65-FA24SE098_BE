@@ -17,6 +17,12 @@ namespace ChildrenVillageSOS_REPO.Implement
         public ExpenseRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+        public decimal GetTotalExpenseAmount()
+        {
+            return _context.Expenses
+                .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
+                .Sum(e => e.ExpenseAmount);
+        }
         public ExpenseResponseDTO[] GetAllExpenses()
         {
             var expenses = _context.Expenses
