@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<ActivityResponseDTO[]> GetAllActivityIsDeleteAsync();
         ActivityResponseDTO GetActivityByIdWithImg(int activityId);
+        Task<List<Activity>> SearchActivities(SearchActivityDTO searchActivityDTO);
 
     }
 }

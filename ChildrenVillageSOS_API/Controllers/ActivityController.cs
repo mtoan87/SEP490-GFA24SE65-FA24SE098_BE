@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var activities = await _activityService.GetAllActivities();
             return Ok(activities);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchActivityDTO searchActivityDTO)
+        {
+            if (string.IsNullOrEmpty(searchActivityDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _activityService.SearchActivities(searchActivityDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllActivityIsDelete")]

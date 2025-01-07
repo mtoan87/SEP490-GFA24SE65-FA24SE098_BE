@@ -19,6 +19,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<ActivityResponseDTO>> GetAllActivityWithImg();
         Task<ActivityResponseDTO> GetActivityByIdWithImg(int activityId);
         Task<ActivityResponseDTO[]> GetAllActivityIsDeleteAsync();
-
+        Task<List<Activity>> SearchActivities(SearchActivityDTO searchActivityDTO);
     }
 }

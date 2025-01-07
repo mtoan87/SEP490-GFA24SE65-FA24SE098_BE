@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -235,5 +236,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return activity;
         }
+
+        public async Task<List<Activity>> SearchActivities(SearchActivityDTO searchActivityDTO)
+        {
+            return await _activityRepository.SearchActivities(searchActivityDTO);
+        }
+
     }
 }

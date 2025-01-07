@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ActivityDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +92,34 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .FirstOrDefault();
 
             return activityDetails;
+        }
+
+        public async Task<List<Activity>> SearchActivities(SearchActivityDTO searchActivityDTO)
+        {
+            var query = _context.Activities.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchActivityDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchActivityDTO.SearchTerm) ||
+                     x.ActivityName.Contains(searchActivityDTO.SearchTerm) ||
+                     x.Description.Contains(searchActivityDTO.SearchTerm) ||
+                     x.Address.Contains(searchActivityDTO.SearchTerm) ||
+                     x.VillageId.Contains(searchActivityDTO.SearchTerm) ||
+                     x.ActivityType.Contains(searchActivityDTO.SearchTerm) ||
+                     x.TargetAudience.Contains(searchActivityDTO.SearchTerm) ||
+                     x.Organizer.Contains(searchActivityDTO.SearchTerm) ||
+                     x.Status.Contains(searchActivityDTO.SearchTerm) ||
+                     x.EventId.Value.ToString().Contains(searchActivityDTO.SearchTerm) ||
+                     x.Budget.Value.ToString().Contains(searchActivityDTO.SearchTerm) ||
+                     x.Feedback.Contains(searchActivityDTO.SearchTerm) ||
+                     x.StartDate.Value.ToString("yyyy-MM-dd").Contains(searchActivityDTO.SearchTerm) ||
+                     x.EndDate.Value.ToString("yyyy-MM-dd").Contains(searchActivityDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }
