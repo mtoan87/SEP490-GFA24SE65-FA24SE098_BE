@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
+using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
 using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<SubjectDetail> UpdateSubjectDetail(int id, UpdateSubjectDetailsDTO updateSubjectDetail);
         Task<SubjectDetail> DeleteSubjectDetail(int id);
         Task<SubjectDetail> RestoreSubjectDetail(int id);
+        Task<List<SubjectDetail>> SearchSubjects(SearchSubjectDTO searchSubjectDTO);
     }
 }

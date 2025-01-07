@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface ISubjectDetailRepository : IRepositoryGeneric<SubjectDetail>
     {
-
+        Task<List<SubjectDetail>> SearchSubjects(SearchSubjectDTO searchSubjectDTO);
     }
 }

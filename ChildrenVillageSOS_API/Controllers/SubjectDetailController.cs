@@ -1,4 +1,7 @@
-﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
+using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var subjectDetails = await _subjectDetailService.GetAllSubjectDetails();
             return Ok(subjectDetails);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchSubjectDTO searchSubjectDTO)
+        {
+            if (string.IsNullOrEmpty(searchSubjectDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _subjectDetailService.SearchSubjects(searchSubjectDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetSubjectDetailById/{id}")]

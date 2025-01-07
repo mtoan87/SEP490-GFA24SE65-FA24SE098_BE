@@ -1,5 +1,8 @@
-﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
+using ChildrenVillageSOS_DAL.DTO.SubjectDetailsDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -102,5 +105,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return subjectDetail;
         }
+
+        public async Task<List<SubjectDetail>> SearchSubjects(SearchSubjectDTO searchSubjectDTO)
+        {
+            return await _subjectDetailRepository.SearchSubjects(searchSubjectDTO);
+        }
+
     }
 }
