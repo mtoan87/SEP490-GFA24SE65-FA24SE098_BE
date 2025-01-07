@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_API.Model;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.DTO.SendEmail;
 using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -9,6 +10,7 @@ using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +34,7 @@ namespace ChildrenVillageSOS_API.Controllers
         private readonly IHealthWalletRepository _healthWalletRepository;
         private readonly IIncomeService _incomeService;
         private readonly IIncomeRepository _incomeRepository;
+        private readonly ISendService _sendService;
         public PaymentsController(
             IPaymentService paymentService,
             IPaymentRepository paymentRepository,
@@ -46,7 +49,8 @@ namespace ChildrenVillageSOS_API.Controllers
             ISystemWalletRepository systemWalletRepository,
             IHealthWalletRepository healthWalletRepository,
             IIncomeService incomeService,
-            IIncomeRepository incomeRepository)
+            IIncomeRepository incomeRepository,
+            ISendService sendService)
         {
             _paymentService = paymentService;
             _paymentRepository = paymentRepository;
@@ -61,7 +65,8 @@ namespace ChildrenVillageSOS_API.Controllers
             _systemWalletRepository = systemWalletRepository;
             _healthWalletRepository = healthWalletRepository;
             _incomeService = incomeService;
-            _incomeRepository = incomeRepository;   
+            _incomeRepository = incomeRepository;  
+            _sendService = sendService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllPayments()
@@ -235,6 +240,9 @@ namespace ChildrenVillageSOS_API.Controllers
                     await _incomeRepository.UpdateAsync(income);
                     await _donationRepository.UpdateAsync(donation);
                     await _paymentRepository.UpdateAsync(payment);
+
+                    var emailSent = await SendEmail.SendThankYouEmail(donation.UserEmail);
+      
                     return Ok(new
                     {
                         success = true,

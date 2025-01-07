@@ -5,6 +5,8 @@ using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace ChildrenVillageSOS_API.Configuration
 {
@@ -74,6 +76,7 @@ namespace ChildrenVillageSOS_API.Configuration
             services.AddScoped<IChildProgressService, ChildProgressService>();
             services.AddScoped<ITransferRequestService, TransferRequestService>();
             services.AddScoped<ITransferHistoryService, TransferHistoryService>();
+            services.AddScoped<ISendService, SendService>();
             return services;
         }
 
