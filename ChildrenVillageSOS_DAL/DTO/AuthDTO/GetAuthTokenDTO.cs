@@ -8,7 +8,7 @@ namespace ChildrenVillageSOS_DAL.DTO.AuthDTO
 {
     public class GetAuthTokenDTO
     {
-        public string? AccessToken { get; set; }
+        public string? Token { get; set; }
         public int? RoleId { get; set; }
         public string? UserAccountId { get; set; }
     }
