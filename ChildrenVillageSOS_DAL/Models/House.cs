@@ -29,7 +29,7 @@ public partial class House
 
     public string? VillageId { get; set; }
 
-    public DateTime? FoundationDate { get; set; }
+    public DateTime FoundationDate { get; set; }
 
     public DateTime? LastInspectionDate { get; set; }
 

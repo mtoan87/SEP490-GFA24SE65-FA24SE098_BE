@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -83,5 +84,24 @@ namespace ChildrenVillageSOS_REPO.Implement
                             b.Visitday.Value <= end)
                 .ToListAsync();
         }
+
+        public async Task<List<Booking>> SearchBookings(SearchBookingDTO searchBookingDTO)
+        {
+            var query = _context.Bookings.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchBookingDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchBookingDTO.SearchTerm) ||
+                     x.HouseId.Contains(searchBookingDTO.SearchTerm) ||
+                     x.Status.Contains(searchBookingDTO.SearchTerm) ||
+                     x.Visitday.Value.ToString("yyyy-MM-dd").Contains(searchBookingDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
+        }
+
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var booking = await _bookingService.GetAllBookings();
             return Ok(booking);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchBookingDTO searchBookingDTO)
+        {
+            if (string.IsNullOrEmpty(searchBookingDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _bookingService.SearchBookings(searchBookingDTO);
+            return Ok(result);
         }
 
         [HttpGet("{Id}")]
@@ -120,5 +134,7 @@ namespace ChildrenVillageSOS_API.Controllers
             var booking = await _bookingService.ConfirmBooking(Id);
             return Ok(booking);
         }
+
+
     }
 }

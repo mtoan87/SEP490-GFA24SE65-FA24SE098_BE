@@ -21,5 +21,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<BookingResponse[]> GetBookingsWithSlotsByUserAsync(string userAccountId);
 
         Task<BookingResponse[]> GetAllBookingsAsync();
+        Task<List<Booking>> SearchBookings(SearchBookingDTO searchBookingDTO);
     }
 }

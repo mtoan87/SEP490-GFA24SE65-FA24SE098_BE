@@ -335,7 +335,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.SchoolId.Contains(searchChildDTO.SearchTerm) ||
                      x.Gender.Contains(searchChildDTO.SearchTerm) ||
                      x.Status.Contains(searchChildDTO.SearchTerm) ||
-                     x.Dob.Value.ToString("yyyy-MM-dd").Contains(searchChildDTO.SearchTerm)
+                     x.Dob.ToString("yyyy-MM-dd").Contains(searchChildDTO.SearchTerm)
                     )
                 );
             }

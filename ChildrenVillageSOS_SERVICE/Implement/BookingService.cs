@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -135,6 +136,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             booking.ModifiedDate = DateTime.Now;
             await _bookingRepository.UpdateAsync(booking);
             return booking;
+        }
+
+        public async Task<List<Booking>> SearchBookings(SearchBookingDTO searchBookingDTO)
+        {
+            return await _bookingRepository.SearchBookings(searchBookingDTO);
         }
     }
 }

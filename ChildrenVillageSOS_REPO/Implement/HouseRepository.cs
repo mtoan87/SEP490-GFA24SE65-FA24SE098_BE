@@ -332,7 +332,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.UserAccountId.Contains(searchHouseDTO.SearchTerm) ||
                      x.VillageId.Contains(searchHouseDTO.SearchTerm) ||
                      x.LastInspectionDate.Value.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
-                     x.FoundationDate.Value.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
+                     x.FoundationDate.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
                      x.MaintenanceStatus.Contains(searchHouseDTO.SearchTerm) ||
                      x.Status.Contains(searchHouseDTO.SearchTerm)
                     )

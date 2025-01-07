@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_REPO.Interface
 
         Task<BookingResponse[]> GetAllBookingsAsync();
         Task<IEnumerable<Booking>> GetBookingsByDateRange(DateTime startDate, DateTime endDate);
+        Task<List<Booking>> SearchBookings(SearchBookingDTO searchBookingDTO);
     }
 }
