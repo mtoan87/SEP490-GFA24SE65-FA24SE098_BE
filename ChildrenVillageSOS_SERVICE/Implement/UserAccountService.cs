@@ -257,7 +257,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 {
                     return new GetAuthTokenDTO()
                     {
-                        AccessToken = googleToken,
+                        Token = googleToken,
                         UserAccountId = existAccount.Id,
                         RoleId = existAccount.RoleId
                     };
@@ -278,7 +278,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                 return new GetAuthTokenDTO()
                 {
-                    AccessToken = googleToken,
+                    Token = googleToken,
                     UserAccountId = newAccount.Id,
                     RoleId = newAccount.RoleId
                 };
@@ -286,7 +286,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return new GetAuthTokenDTO()
             {
-                AccessToken = null
+                Token = null
             };
         }
 
