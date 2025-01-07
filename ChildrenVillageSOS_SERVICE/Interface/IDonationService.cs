@@ -31,5 +31,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<object> GetDonationsByUserAndChildAsync(string userId, string childId);
         FormatDonationResponseDTO[] GetAllDonationIsDeleteAsync();
         Task<DonationDetailsDTO> GetDonationDetails(int donationId);
+        Task<List<Donation>> SearchDonations(SearchDonationDTO searchDonationDTO);
     }
 }

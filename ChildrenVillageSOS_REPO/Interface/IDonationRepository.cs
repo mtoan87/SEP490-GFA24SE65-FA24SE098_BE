@@ -24,6 +24,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<DonationTrendsDTO> GetDonationTrendsByYear(int year);
         FormatDonationResponseDTO[] GetDonationIsDeleteArray();
         Task<DonationDetailsDTO> GetDonationDetails(int donationId);
+        Task<List<Donation>> SearchDonations(SearchDonationDTO searchDonationDTO);
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -287,6 +288,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public FormatDonationResponseDTO[] GetAllDonationIsDeleteAsync()
         {
             return _donationRepository.GetDonationIsDeleteArray();
+        }
+
+        public async Task<List<Donation>> SearchDonations(SearchDonationDTO searchDonationDTO)
+        {
+            return await _donationRepository.SearchDonations(searchDonationDTO);
         }
     }
 }

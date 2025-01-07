@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Helper;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -268,6 +269,33 @@ namespace ChildrenVillageSOS_REPO.Implement
             if (donation.HealthWallet != null) return "Health Wallet";
             if (donation.NecessitiesWallet != null) return "Necessities Wallet";
             return "Unknown Wallet";
+        }
+
+        public async Task<List<Donation>> SearchDonations(SearchDonationDTO searchDonationDTO)
+        {
+            var query = _context.Donations.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchDonationDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchDonationDTO.SearchTerm) ||
+                     x.UserAccountId.Contains(searchDonationDTO.SearchTerm) ||
+                     x.UserName.Contains(searchDonationDTO.SearchTerm) ||
+                     x.UserEmail.Contains(searchDonationDTO.SearchTerm) ||
+                     x.Phone.Contains(searchDonationDTO.SearchTerm) ||
+                     x.Address.Contains(searchDonationDTO.SearchTerm) ||
+                     x.EventId.Value.ToString().Contains(searchDonationDTO.SearchTerm) ||
+                     x.ChildId.ToString().Contains(searchDonationDTO.SearchTerm) ||
+                     x.DonationType.Contains(searchDonationDTO.SearchTerm) ||
+                     x.Amount.ToString().Contains(searchDonationDTO.SearchTerm) ||
+                     x.EventCode.Contains(searchDonationDTO.SearchTerm) ||
+                     x.Status.Contains(searchDonationDTO.SearchTerm) ||
+                     x.DateTime.ToString("yyyy-MM-dd").Contains(searchDonationDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.BookingDTO;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -24,6 +25,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var donation = await _donationService.GetAllDonations();
             return Ok(donation);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchDonationDTO searchDonationDTO)
+        {
+            if (string.IsNullOrEmpty(searchDonationDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _donationService.SearchDonations(searchDonationDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetDonationDetails/{donationId}")]
