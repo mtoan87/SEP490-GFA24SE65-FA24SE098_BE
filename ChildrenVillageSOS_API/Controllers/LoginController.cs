@@ -62,7 +62,7 @@ namespace ChildrenVillageSOS_API.Controllers
             });
         }
 
-        [HttpPost("Login Google")]
+        [HttpPost("LoginGoogle")]
         public async Task<IActionResult> LoginGoogleAsync(LoginGoogleDTO loginGoogleDto)
         {
             var result = await _customerService.LoginWithGoogle(loginGoogleDto.GoogleToken);
