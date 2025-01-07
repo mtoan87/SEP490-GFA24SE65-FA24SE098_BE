@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -222,6 +223,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return inventory;
+        }
+
+        public async Task<List<Inventory>> SearchIventories(SearchInventoryDTO searchInventoryDTO)
+        {
+            return await _inventoryRepository.SearchInventories(searchInventoryDTO);
         }
     }
 }

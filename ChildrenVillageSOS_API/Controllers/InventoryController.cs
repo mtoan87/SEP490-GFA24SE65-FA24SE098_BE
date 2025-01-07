@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -22,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var inventories = await _inventoryService.GetAllInventories();
             return Ok(inventories);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchInventoryDTO searchInventoryDTO)
+        {
+            if (string.IsNullOrEmpty(searchInventoryDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _inventoryService.SearchIventories(searchInventoryDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllInventoryIsDelete")]

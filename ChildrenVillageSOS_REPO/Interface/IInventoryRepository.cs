@@ -12,5 +12,6 @@ namespace ChildrenVillageSOS_REPO.Interface
     {
         Task<InventoryResponseDTO[]> GetAllInventoryIsDeleteAsync();
         InventoryResponseDTO GetInventoryByIdWithImg(int inventoryId);
+        Task<List<Inventory>> SearchInventories(SearchInventoryDTO searchInventoryDTO);
     }
 }
