@@ -16,7 +16,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string? Gender { get; set; }
 
-        public DateTime Dob { get; set; }
+        public DateTime? Dob { get; set; }
 
         public string? AcademicYear { get; set; }
 
