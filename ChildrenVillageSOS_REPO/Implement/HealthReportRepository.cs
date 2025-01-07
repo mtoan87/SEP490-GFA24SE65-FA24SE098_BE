@@ -1,7 +1,9 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,6 +97,35 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .FirstOrDefault();
 
             return healthReportDetails;
+        }
+
+        public async Task<List<HealthReport>> SearchHealthReports(SearchHealthReportDTO searchHealthReportDTO)
+        {
+            var query = _context.HealthReports.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchHealthReportDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.ChildId.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.NutritionalStatus.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.MedicalHistory.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.VaccinationStatus.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Weight.Value.ToString().Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Height.Value.ToString().Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.DoctorName.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.CheckupDate.Value.ToString("yyyy-MM-dd").Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Recommendations.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.HealthStatus.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.FollowUpDate.Value.ToString("yyyy-MM-dd").Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Illnesses.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Allergies.Contains(searchHealthReportDTO.SearchTerm) ||
+                     x.Status.Contains(searchHealthReportDTO.SearchTerm) 
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }

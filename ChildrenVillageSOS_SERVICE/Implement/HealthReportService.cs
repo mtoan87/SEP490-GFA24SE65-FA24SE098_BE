@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -255,6 +256,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return report;
+        }
+
+        public async Task<List<HealthReport>> SearchHealthReports(SearchHealthReportDTO searchHealthReportDTO)
+        {
+            return await _healthReportRepository.SearchHealthReports(searchHealthReportDTO);
         }
     }
 }

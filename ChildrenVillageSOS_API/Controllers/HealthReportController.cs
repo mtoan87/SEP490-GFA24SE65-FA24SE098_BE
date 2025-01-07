@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -22,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var reports = await _healthReportService.GetAllHealthReports();
             return Ok(reports);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchHealthReportDTO searchHealthReportDTO)
+        {
+            if (string.IsNullOrEmpty(searchHealthReportDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _healthReportService.SearchHealthReports(searchHealthReportDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllHealthReportIsDelete")]

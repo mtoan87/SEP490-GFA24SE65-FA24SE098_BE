@@ -19,5 +19,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HealthReportResponseDTO> GetHealthReportByIdWithImg(int id);
         Task<HealthReportResponseDTO[]> GetAllHealthReportIsDeleteAsync();
         Task<IEnumerable<HealthReportResponseDTO>> GetAllHealthReportWithImg();
+        Task<List<HealthReport>> SearchHealthReports(SearchHealthReportDTO searchHealthReportDTO);
     }
 }
