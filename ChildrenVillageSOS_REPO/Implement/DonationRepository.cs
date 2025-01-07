@@ -22,7 +22,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         public decimal GetTotalDonateAmount()
         {
             return _context.Donations
-                .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
+                .Where(e => !e.IsDeleted)
                 .Sum(e => e.Amount);
         }
         public async Task<List<Donation>> GetDonationsByEventIdAsync(int eventId)
