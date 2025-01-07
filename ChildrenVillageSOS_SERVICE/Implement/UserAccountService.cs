@@ -289,5 +289,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 AccessToken = null
             };
         }
+
+        public async Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO)
+        {
+            return await _userAccountRepository.SearchUserAccounts(searchUserDTO);
+        }
     }
 }

@@ -19,5 +19,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         DataTable getUser();
         Task<UserResponseDTO[]> GetAllUserIsDeletedAsync();
         UserResponseDTO GetUserByIdArray(string userid);
+        Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO);
     }
 }

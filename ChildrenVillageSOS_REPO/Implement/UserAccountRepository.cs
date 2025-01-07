@@ -159,5 +159,28 @@ namespace ChildrenVillageSOS_REPO.Implement
                 NewUsersThisWeek = newUsersThisWeek
             };
         }
+
+        public async Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO)
+        {
+            var query = _context.UserAccounts.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchUserDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.RoleId.ToString().Contains(searchUserDTO.SearchTerm) ||
+                     x.Status.Contains(searchUserDTO.SearchTerm) ||
+                     x.Country.Contains(searchUserDTO.SearchTerm) ||
+                     x.Gender.Contains(searchUserDTO.SearchTerm) ||
+                     x.Address.Contains(searchUserDTO.SearchTerm) ||
+                     x.Phone.Contains(searchUserDTO.SearchTerm) ||
+                     x.UserEmail.Contains(searchUserDTO.SearchTerm) ||
+                     x.UserName.Contains(searchUserDTO.SearchTerm) ||
+                     x.Id.Contains(searchUserDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
+        }
     }
 }

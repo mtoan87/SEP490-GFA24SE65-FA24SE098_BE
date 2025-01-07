@@ -24,5 +24,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<UserResponseDTO[]> GetAllUserIsDeletedAsync();
         Task<UserResponseDTO> GetUserByIdArray(string userid);
         Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken);
+        Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO);
     }
 }
