@@ -26,7 +26,7 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public int? CurrentMembers { get; set; }
 
-        public DateTime FoundationDate { get; set; }
+        public DateTime? FoundationDate { get; set; }
 
         public string MaintenanceStatus { get; set; } = null!;
 

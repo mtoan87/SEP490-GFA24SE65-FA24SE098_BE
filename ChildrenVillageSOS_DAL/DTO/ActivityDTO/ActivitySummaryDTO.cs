@@ -11,7 +11,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ActivityDTO
         public int Id { get; set; }
         public string ActivityName { get; set; }
         public string? Description { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string? Address { get; set; }
         public string? ActivityType { get; set; }
