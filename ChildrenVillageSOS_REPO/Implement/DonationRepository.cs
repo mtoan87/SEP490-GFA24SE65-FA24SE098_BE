@@ -134,7 +134,60 @@ namespace ChildrenVillageSOS_REPO.Implement
                 }).ToListAsync();
             return donationDetails;
         }
-
+        public FormatDonationResponseDTO[] GetDonationByEventIdArray(int eventId)
+        {
+            var donationDetailevent = _context.Donations
+                .Where(d => d.EventId == eventId && (d.IsDeleted == null || d.IsDeleted == false))
+                .Select(d => new FormatDonationResponseDTO
+                {
+                    Id = d.Id,
+                    UserAccountId = d.UserAccountId,
+                    UserName = d.UserName,
+                    UserEmail = d.UserEmail,
+                    Phone = d.Phone,
+                    Address = d.Address,
+                    DonationType = d.DonationType,
+                    DateTime = d.DateTime,
+                    Amount = d.Amount,
+                    Description = d.Description,
+                    SystemWalletId = d.SystemWalletId,
+                    FacilitiesWalletId = d.FacilitiesWalletId,
+                    FoodStuffWalletId = d.FoodStuffWalletId,
+                    HealthWalletId = d.HealthWalletId,
+                    NecessitiesWalletId = d.NecessitiesWalletId,
+                    ChildId = d.ChildId,
+                    EventId = d.EventId,
+                    Status = d.Status,
+                }).ToArray();
+            return donationDetailevent;
+        }
+        public FormatDonationResponseDTO[] GetDonationByEventArray()
+        {
+            var donationDetailevent = _context.Donations
+                .Where(d => d.DonationType == "Event" && (d.IsDeleted == null || d.IsDeleted == false))
+                .Select(d => new FormatDonationResponseDTO
+                {
+                    Id = d.Id,
+                    UserAccountId = d.UserAccountId,
+                    UserName = d.UserName,
+                    UserEmail = d.UserEmail,
+                    Phone = d.Phone,
+                    Address = d.Address,
+                    DonationType = d.DonationType,
+                    DateTime = d.DateTime,
+                    Amount = d.Amount,
+                    Description = d.Description,
+                    SystemWalletId = d.SystemWalletId,
+                    FacilitiesWalletId = d.FacilitiesWalletId,
+                    FoodStuffWalletId = d.FoodStuffWalletId,
+                    HealthWalletId = d.HealthWalletId,
+                    NecessitiesWalletId = d.NecessitiesWalletId,
+                    ChildId = d.ChildId,
+                    EventId = d.EventId,
+                    Status = d.Status,
+                }).ToArray();
+            return donationDetailevent;
+        }
         public async Task<List<Donation>> GetDonationsByUserAndEventAsync(string userId, int eventId)
         {
             return await _context.Donations

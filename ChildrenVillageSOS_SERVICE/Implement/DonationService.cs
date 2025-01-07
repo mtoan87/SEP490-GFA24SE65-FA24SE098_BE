@@ -100,10 +100,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 DonationType = createDonation.DonationType,
                 FacilitiesWalletId = createDonation.FacilitiesWalletId,
                 NecessitiesWalletId = createDonation.NecessitiesWalletId,
-                SystemWalletId   = createDonation.SystemWalletId,
+                SystemWalletId = createDonation.SystemWalletId,
                 HealthWalletId = createDonation.HealthWalletId,
                 FoodStuffWalletId = createDonation.FoodStuffWalletId,
-                DateTime =DateTime.Now,
+                DateTime = DateTime.Now,
                 IsDeleted = false,
                 Amount = createDonation.Amount,
                 Description = createDonation.Description,
@@ -128,7 +128,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 ChildId = createDonation.ChildId,
                 EventId = createDonation.EventId,
                 Status = createDonation.Status,
-                CreatedDate= DateTime.Now
+                CreatedDate = DateTime.Now
             };
             await _donationRepository.AddAsync(donation);
             return donation;
@@ -140,7 +140,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Map to DTO and include EventCode
             return donations.Select(d => new DonationResponseDTO
             {
-               
+
                 UserName = d.UserName,
                 UserEmail = d.UserEmail,
                 Phone = d.Phone,
@@ -155,14 +155,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<Donation> DonateNow(DonateDTO donateDTO)
         {
             var donation = new Donation
-            {   
+            {
                 EventCode = donateDTO.EventCode,
                 FacilitiesWalletId = donateDTO.FacilitiesWalletId,
                 SystemWalletId = donateDTO.SystemWalletId,
                 NecessitiesWalletId = donateDTO.NecessitiesWalletId,
                 FoodStuffWalletId = donateDTO.FoodStuffWalletId,
                 HealthWalletId = donateDTO.HealthWalletId,
-                UserAccountId= donateDTO.UserAccountId,
+                UserAccountId = donateDTO.UserAccountId,
                 UserName = donateDTO.UserName,
                 UserEmail = donateDTO.UserEmail,
                 Phone = donateDTO.Phone,
@@ -289,7 +289,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _donationRepository.GetDonationIsDeleteArray();
         }
-
+        public FormatDonationResponseDTO[] GetDonationByEventIdAsync(int eventId)
+        {
+            return _donationRepository.GetDonationByEventIdArray(eventId);
+        }
+        public FormatDonationResponseDTO[] GetDonationByEventAsync()
+        {
+            return _donationRepository.GetDonationByEventArray();
+        }
         public async Task<List<Donation>> SearchDonations(SearchDonationDTO searchDonationDTO)
         {
             return await _donationRepository.SearchDonations(searchDonationDTO);
