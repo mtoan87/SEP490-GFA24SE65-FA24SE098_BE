@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         EventResponseDTO GetEventById(int eventId);
         Task<TotalEventsStatDTO> GetTotalEventsStatAsync();
         Task<EventResponseDTO[]> GetAllEventIsDeleteAsync();
+        Task<EventDetailsDTO> GetEventDetails(int eventId);
     }
 }
