@@ -25,6 +25,13 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(e => !e.IsDeleted)
                 .Sum(e => e.Amount);
         }
+        public decimal GetTotalDonationThisMonth()
+        {
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            return _context.Donations
+                .Where(d => !d.IsDeleted && d.DateTime >= firstDayOfMonth)
+                .Sum(d => d.Amount);
+        }
         public async Task<List<Donation>> GetDonationsByEventIdAsync(int eventId)
         {
             return await _context.Donations

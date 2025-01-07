@@ -84,20 +84,33 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _userAccountRepository.GetTotalUsersStatAsync();
         }
+        public TotalDonationStatDTO GetTotalDonationStats()
+        {
+            return new TotalDonationStatDTO
+            {
+                TotalDonation = _donationRepository.GetTotalDonateAmount(),
+                TotalDonationThisMonth = _donationRepository.GetTotalDonationThisMonth()
+            };
+        }
+        public TotalIncomeStatDTO GetTotalIncomeStats()
+        {
+            return new TotalIncomeStatDTO
+            {
+                TotalIncome = _incomeRepository.GetTotalIncomeAmount(),
+                TotalIncomeThisMonth = _incomeRepository.GetTotalIncomeThisMonth()
+            };
+        }
 
-        //KPI
-        public decimal GetTotalDonateAmount()
+        public TotalExpenseStatDTO GetTotalExpenseStats()
         {
-            return _donationRepository.GetTotalDonateAmount();
+            return new TotalExpenseStatDTO
+            {
+                TotalExpense = _expenseRepository.GetTotalExpenseAmount(),
+                TotalExpenseThisMonth = _expenseRepository.GetTotalExpenseThisMonth()
+            };
         }
-        public decimal TotalIncome()
-        {
-            return _incomeRepository.GetTotalIncomeAmount();
-        }    
-        public decimal TotalExpense()
-        {
-            return _expenseRepository.GetTotalExpenseAmount();
-        }
+
+        //KPI 
         public decimal GetCostPerChild()
         {
             return _expenseRepository.GetCostPerChild();
@@ -399,7 +412,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return result;
         }
-
     }
 
 }

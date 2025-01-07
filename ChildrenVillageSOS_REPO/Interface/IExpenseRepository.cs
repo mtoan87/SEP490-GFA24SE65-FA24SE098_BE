@@ -26,5 +26,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         DataTable getExpense();
         Task<IEnumerable<Expense>> GetExpensesByYear(int year);
         Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO);
+        decimal GetTotalExpenseThisMonth();
     }
 }
