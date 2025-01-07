@@ -18,5 +18,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<IEnumerable<TransferRequest>> GetAllTransferRequestsWithDetails();
         Task<TransferRequest> DeleteTransferRequest(int id);
         Task<TransferRequest> RestoreTransferRequest(int id);
+        Task<List<TransferRequest>> SearchTransferRequests(SearchTransferRequestDTO searchTransferRequestDTO);
     }
 }

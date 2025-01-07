@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferRequestDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var results = await _transferRequestService.GetAllTransferRequests();
             return Ok(results);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchTransferRequestDTO searchTransferRequestDTO)
+        {
+            if (string.IsNullOrEmpty(searchTransferRequestDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _transferRequestService.SearchTransferRequests(searchTransferRequestDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetTransferRequestById/{id}")]

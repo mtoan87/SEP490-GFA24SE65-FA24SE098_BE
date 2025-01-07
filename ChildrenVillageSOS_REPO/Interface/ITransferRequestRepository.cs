@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.Models;
+﻿using ChildrenVillageSOS_DAL.DTO.TransferRequestDTO;
+using ChildrenVillageSOS_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<IEnumerable<TransferRequest>> GetTransferRequestsByHouse(string houseId);
         Task<TransferRequest> GetTransferRequestWithDetails(int requestId);
         Task<IEnumerable<TransferRequest>> GetAllTransferRequestsWithDetails();
+        Task<List<TransferRequest>> SearchTransferRequests(SearchTransferRequestDTO searchTransferRequestDTO);
     }
 }

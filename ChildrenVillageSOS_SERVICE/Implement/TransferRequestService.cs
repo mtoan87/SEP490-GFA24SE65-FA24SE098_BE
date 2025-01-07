@@ -1,6 +1,8 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferRequestDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -224,5 +226,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return transferRequest;
         }
+
+        public async Task<List<TransferRequest>> SearchTransferRequests(SearchTransferRequestDTO searchTransferRequestDTO)
+        {
+            return await _transferRequestRepository.SearchTransferRequests(searchTransferRequestDTO);
+        }
+
     }
 }
