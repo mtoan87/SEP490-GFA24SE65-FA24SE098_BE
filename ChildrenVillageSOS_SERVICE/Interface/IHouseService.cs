@@ -30,5 +30,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HouseResponseDTO> GetHouseByIdWithImg(string houseId);
         DataTable getHouse();
         Task<HouseDetailsDTO> GetHouseDetails(string houseId);
+        Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO);
     }
 }

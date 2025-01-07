@@ -31,7 +31,7 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public string VillageId { get; set; }
 
-        public DateTime FoundationDate { get; set; }
+        public DateTime? FoundationDate { get; set; }
 
         public DateTime? LastInspectionDate { get; set; }
 

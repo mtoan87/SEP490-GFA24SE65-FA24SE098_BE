@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
@@ -313,6 +314,31 @@ namespace ChildrenVillageSOS_REPO.Implement
             };
 
             return result;
+        }
+
+        public async Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO)
+        {
+            var query = _context.Houses.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchHouseDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchHouseDTO.SearchTerm) ||
+                     x.HouseName.Contains(searchHouseDTO.SearchTerm) ||
+                     x.HouseNumber.Value.ToString().Contains(searchHouseDTO.SearchTerm) ||
+                     x.Location.Contains(searchHouseDTO.SearchTerm) ||
+                     x.HouseOwner.Contains(searchHouseDTO.SearchTerm) ||
+                     x.UserAccountId.Contains(searchHouseDTO.SearchTerm) ||
+                     x.VillageId.Contains(searchHouseDTO.SearchTerm) ||
+                     x.LastInspectionDate.Value.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
+                     x.FoundationDate.Value.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
+                     x.MaintenanceStatus.Contains(searchHouseDTO.SearchTerm) ||
+                     x.Status.Contains(searchHouseDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }

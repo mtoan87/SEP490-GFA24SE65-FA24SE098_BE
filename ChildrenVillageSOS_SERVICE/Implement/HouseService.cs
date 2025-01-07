@@ -289,5 +289,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _houseRepository.GetHouseNameByIdAsync(houseId);
         }
+
+        public async Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO)
+        {
+            return await _houseRepository.SearchHouses(searchHouseDTO);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.House;
+using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -34,6 +36,17 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var houses = await _houseService.GetAllHouses();
             return Ok(houses);
+        }
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchHouseDTO searchHouseDTO)
+        {
+            if (string.IsNullOrEmpty(searchHouseDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _houseService.SearchHouses(searchHouseDTO);
+            return Ok(result);
         }
         [HttpGet("GetHouseByAccountId")]
         public  IActionResult getHouseByAccountId(string userAccountId)
