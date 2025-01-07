@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -100,6 +101,32 @@ namespace ChildrenVillageSOS_REPO.Implement
                 //.Where(x => x.Diploma != null && x.SchoolReport != null)
                 .Where(x => x.SchoolLevel != null && x.SchoolReport != null)
                 .ToListAsync();
+        }
+
+        public async Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO)
+        {
+            var query = _context.AcademicReports.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchAcademicReportDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Diploma.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.ChildId.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.SchoolReport.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Gpa.Value.ToString().Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.SchoolLevel.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.SchoolId.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Semester.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.AcademicYear.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Remarks.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Achievement.Contains(searchAcademicReportDTO.SearchTerm) ||
+                     x.Status.Contains(searchAcademicReportDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }

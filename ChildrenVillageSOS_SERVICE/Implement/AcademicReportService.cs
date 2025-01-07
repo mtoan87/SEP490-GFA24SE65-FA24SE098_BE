@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.InventoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
@@ -249,6 +250,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return report;
+        }
+
+        public async Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO)
+        {
+            return await _academicReportRepository.SearchAcademicReports(searchAcademicReportDTO);
         }
     }
 }

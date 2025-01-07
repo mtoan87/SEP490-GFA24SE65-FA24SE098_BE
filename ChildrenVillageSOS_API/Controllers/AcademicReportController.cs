@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -22,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var reports = await _academicReportService.GetAllAcademicReports();
             return Ok(reports);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchAcademicReportDTO searchAcademicReportDTO)
+        {
+            if (string.IsNullOrEmpty(searchAcademicReportDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _academicReportService.SearchAcademicReports(searchAcademicReportDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllAcademicReportIsDelete")]

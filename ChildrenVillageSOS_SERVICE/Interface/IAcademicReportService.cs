@@ -19,5 +19,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<AcademicReportResponseDTO[]> GetAllAcademicReportIsDeleteAsync();
         Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg();
         Task<AcademicReportResponseDTO> GetAcademicReportByIdWithImg(int id);
+        Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO);
     }
 }

@@ -15,5 +15,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<AcademicReportResponseDTO[]> GetAllAcademicReportIsDeleteAsync();
         AcademicReportResponseDTO GetAcademicReportByIdWithImg(int academicReportId);
         Task<List<AcademicReport>> GetAcademicPerformanceDistribution();
+        Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO);
     }
 }
