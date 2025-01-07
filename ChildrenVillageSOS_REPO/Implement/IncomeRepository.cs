@@ -26,6 +26,14 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Sum(e => e.Amount);
         }
 
+        public decimal GetTotalIncomeThisMonth()
+        {
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            return _context.Incomes
+                .Where(i => !i.IsDeleted && i.Receiveday >= firstDayOfMonth)
+                .Sum(i => i.Amount);
+        }
+
         public DataTable getIncome()
         {
             DataTable dt = new DataTable();

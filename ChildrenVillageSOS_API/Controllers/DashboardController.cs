@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -132,25 +133,25 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(stat);
         }
 
-        [HttpGet("total-donates")]
-        public IActionResult CalculateTotalIncome()
+        [HttpGet("total-donation-stats")]
+        public ActionResult<TotalDonationStatDTO> GetTotalDonationStats()
         {
-            var stat = _dashboardService.GetTotalDonateAmount();
-            return Ok(stat);
+            var stats = _dashboardService.GetTotalDonationStats();
+            return Ok(stats);
         }
 
-        [HttpGet("total-incomes")]
-        public IActionResult TotalIncome()
+        [HttpGet("total-income-stats")]
+        public ActionResult<TotalIncomeStatDTO> GetTotalIncomeStats()
         {
-            var stat = _dashboardService.TotalIncome();
-            return Ok(stat);
+            var stats = _dashboardService.GetTotalIncomeStats();
+            return Ok(stats);
         }
 
-        [HttpGet("total-expenses")]
-        public IActionResult TotalExpense()
+        [HttpGet("total-expense-stats")]
+        public ActionResult<TotalExpenseStatDTO> GetTotalExpenseStats()
         {
-            var stat = _dashboardService.TotalExpense();
-            return Ok(stat);
+            var stats = _dashboardService.GetTotalExpenseStats();
+            return Ok(stats);
         }
 
         //Charts
