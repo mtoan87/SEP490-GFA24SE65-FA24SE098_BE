@@ -7,6 +7,7 @@ using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.HealthReportDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
 using ChildrenVillageSOS_DAL.DTO.SubjectDetailDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -317,6 +318,28 @@ namespace ChildrenVillageSOS_REPO.Implement
             };
 
             return result;
+        }
+
+        public async Task<List<Child>> SearchChildren(SearchChildDTO searchChildDTO)
+        {
+            var query = _context.Children.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchChildDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchChildDTO.SearchTerm) ||
+                     x.ChildName.Contains(searchChildDTO.SearchTerm) ||
+                     x.HealthStatus.Contains(searchChildDTO.SearchTerm) ||
+                     x.HouseId.Contains(searchChildDTO.SearchTerm) ||
+                     x.SchoolId.Contains(searchChildDTO.SearchTerm) ||
+                     x.Gender.Contains(searchChildDTO.SearchTerm) ||
+                     x.Status.Contains(searchChildDTO.SearchTerm) ||
+                     x.Dob.Value.ToString("yyyy-MM-dd").Contains(searchChildDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }

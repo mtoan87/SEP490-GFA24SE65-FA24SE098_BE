@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.HouseDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -536,6 +537,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync()
         {
             return _childRepository.GetAllChildIsDeleteAsync();
+        }
+
+        public async Task<List<Child>> SearchChildren(SearchChildDTO searchChildDTO)
+        {
+            return await _childRepository.SearchChildren(searchChildDTO);
         }
 
     }

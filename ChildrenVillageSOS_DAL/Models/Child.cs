@@ -33,7 +33,7 @@ public partial class Child
 
     public string? Gender { get; set; }
 
-    public DateTime Dob { get; set; }
+    public DateTime? Dob { get; set; }
 
     public string? Status { get; set; }
 

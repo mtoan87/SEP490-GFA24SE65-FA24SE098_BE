@@ -15,7 +15,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public string ChildName { get; set; }
         public string HealthStatus { get; set; }
         public string Gender { get; set; }
-        public DateTime Dob { get; set; }
+        public DateTime? Dob { get; set; }
         public string Status { get; set; }
         public string HouseName { get; set; }
         public string SchoolName { get; set; }
