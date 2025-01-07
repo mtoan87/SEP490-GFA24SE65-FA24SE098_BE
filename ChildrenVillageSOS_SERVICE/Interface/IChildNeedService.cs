@@ -16,5 +16,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<ChildNeed> UpdateChildNeed(int id, UpdateChildNeedsDTO updateChildNeed);
         Task<ChildNeed> DeleteChildNeed(int id);
         Task<ChildNeed> RestoreChildNeed(int id);
+        Task<List<ChildNeed>> SearchChildNeeds(SearchChildNeedsDTO searchChildNeedsDTO);
     }
 }

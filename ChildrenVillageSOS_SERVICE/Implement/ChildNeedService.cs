@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildNeedsDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -108,6 +110,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return childNeed;
+        }
+
+        public async Task<List<ChildNeed>> SearchChildNeeds(SearchChildNeedsDTO searchChildNeedsDTO)
+        {
+            return await _childNeedRepository.SearchChildNeeds(searchChildNeedsDTO);
         }
     }
 }

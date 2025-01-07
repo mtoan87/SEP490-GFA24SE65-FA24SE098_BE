@@ -1,4 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildNeedsDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +22,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var childNeeds = await _childNeedService.GetAllChildNeeds();
             return Ok(childNeeds);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchChildNeedsDTO searchChildNeedsDTO)
+        {
+            if (string.IsNullOrEmpty(searchChildNeedsDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _childNeedService.SearchChildNeeds(searchChildNeedsDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetChildNeedById/{id}")]
