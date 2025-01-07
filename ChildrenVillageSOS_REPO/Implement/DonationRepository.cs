@@ -18,6 +18,12 @@ namespace ChildrenVillageSOS_REPO.Implement
         public DonationRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+        public decimal GetTotalDonateAmount()
+        {
+            return _context.Donations
+                .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
+                .Sum(e => e.Amount);
+        }
         public async Task<List<Donation>> GetDonationsByEventIdAsync(int eventId)
         {
             return await _context.Donations

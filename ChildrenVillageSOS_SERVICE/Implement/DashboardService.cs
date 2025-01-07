@@ -86,6 +86,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
 
         //KPI
+        public decimal GetTotalDonateAmount()
+        {
+            return _donationRepository.GetTotalDonateAmount();
+        }
+        public decimal TotalIncome()
+        {
+            return _incomeRepository.GetTotalIncomeAmount();
+        }    
+        public decimal TotalExpense()
+        {
+            return _expenseRepository.GetTotalExpenseAmount();
+        }
         public decimal GetCostPerChild()
         {
             return _expenseRepository.GetCostPerChild();
@@ -158,14 +170,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return demographics;
         }
-        public  decimal CalculateTotalExpense(IEnumerable<Expense> expenses)
-        {
-            return expenses.Where(e => !e.IsDeleted).Sum(e => e.ExpenseAmount);
-        }
-        public  decimal CalculateTotalIncome(IEnumerable<Income> incomes)
-        {
-            return incomes.Where(e => !e.IsDeleted).Sum(e => e.Amount);
-        }
+        
         public async Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatistics()
         {
             return await _paymentRepository.GetPaymentMethodStatistics();
