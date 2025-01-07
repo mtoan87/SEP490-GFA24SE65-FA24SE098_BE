@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -239,6 +240,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             updIncome.IsDeleted = true;
             await _incomeRepository.UpdateAsync(updIncome);
             return updIncome;
+        }
+
+        public async Task<List<Income>> SearchIncomes(SearchIncomeDTO searchIncomeDTO)
+        {
+            return await _incomeRepository.SearchIncomes(searchIncomeDTO);
         }
     }
 }

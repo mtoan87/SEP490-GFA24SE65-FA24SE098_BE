@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -29,6 +30,17 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var exp = await _incomeService.GetAllIncomes();
             return Ok(exp);
+        }
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchIncomeDTO searchIncomeDTO)
+        {
+            if (string.IsNullOrEmpty(searchIncomeDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _incomeService.SearchIncomes(searchIncomeDTO);
+            return Ok(result);
         }
         [HttpGet("ExportExcel")]
         public ActionResult ExportExcel()

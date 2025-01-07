@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
 using ChildrenVillageSOS_DAL.DTO.IncomeDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -145,8 +146,25 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return totalIncome;
         }
-    }
 
-   
+        public async Task<List<Income>> SearchIncomes(SearchIncomeDTO searchIncomeDTO)
+        {
+            var query = _context.Incomes.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchIncomeDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchIncomeDTO.SearchTerm) ||
+                     x.DonationId.Value.ToString().Contains(searchIncomeDTO.SearchTerm) ||
+                     x.Amount.ToString().Contains(searchIncomeDTO.SearchTerm) ||
+                     x.Status.Contains(searchIncomeDTO.SearchTerm) ||
+                     x.Receiveday.ToString("yyyy-MM-dd").Contains(searchIncomeDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
+        }
+    }   
 }
 

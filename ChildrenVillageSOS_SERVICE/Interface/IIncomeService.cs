@@ -25,5 +25,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Income[] GetIcomeByHealthWallet(int id);
         Income[] GetIcomeByNesWallet(int id);
         Income[] GetIcomeBySystemWallet(int id);
+        Task<List<Income>> SearchIncomes(SearchIncomeDTO searchIncomeDTO);
     }
 }
