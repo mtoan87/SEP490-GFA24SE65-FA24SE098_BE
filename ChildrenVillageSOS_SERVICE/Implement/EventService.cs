@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.AcademicReportDTO;
+using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
@@ -391,6 +392,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 await _eventRepository.UpdateAsync(even);
             }
             return even;
+        }
+
+        public async Task<List<Event>> SearchEvents(SearchEventDTO searchEventDTO)
+        {
+            return await _eventRepository.SearchEvents(searchEventDTO);
         }
     }
 }

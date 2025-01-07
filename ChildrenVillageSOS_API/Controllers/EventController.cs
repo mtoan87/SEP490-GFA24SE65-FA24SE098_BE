@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -20,6 +21,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var even = await _eventService.GetAllEvent();
             return Ok(even);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchEventDTO searchEventDTO)
+        {
+            if (string.IsNullOrEmpty(searchEventDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _eventService.SearchEvents(searchEventDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllEventsIsDelete")]

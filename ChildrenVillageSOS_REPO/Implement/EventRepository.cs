@@ -1,6 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -152,6 +153,27 @@ namespace ChildrenVillageSOS_REPO.Implement
             };
 
             return result;
+        }
+
+        public async Task<List<Event>> SearchEvents(SearchEventDTO searchEventDTO)
+        {
+            var query = _context.Events.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchEventDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchEventDTO.SearchTerm) ||
+                     x.EventCode.Contains(searchEventDTO.SearchTerm) ||
+                     x.Name.Contains(searchEventDTO.SearchTerm) ||
+                     x.EventCode.Contains(searchEventDTO.SearchTerm) ||
+                     x.StartTime.Value.ToString("yyyy-MM-dd").Contains(searchEventDTO.SearchTerm) ||
+                     x.EndTime.Value.ToString("yyyy-MM-dd").Contains(searchEventDTO.SearchTerm) ||
+                     x.Status.Contains(searchEventDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }
