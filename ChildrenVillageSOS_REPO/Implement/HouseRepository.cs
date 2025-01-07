@@ -279,9 +279,9 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             var averageAge = children.Count > 0 ? (double)totalAge / children.Count : 0;
 
-            var achievementCount = await _context.AcademicReports
-                .Where(ar => house.Children.Select(c => c.Id).Contains(ar.ChildId))
-                .CountAsync();
+            //var achievementCount = await _context.AcademicReports
+            //    .Where(ar => house.Children.Select(c => c.Id).Contains(ar.ChildId))
+            //    .CountAsync();
          
             var childrenList = children.Select(c => new ChildSummaryDTO
             {
@@ -310,7 +310,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 AverageAge = averageAge,
                 MaleCount = maleCount,
                 FemaleCount = femaleCount,
-                AchievementCount = achievementCount
+                //AchievementCount = achievementCount
             };
 
             return result;
@@ -331,8 +331,6 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.HouseOwner.Contains(searchHouseDTO.SearchTerm) ||
                      x.UserAccountId.Contains(searchHouseDTO.SearchTerm) ||
                      x.VillageId.Contains(searchHouseDTO.SearchTerm) ||
-                     x.LastInspectionDate.Value.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
-                     x.FoundationDate.ToString("yyyy-MM-dd").Contains(searchHouseDTO.SearchTerm) ||
                      x.MaintenanceStatus.Contains(searchHouseDTO.SearchTerm) ||
                      x.Status.Contains(searchHouseDTO.SearchTerm)
                     )
