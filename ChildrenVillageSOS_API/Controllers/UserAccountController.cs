@@ -23,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(user);
         }
 
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchUserDTO searchUserDTO)
+        {
+            if (string.IsNullOrEmpty(searchUserDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _userAccountService.SearchUserAccounts(searchUserDTO);
+            return Ok(result);
+        }
+
         [HttpGet("GetAllUserIsDelete")]
         public async Task<IActionResult> GetAllUserIsDeletedAsync()
         {
@@ -86,16 +98,5 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("Search")]
-        public async Task<IActionResult> Search([FromQuery] SearchUserDTO searchUserDTO)
-        {
-            if (string.IsNullOrEmpty(searchUserDTO.SearchTerm))
-            {
-                return BadRequest("Search term is required.");
-            }
-
-            var result = await _userAccountService.SearchUserAccounts(searchUserDTO);
-            return Ok(result);
-        }
     }
 }

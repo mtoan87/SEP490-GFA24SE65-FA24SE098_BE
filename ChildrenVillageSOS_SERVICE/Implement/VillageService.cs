@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.DTO.UserDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -245,6 +246,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 await _villageRepository.UpdateAsync(village);
             }
             return village;
+        }
+
+        public async Task<List<Village>> SearchVillages(SearchVillageDTO searchVillageDTO)
+        {
+            return await _villageRepository.SearchVillages(searchVillageDTO);
         }
     }
 }

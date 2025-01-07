@@ -1,4 +1,5 @@
-﻿using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+﻿using ChildrenVillageSOS_DAL.DTO.UserDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -21,6 +22,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var vil = await _villageService.GetAllVillage();
             return Ok(vil);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchVillageDTO searchVillageDTO)
+        {
+            if (string.IsNullOrEmpty(searchVillageDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _villageService.SearchVillages(searchVillageDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetVillageByEventId")]
