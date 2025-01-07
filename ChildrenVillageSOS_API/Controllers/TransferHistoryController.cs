@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferHistoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -22,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var transferHistories = await _transferHistoryService.GetAllTransferHistories();
             return Ok(transferHistories);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchTransferHistoryDTO searchTransferHistoryDTO)
+        {
+            if (string.IsNullOrEmpty(searchTransferHistoryDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _transferHistoryService.SearchTransferHistories(searchTransferHistoryDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetTransferHistoryById/{id}")]

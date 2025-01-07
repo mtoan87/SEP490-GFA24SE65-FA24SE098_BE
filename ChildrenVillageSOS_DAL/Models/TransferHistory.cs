@@ -13,7 +13,7 @@ public partial class TransferHistory
 
     public string ToHouseId { get; set; } = null!;
 
-    public DateTime TransferDate { get; set; }
+    public DateTime? TransferDate { get; set; }
 
     public string Status { get; set; } = null!;
 

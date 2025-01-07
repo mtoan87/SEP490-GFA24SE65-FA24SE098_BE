@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.TransferHistoryDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -108,5 +109,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return transferRequest;
         }
+
+        public async Task<List<TransferHistory>> SearchTransferHistories(SearchTransferHistoryDTO searchTransferHistoryDTO)
+        {
+            return await _transferHistoryRepository.SearchTransferHistories(searchTransferHistoryDTO);
+        }
+
     }
 }

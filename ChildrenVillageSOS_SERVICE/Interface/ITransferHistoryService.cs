@@ -16,5 +16,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<TransferHistory> UpdateTransferHistory(int id, UpdateTransferHistoryDTO updateTransferHistory);
         Task<TransferHistory> DeleteTransferHistory(int id);
         Task<TransferHistory> RestoreTransferHistory(int id);
+        Task<List<TransferHistory>> SearchTransferHistories(SearchTransferHistoryDTO searchTransferHistoryDTO);
     }
 }
