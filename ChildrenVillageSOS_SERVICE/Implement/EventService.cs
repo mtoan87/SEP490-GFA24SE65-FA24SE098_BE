@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Helpers;
 using ChildrenVillageSOS_DAL.Models;
@@ -10,6 +11,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +53,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<EventResponseDTO[]> GetAllEventIsDeleteAsync()
         {
             return _eventRepository.GetAllEventIsDeleteAsync();
+        }
+
+        public async Task<EventDetailsDTO> GetEventDetails(int eventId)
+        {
+            return await _eventRepository.GetEventDetails(eventId);
         }
 
         public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()

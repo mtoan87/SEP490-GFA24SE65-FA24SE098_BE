@@ -27,7 +27,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         }
         public async Task<decimal> GetWalletBudgetByUserIdAsync(string userAccountId)
         {
-            return await _context.FoodStuffWallets
+            return await _context.SystemWallets
                 .Where(w => w.UserAccountId == userAccountId)
                 .Select(w => w.Budget)
                 .FirstOrDefaultAsync();

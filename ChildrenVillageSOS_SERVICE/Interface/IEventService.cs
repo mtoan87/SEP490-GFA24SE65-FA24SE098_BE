@@ -18,5 +18,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Event> RestoreEvent(int id);
         Task<string> DonateEvent(int id, EventDonateDTO updateEvent);
         public Task<EventResponseDTO[]> GetAllEventIsDeleteAsync();
+        Task<EventDetailsDTO> GetEventDetails(int eventId);
     }
 }

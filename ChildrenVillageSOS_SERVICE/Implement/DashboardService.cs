@@ -86,6 +86,38 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
 
         //KPI
+        public decimal GetCostPerChild()
+        {
+            return _expenseRepository.GetCostPerChild();
+        }
+        public decimal GetBudgetUtilizationPercentage()
+        {
+            return _expenseRepository.GetBudgetUtilizationPercentage();
+        }
+
+        public object GetMonthlyEfficiency()
+        {
+            // Get current year and month
+            var currentYear = DateTime.Now.Year;
+            var currentMonth = DateTime.Now.Month;
+
+            // Get total income and expense for the current month and year
+            var totalIncome = _incomeRepository.GetMonthlyIncome(currentYear, currentMonth);
+            var totalExpense = _expenseRepository.GetMonthlyExpense(currentYear, currentMonth);
+
+            // Calculate efficiency
+            decimal efficiency = 0;
+            if (totalIncome > 0)
+            {
+                efficiency = (totalExpense / totalIncome) * 100;
+            }
+
+            // Return result
+            return new
+            {
+                Efficiency = Math.Round(efficiency, 2) // Round to 2 decimal places
+            };
+        }
 
         //Charts
 
@@ -150,7 +182,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var reports = await _academicReportRepository.GetAcademicPerformanceDistribution();
 
             var primaryReports = reports.Where(r => r.SchoolLevel == "Elementary School").ToList();
-            var secondaryReports = reports.Where(r => r.SchoolLevel == "Middle  School").ToList();
+            var secondaryReports = reports.Where(r => r.SchoolLevel == "Middle School").ToList();
             var highSchoolReports = reports.Where(r => r.SchoolLevel == "High School").ToList();
 
             var result = new List<AcademicPerformanceDistributionDTO>
@@ -304,7 +336,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         result.Labels.Add(date.ToString("dd/MM"));
                         result.BookingCounts.Add(weeklyBookings.Count(b =>
-                            b.Visitday == DateOnly.FromDateTime(date)));
+                            b.Visitday == DateOnly.FromDateTime(date) && b.Status == "Confirmed"));
                     }
                     break;
 
@@ -318,6 +350,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     // Group by week
                     var weeks = monthlyBookings
+                        .Where(b => b.Status == "Confirmed")
                         .GroupBy(b => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
                             b.Visitday.Value.ToDateTime(TimeOnly.MinValue),
                             CalendarWeekRule.FirstDay,
@@ -342,9 +375,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                     for (int month = 1; month <= 12; month++)
                     {
-                        result.Labels.Add($"Month {month}");
+                        result.Labels.Add($"M {month}");
                         result.BookingCounts.Add(yearlyBookings.Count(b =>
-                            b.Visitday.Value.Month == month));
+                            b.Visitday.Value.Month == month && b.Status == "Confirmed"));
                     }
                     break;
 
@@ -353,38 +386,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return result;
-        }
-        public decimal GetCostPerChild()
-        {
-            return _expenseRepository.GetCostPerChild();
-        }
-        public decimal GetBudgetUtilizationPercentage()
-        {
-            return _expenseRepository.GetBudgetUtilizationPercentage();
-        }
-
-        public object GetMonthlyEfficiency()
-        {
-            // Get current year and month
-            var currentYear = DateTime.Now.Year;
-            var currentMonth = DateTime.Now.Month;
-
-            // Get total income and expense for the current month and year
-            var totalIncome = _incomeRepository.GetMonthlyIncome(currentYear, currentMonth);
-            var totalExpense = _expenseRepository.GetMonthlyExpense(currentYear, currentMonth);
-
-            // Calculate efficiency
-            decimal efficiency = 0;
-            if (totalIncome > 0)
-            {
-                efficiency = (totalExpense / totalIncome) * 100;
-            }
-
-            // Return result
-            return new
-            {              
-                Efficiency = Math.Round(efficiency, 2) // Round to 2 decimal places
-            };
         }
 
     }
