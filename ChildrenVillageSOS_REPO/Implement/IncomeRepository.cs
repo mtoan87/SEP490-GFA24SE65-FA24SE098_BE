@@ -135,7 +135,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(i => !i.IsDeleted &&
                             i.Receiveday.Year == year &&
                             i.Receiveday.Month == month)
-                .Sum(i => i.Amount ?? 0);
+                .Sum(i => i.Amount);
 
             return totalIncome;
         }

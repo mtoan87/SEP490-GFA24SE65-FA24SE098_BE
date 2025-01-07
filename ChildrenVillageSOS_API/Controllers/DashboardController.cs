@@ -89,7 +89,18 @@ namespace ChildrenVillageSOS_API.Controllers
         //    var totalDonations = await _donationService.GetTotalDonationsByYear(year);
         //    return Ok(new { Year = year, TotalDonations = totalDonations });
         //}
-
+        [HttpGet("total-incomes")]
+        public IActionResult CalculateTotalIncome(IEnumerable<Income> incomes)
+        {
+            var stat = _dashboardService.CalculateTotalIncome(incomes);
+            return Ok(stat);
+        }
+        [HttpGet("total-expenses")]
+        public IActionResult CalculateTotalExpense(IEnumerable<Expense> expenses)
+        {
+            var stat = _dashboardService.CalculateTotalExpense(expenses);
+            return Ok(stat);
+        }
         [HttpGet("efficiency-by-month")]
         public  IActionResult GetEfficiencyByMonth()
         {

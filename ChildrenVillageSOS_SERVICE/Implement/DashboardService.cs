@@ -126,7 +126,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return demographics;
         }
-
+        public  decimal CalculateTotalExpense(IEnumerable<Expense> expenses)
+        {
+            return expenses.Where(e => !e.IsDeleted).Sum(e => e.ExpenseAmount);
+        }
+        public  decimal CalculateTotalIncome(IEnumerable<Income> incomes)
+        {
+            return incomes.Where(e => !e.IsDeleted).Sum(e => e.Amount);
+        }
         public async Task<IEnumerable<PaymentMethodStatsDTO>> GetPaymentMethodStatistics()
         {
             return await _paymentRepository.GetPaymentMethodStatistics();
@@ -222,7 +229,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 .Select(g => new
                 {
                     Month = g.Key,
-                    Total = g.Sum(x => x.Amount ?? 0)
+                    Total = g.Sum(x => x.Amount)
                 })
                 .OrderBy(x => x.Month)
                 .ToList();
