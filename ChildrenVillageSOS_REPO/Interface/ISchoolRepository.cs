@@ -13,5 +13,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<SchoolResponseDTO[]> GetAllSchoolsIsDeleted();
         SchoolResponseDTO GetSchoolByIdWithImg(string schoolId);
         Task<SchoolDetailsDTO> GetSchoolDetails(string schoolId);
+        Task<List<School>> SearchSchools(SearchSchoolDTO searchSchoolDTO);
     }
 }

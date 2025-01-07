@@ -20,5 +20,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<SchoolResponseDTO> GetSchoolByIdWithImg(string schoolId);
         Task<IEnumerable<SchoolResponseDTO>> GetAllSchoolWithImg();
         Task<SchoolDetailsDTO> GetSchoolDetails(string schoolId);
+        Task<List<School>> SearchSchools(SearchSchoolDTO searchSchoolDTO);
     }
 }

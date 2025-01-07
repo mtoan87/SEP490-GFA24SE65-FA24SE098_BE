@@ -216,5 +216,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return school;
         }
+
+        public async Task<List<School>> SearchSchools(SearchSchoolDTO searchSchoolDTO)
+        {
+            return await _schoolRepository.SearchSchools(searchSchoolDTO);
+        }
     }
 }

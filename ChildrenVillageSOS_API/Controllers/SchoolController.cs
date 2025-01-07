@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -22,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var schools = await _schoolService.GetAllSchools();
             return Ok(schools);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchSchoolDTO searchSchoolDTO)
+        {
+            if (string.IsNullOrEmpty(searchSchoolDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _schoolService.SearchSchools(searchSchoolDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetAllSchoolsIsDeleted")]

@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.SchoolDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -122,6 +123,26 @@ namespace ChildrenVillageSOS_REPO.Implement
             };
 
             return result;
+        }
+        
+        public async Task<List<School>> SearchSchools(SearchSchoolDTO searchSchoolDTO)
+        {
+            var query = _context.Schools.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchSchoolDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchSchoolDTO.SearchTerm) ||
+                     x.SchoolName.Contains(searchSchoolDTO.SearchTerm) ||
+                     x.Address.Contains(searchSchoolDTO.SearchTerm) ||
+                     x.SchoolType.Contains(searchSchoolDTO.SearchTerm) ||
+                     x.PhoneNumber.Contains(searchSchoolDTO.SearchTerm) ||
+                     x.Email.Contains(searchSchoolDTO.SearchTerm) 
+                    )
+                );
+            }
+            return await query.ToListAsync();
         }
     }
 }
