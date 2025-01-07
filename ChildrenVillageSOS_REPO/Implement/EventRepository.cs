@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
+using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
@@ -110,5 +111,47 @@ namespace ChildrenVillageSOS_REPO.Implement
             };
         }
 
+        public async Task<EventDetailsDTO> GetEventDetails(int eventId)
+        {
+            var eventDetails = await _context.Events
+                .Include(e => e.Donations.Where(d => !d.IsDeleted))
+                .FirstOrDefaultAsync(e => e.Id == eventId && !e.IsDeleted);
+
+            if (eventDetails == null)
+            {
+                throw new Exception("Event not found.");
+            }
+
+            // Lấy danh sách các donor/sponsor đã donate
+            var donors = eventDetails.Donations.Select(d => new DonorDTO
+            {
+                Id = d.Id,
+                UserName = d.UserName ?? "Unknown",
+                UserEmail = d.UserEmail ?? "Unknown",
+                Phone = d.Phone ?? "Unknown",
+                Address = d.Address ?? "Unknown",
+                DonationType = d.DonationType,
+                Amount = d.Amount,
+                DateTime = d.DateTime,
+                Description = d.Description
+            }).ToList();
+
+            var result = new EventDetailsDTO
+            {
+                Id = eventDetails.Id,
+                Name = eventDetails.Name,
+                Description = eventDetails.Description,
+                StartTime = eventDetails.StartTime,
+                EndTime = eventDetails.EndTime,
+                Amount = eventDetails.Amount,
+                CurrentAmount = eventDetails.CurrentAmount,
+                AmountLimit = eventDetails.AmountLimit,
+                Status = eventDetails.Status,
+                VillageId = eventDetails.VillageId,
+                Donors = donors
+            };
+
+            return result;
+        }
     }
 }
