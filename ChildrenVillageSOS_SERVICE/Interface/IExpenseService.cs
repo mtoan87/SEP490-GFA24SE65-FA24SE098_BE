@@ -25,5 +25,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Expense[] GetExpenseByHealthWalletId(int id);
         Expense[] GetExpenseByNesceWalletId(int id);
         Expense[] GetExpenseBySysWalletId(int id);
+        Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO);
     }
 }

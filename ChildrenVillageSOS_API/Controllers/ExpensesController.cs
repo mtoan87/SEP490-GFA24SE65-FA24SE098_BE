@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Interface;
 using ClosedXML.Excel;
@@ -51,6 +52,17 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var exp = await _expenseService.GetAllExpenses();
             return Ok(exp);
+        }
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchExpenseDTO searchExpenseDTO)
+        {
+            if (string.IsNullOrEmpty(searchExpenseDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _expenseService.SearchExpenses(searchExpenseDTO);
+            return Ok(result);
         }
         [HttpGet("GetExpenseByFacilitiesWalletId")]
         public IActionResult GetExpenseByFacilitiesWalletId(int Id)

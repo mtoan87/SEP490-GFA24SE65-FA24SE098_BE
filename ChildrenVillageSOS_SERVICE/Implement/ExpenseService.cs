@@ -1,4 +1,5 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -245,6 +246,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 }
             }           
             return exp;
+        }
+
+        public async Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO)
+        {
+            return await _expenseRepository.SearchExpenses(searchExpenseDTO);
         }
     }
 }

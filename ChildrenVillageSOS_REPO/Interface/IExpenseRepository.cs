@@ -25,5 +25,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Expense[] GetExpenseBySystemWalletId(int id);
         DataTable getExpense();
         Task<IEnumerable<Expense>> GetExpensesByYear(int year);
+        Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO);
     }
 }

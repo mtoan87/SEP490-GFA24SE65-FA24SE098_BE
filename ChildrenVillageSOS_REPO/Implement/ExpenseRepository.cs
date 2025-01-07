@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.KPIStatCards;
 using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -187,6 +188,26 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(x => !x.IsDeleted && x.Expenseday.Value.Year == year)
                 .ToListAsync();
         }
-        
+
+        public async Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO)
+        {
+            var query = _context.Expenses.AsQueryable();
+
+            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            if (!string.IsNullOrEmpty(searchExpenseDTO.SearchTerm))
+            {
+                query = query.Where(x =>
+                    (x.Id.ToString().Contains(searchExpenseDTO.SearchTerm) ||
+                     x.ExpenseAmount.ToString().Contains(searchExpenseDTO.SearchTerm) ||
+                     x.Description.Contains(searchExpenseDTO.SearchTerm) ||
+                     x.HouseId.Contains(searchExpenseDTO.SearchTerm) ||
+                     x.Status.Contains(searchExpenseDTO.SearchTerm) ||
+                     x.Expenseday.Value.ToString("yyyy-MM-dd").Contains(searchExpenseDTO.SearchTerm) ||
+                     x.CreatedDate.Value.ToString("yyyy-MM-dd").Contains(searchExpenseDTO.SearchTerm)
+                    )
+                );
+            }
+            return await query.ToListAsync();
+        }
     }
 }
