@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildProgressDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using System;
@@ -105,6 +107,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             return childProgress;
+        }
+
+        public async Task<List<ChildProgress>> SearchChildProgresses(SearchChildProgressDTO searchChildProgressDTO)
+        {
+            return await _childProgressRepository.SearchChildProgresses(searchChildProgressDTO);
         }
     }
 }

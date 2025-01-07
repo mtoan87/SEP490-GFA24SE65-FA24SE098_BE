@@ -1,5 +1,7 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ChildProgressDTO;
+using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
+using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +23,18 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var childProgresses = await _childProgressService.GetAllChildProgresses();
             return Ok(childProgresses);
+        }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] SearchChildProgressDTO searchChildProgressDTO)
+        {
+            if (string.IsNullOrEmpty(searchChildProgressDTO.SearchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _childProgressService.SearchChildProgresses(searchChildProgressDTO);
+            return Ok(result);
         }
 
         [HttpGet("GetChildProgressById/{id}")]

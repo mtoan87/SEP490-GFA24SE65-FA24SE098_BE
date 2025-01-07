@@ -16,5 +16,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<ChildProgress> UpdateChildProgress(int id, UpdateChildProgressDTO updateChildProgress);
         Task<ChildProgress> DeleteChildProgress(int id);
         Task<ChildProgress> RestoreChildProgress(int id);
+        Task<List<ChildProgress>> SearchChildProgresses(SearchChildProgressDTO searchChildProgressDTO);
     }
 }
