@@ -62,8 +62,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.FromHouseId.Contains(searchTransferRequestDTO.SearchTerm) ||
                      x.ToHouseId.Contains(searchTransferRequestDTO.SearchTerm) ||
                      x.RequestReason.Contains(searchTransferRequestDTO.SearchTerm) ||
-                     x.Status.Contains(searchTransferRequestDTO.SearchTerm) ||
-                     x.RequestDate.Value.ToString("yyyy-MM-dd").Contains(searchTransferRequestDTO.SearchTerm)
+                     x.Status.Contains(searchTransferRequestDTO.SearchTerm)
                     )
                 );
             }
