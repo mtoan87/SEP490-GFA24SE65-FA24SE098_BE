@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Charts;
 using ChildrenVillageSOS_DAL.DTO.DashboardDTO.Response;
+using ChildrenVillageSOS_DAL.DTO.DashboardDTO.TopStatCards;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
@@ -91,24 +92,6 @@ namespace ChildrenVillageSOS_API.Controllers
         //}
 
         // Dashboard KPI card
-        [HttpGet("total-donates")]
-        public IActionResult CalculateTotalIncome()
-        {
-            var stat = _dashboardService.GetTotalDonateAmount();
-            return Ok(stat);
-        }
-        [HttpGet("total-incomes")]
-        public IActionResult TotalIncome()
-        {
-            var stat = _dashboardService.TotalIncome();
-            return Ok(stat);
-        }
-        [HttpGet("total-expenses")]
-        public IActionResult TotalExpense()
-        {
-            var stat = _dashboardService.TotalExpense();
-            return Ok(stat);
-        }
         [HttpGet("efficiency-by-month")]
         public  IActionResult GetEfficiencyByMonth()
         {
@@ -150,6 +133,27 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(stat);
         }
 
+        [HttpGet("total-donation-stats")]
+        public ActionResult<TotalDonationStatDTO> GetTotalDonationStats()
+        {
+            var stats = _dashboardService.GetTotalDonationStats();
+            return Ok(stats);
+        }
+
+        [HttpGet("total-income-stats")]
+        public ActionResult<TotalIncomeStatDTO> GetTotalIncomeStats()
+        {
+            var stats = _dashboardService.GetTotalIncomeStats();
+            return Ok(stats);
+        }
+
+        [HttpGet("total-expense-stats")]
+        public ActionResult<TotalExpenseStatDTO> GetTotalExpenseStats()
+        {
+            var stats = _dashboardService.GetTotalExpenseStats();
+            return Ok(stats);
+        }
+
         //Charts
         [HttpGet("village-house-distribution")]
         public async Task<ActionResult<IEnumerable<VillageHouseDistributionDTO>>> GetVillageHouseDistribution()
@@ -176,27 +180,6 @@ namespace ChildrenVillageSOS_API.Controllers
                 statistics = statistics
             });
         }
-
-        // [HttpGet("payment-statistics/date-range")]
-        // public async Task<ActionResult<object>> GetPaymentMethodStatisticsByDateRange(
-        //[FromQuery] DateTime startDate,
-        //[FromQuery] DateTime endDate)
-        // {
-        //     try
-        //     {
-        //         var statistics = await _dashboardService.GetPaymentMethodStatisticsByDateRange(startDate, endDate);
-        //         return Ok(new
-        //         {
-        //             totalTransactions = statistics.Sum(x => x.NumberOfUses),
-        //             totalAmount = statistics.Sum(x => x.TotalAmount),
-        //             statistics = statistics
-        //         });
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(500, new { message = "Internal server error", error = ex.Message });
-        //     }
-        // }
 
         [HttpGet("academic-performance-distribution")]
         public async Task<IActionResult> GetAcademicPerformanceDistribution()

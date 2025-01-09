@@ -113,9 +113,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.Status.Contains(searchActivityDTO.SearchTerm) ||
                      x.EventId.Value.ToString().Contains(searchActivityDTO.SearchTerm) ||
                      x.Budget.Value.ToString().Contains(searchActivityDTO.SearchTerm) ||
-                     x.Feedback.Contains(searchActivityDTO.SearchTerm) ||
-                     x.StartDate.ToString("yyyy-MM-dd").Contains(searchActivityDTO.SearchTerm) ||
-                     x.EndDate.Value.ToString("yyyy-MM-dd").Contains(searchActivityDTO.SearchTerm)
+                     x.Feedback.Contains(searchActivityDTO.SearchTerm)                    
                     )
                 );
             }

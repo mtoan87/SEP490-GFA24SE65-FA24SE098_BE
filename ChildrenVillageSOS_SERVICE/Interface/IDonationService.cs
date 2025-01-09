@@ -21,6 +21,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Donation> DeleteDonation(int id);
         Task<Donation> RestoreDonation(int id);
         FormatDonationResponseDTO[] GetAllDonationArray();
+        FormatDonationResponseDTO[] GetDonationByEventIdAsync(int eventId);
+        FormatDonationResponseDTO[] GetDonationByEventAsync();
         Task<Donation> CreateDonationPayment(CreateDonationPayment createDonation);
         Task<Dictionary<int, Dictionary<string, decimal>>> GetMonthlyDonations();
         Task<int> GetTotalDonationsByYear(int year);

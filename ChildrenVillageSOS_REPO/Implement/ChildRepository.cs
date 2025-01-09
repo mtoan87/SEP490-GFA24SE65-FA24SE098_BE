@@ -196,11 +196,13 @@ namespace ChildrenVillageSOS_REPO.Implement
         // Dashboard phần Child Trends
         public async Task<List<ChildTrendDTO>> GetChildTrendsByYearAsync(int year)
         {
+            var monthAbbreviations = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
             // Danh sách mặc định 12 tháng với Count = 0
             var allMonths = Enumerable.Range(1, 12)
                 .Select(month => new ChildTrendDTO
                 {
-                    Month = month.ToString(),
+                    Month = monthAbbreviations[month - 1],
                     Year = year,
                     Count = 0
                 })
@@ -209,25 +211,24 @@ namespace ChildrenVillageSOS_REPO.Implement
             var actualData = await _context.Children
                 .Where(c => c.CreatedDate.HasValue && c.CreatedDate.Value.Year == year)
                 .GroupBy(c => c.CreatedDate.Value.Month)
-                .Select(g => new ChildTrendDTO
+                .Select(g => new
                 {
-                    Month = g.Key.ToString(),
-                    Year = year,
+                    Month = g.Key,
                     Count = g.Count()
                 })
-                .ToListAsync();
+                .ToDictionaryAsync(x => x.Month, x => x.Count);
 
-            // Kết hợp dữ liệu thực tế với danh sách mặc định
-            foreach (var data in actualData)
+            // Áp dụng dữ liệu thực tế vào danh sách mặc định
+            foreach (var month in allMonths)
             {
-                var monthData = allMonths.FirstOrDefault(m => m.Month == data.Month);
-                if (monthData != null)
+                var monthIndex = Array.IndexOf(monthAbbreviations, month.Month) + 1; // Tìm index (1-based)
+                if (actualData.ContainsKey(monthIndex))
                 {
-                    monthData.Count = data.Count;
+                    month.Count = actualData[monthIndex];
                 }
             }
 
-            return allMonths.OrderBy(x => int.Parse(x.Month)).ToList();
+            return allMonths;
         }
 
         public async Task<ChildDetailsDTO> GetChildDetails(string childId)
@@ -334,8 +335,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.HouseId.Contains(searchChildDTO.SearchTerm) ||
                      x.SchoolId.Contains(searchChildDTO.SearchTerm) ||
                      x.Gender.Contains(searchChildDTO.SearchTerm) ||
-                     x.Status.Contains(searchChildDTO.SearchTerm) ||
-                     x.Dob.ToString("yyyy-MM-dd").Contains(searchChildDTO.SearchTerm)
+                     x.Status.Contains(searchChildDTO.SearchTerm)
                     )
                 );
             }

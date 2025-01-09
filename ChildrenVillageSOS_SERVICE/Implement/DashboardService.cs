@@ -84,20 +84,33 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _userAccountRepository.GetTotalUsersStatAsync();
         }
+        public TotalDonationStatDTO GetTotalDonationStats()
+        {
+            return new TotalDonationStatDTO
+            {
+                TotalDonation = _donationRepository.GetTotalDonateAmount(),
+                TotalDonationThisMonth = _donationRepository.GetTotalDonationThisMonth()
+            };
+        }
+        public TotalIncomeStatDTO GetTotalIncomeStats()
+        {
+            return new TotalIncomeStatDTO
+            {
+                TotalIncome = _incomeRepository.GetTotalIncomeAmount(),
+                TotalIncomeThisMonth = _incomeRepository.GetTotalIncomeThisMonth()
+            };
+        }
 
-        //KPI
-        public decimal GetTotalDonateAmount()
+        public TotalExpenseStatDTO GetTotalExpenseStats()
         {
-            return _donationRepository.GetTotalDonateAmount();
+            return new TotalExpenseStatDTO
+            {
+                TotalExpense = _expenseRepository.GetTotalExpenseAmount(),
+                TotalExpenseThisMonth = _expenseRepository.GetTotalExpenseThisMonth()
+            };
         }
-        public decimal TotalIncome()
-        {
-            return _incomeRepository.GetTotalIncomeAmount();
-        }    
-        public decimal TotalExpense()
-        {
-            return _expenseRepository.GetTotalExpenseAmount();
-        }
+
+        //KPI 
         public decimal GetCostPerChild()
         {
             return _expenseRepository.GetCostPerChild();
@@ -259,6 +272,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             var result = new IncomeExpenseChartDTO();
 
+            var monthAbbreviations = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
             // Lấy dữ liệu Income theo tháng
             var incomes = await _incomeRepository.GetIncomesByYear(year);
             var monthlyIncomes = incomes
@@ -286,7 +301,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Tạo dữ liệu cho 12 tháng
             for (int month = 1; month <= 12; month++)
             {
-                result.Labels.Add($"Month {month}");
+                result.Labels.Add(monthAbbreviations[month - 1]); // Thêm tên viết tắt của tháng
                 result.IncomeData.Add(monthlyIncomes.FirstOrDefault(x => x.Month == month)?.Total ?? 0);
                 result.ExpenseData.Add(monthlyExpenses.FirstOrDefault(x => x.Month == month)?.Total ?? 0);
             }
@@ -331,7 +346,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             switch (timeFrame.ToLower())
             {
                 case "week":
-                    // Get last 7 days data
+                    // Lấy dữ liệu trong 7 ngày qua
                     endDate = DateTime.Today;
                     startDate = endDate.AddDays(-6);
 
@@ -341,48 +356,53 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     {
                         result.Labels.Add(date.ToString("dd/MM"));
                         result.BookingCounts.Add(weeklyBookings.Count(b =>
-                            b.Visitday == DateOnly.FromDateTime(date) && b.Status == "Confirmed"));
+                            b.Visitday.HasValue &&
+                            b.Visitday.Value == DateOnly.FromDateTime(date) &&
+                            b.Status == "Confirmed"));
                     }
                     break;
 
                 case "month":
-                    // Get current month data by weeks
+                    // Lấy dữ liệu trong tháng hiện tại, nhóm theo tuần
                     var currentDate = DateTime.Today;
                     startDate = new DateTime(currentDate.Year, currentDate.Month, 1);
                     endDate = startDate.AddMonths(1).AddDays(-1);
 
                     var monthlyBookings = await _bookingRepository.GetBookingsByDateRange(startDate, endDate);
 
-                    // Group by week
+                    // Nhóm theo tuần
                     var weeks = monthlyBookings
-                        .Where(b => b.Status == "Confirmed")
+                        .Where(b => b.Status == "Confirmed" && b.Visitday.HasValue)
                         .GroupBy(b => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
                             b.Visitday.Value.ToDateTime(TimeOnly.MinValue),
                             CalendarWeekRule.FirstDay,
                             DayOfWeek.Monday))
-                        .OrderBy(g => g.Key)
-                        .ToList();
+                        .OrderBy(g => g.Key);
 
                     foreach (var week in weeks)
                     {
-                        result.Labels.Add($"Week {week.Key}");
+                        result.Labels.Add($"W{week.Key}");
                         result.BookingCounts.Add(week.Count());
                     }
                     break;
 
                 case "year":
-                    // Get current year data by months
+                    // Lấy dữ liệu trong năm hiện tại, nhóm theo tháng
                     var currentYear = DateTime.Today.Year;
                     startDate = new DateTime(currentYear, 1, 1);
                     endDate = new DateTime(currentYear, 12, 31);
 
                     var yearlyBookings = await _bookingRepository.GetBookingsByDateRange(startDate, endDate);
 
+                    var monthAbbreviations = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
                     for (int month = 1; month <= 12; month++)
                     {
-                        result.Labels.Add($"M {month}");
+                        result.Labels.Add(monthAbbreviations[month - 1]);
                         result.BookingCounts.Add(yearlyBookings.Count(b =>
-                            b.Visitday.Value.Month == month && b.Status == "Confirmed"));
+                            b.Visitday.HasValue &&
+                            b.Visitday.Value.Month == month &&
+                            b.Status == "Confirmed"));
                     }
                     break;
 
@@ -392,7 +412,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return result;
         }
-
     }
 
 }

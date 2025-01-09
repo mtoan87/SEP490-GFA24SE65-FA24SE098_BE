@@ -24,6 +24,13 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(e => !e.IsDeleted) // Optional: Exclude deleted records
                 .Sum(e => e.ExpenseAmount);
         }
+        public decimal GetTotalExpenseThisMonth()
+        {
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            return _context.Expenses
+                .Where(e => !e.IsDeleted && e.Expenseday >= firstDayOfMonth)
+                .Sum(e => e.ExpenseAmount);
+        }
         public ExpenseResponseDTO[] GetAllExpenses()
         {
             var expenses = _context.Expenses
