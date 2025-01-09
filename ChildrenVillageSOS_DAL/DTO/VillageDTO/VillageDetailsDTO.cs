@@ -20,6 +20,7 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
         public string? Description { get; set; }
         public int TotalHouseOwners { get; set; }
         public int TotalMatureChildren { get; set; }
+        public decimal TotalDonationsLastMonth { get; set; }
         public List<HouseSummaryDTO> Houses { get; set; }
         public List<ActivitySummaryDTO> Activities { get; set; }
     }

@@ -305,8 +305,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.TotalHouses.Value.ToString().Contains(searchVillageDTO.SearchTerm) ||
                      x.TotalChildren.Value.ToString().Contains(searchVillageDTO.SearchTerm) ||
                      x.UserAccountId.Contains(searchVillageDTO.SearchTerm) ||
-                     x.Status.Contains(searchVillageDTO.SearchTerm) ||
-                     x.EstablishedDate.Value.ToString("yyyy-MM-dd").Contains(searchVillageDTO.SearchTerm)
+                     x.Status.Contains(searchVillageDTO.SearchTerm)
                     )
                 );
             }

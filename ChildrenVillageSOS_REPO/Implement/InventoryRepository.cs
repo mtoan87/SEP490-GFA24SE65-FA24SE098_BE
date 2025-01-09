@@ -100,9 +100,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.Purpose.Contains(searchInventoryDTO.SearchTerm) ||
                      x.BelongsTo.Contains(searchInventoryDTO.SearchTerm) ||
                      x.BelongsToId.Contains(searchInventoryDTO.SearchTerm) ||
-                     x.MaintenanceStatus.Contains(searchInventoryDTO.SearchTerm) ||
-                     x.PurchaseDate.Value.ToString("yyyy-MM-dd").Contains(searchInventoryDTO.SearchTerm) ||
-                     x.LastInspectionDate.Value.ToString("yyyy-MM-dd").Contains(searchInventoryDTO.SearchTerm)
+                     x.MaintenanceStatus.Contains(searchInventoryDTO.SearchTerm)
                     )
                 );
             }
