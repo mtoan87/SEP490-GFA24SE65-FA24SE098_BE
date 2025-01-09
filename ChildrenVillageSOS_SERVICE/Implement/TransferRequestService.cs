@@ -134,7 +134,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     Notes = dto.DirectorNote,
                     HandledBy = dto.ApprovedBy,
                     CreatedDate = DateTime.Now,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    CreatedBy = transferRequest.CreatedBy
                 };
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
@@ -163,7 +164,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     HandledBy = dto.ModifiedBy,
                     CreatedDate = DateTime.Now,
                     IsDeleted = false,
-                    RejectionReason = dto.DirectorNote
+                    RejectionReason = dto.DirectorNote,
+                    CreatedBy = transferRequest.CreatedBy
                 };
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
