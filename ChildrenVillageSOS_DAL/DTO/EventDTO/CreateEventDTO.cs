@@ -9,6 +9,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 {
     public class CreateEventDTO
     {
+        public string? EventCode { get; set; }
         public string? Name { get; set; }
 
         public string? Description { get; set; }

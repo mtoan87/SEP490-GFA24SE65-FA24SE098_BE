@@ -112,6 +112,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 SystemWalletId = createEvent.SystemWalletId,
                 HealthWalletId = createEvent.HealthWalletId,
                 NecessitiesWalletId = createEvent.NecessitiesWalletId,
+                EventCode = createEvent.EventCode,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 Status = "Active",
