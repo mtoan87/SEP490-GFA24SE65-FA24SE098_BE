@@ -46,7 +46,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         [Range(0, double.MaxValue, ErrorMessage = "CurrentAmount must be greater than or equal to 0.")]
         public decimal? CurrentAmount { get; set; }
 
-        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
         public decimal? Amount { get; set; }
 
         [Range(0.01, double.MaxValue, ErrorMessage = "AmountLimit must be greater than 0.")]

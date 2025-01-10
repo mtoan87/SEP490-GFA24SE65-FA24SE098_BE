@@ -114,6 +114,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = createEvent.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
+                EventCode = createEvent.EventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
