@@ -17,6 +17,29 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
 
         }
+
+        public async Task<BookingDetailsDTO?> GetBookingDetailsAsync(int bookingId)
+        {
+            var result = await (from b in _context.Bookings
+                                join h in _context.Houses on b.HouseId equals h.Id
+                                join v in _context.Villages on h.VillageId equals v.Id
+                                join bs in _context.BookingSlots on b.BookingSlotId equals bs.Id
+                                join ua in _context.UserAccounts on b.UserAccountId equals ua.Id
+                                where b.Id == bookingId
+                                select new BookingDetailsDTO
+                                {
+                                    VillageName = v.VillageName,
+                                    VillageLocation = v.Location,
+                                    HouseName = h.HouseName,
+                                    HouseLocation = h.Location,
+                                    StartTime = bs.StartTime,
+                                    EndTime = bs.EndTime,
+                                    Visitday = b.Visitday,
+                                    UserEmail = ua.UserEmail
+                                }).FirstOrDefaultAsync();
+
+            return result;
+        }
         public async Task<Booking?> GetBookingBySlotAsync(string houseId, DateOnly visitDay, int bookingSlotId)
         {
             return await _context.Bookings
