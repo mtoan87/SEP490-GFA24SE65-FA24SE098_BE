@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IUserAccountRepository : IRepositoryGeneric<UserAccount>
     {
+        string? GetRoleNameById(int roleId);
         Task<UserAccount> Login(string email, string password);
         Task<UserAccount> GetHighestIdUser();
         Task<UserAccount> GetUserWithImagesByIdAsync(string id);

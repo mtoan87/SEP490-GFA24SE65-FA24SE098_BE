@@ -12,6 +12,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IUserAccountService
     {
+        string? GetRoleNameById(int roleId);
         DataTable getUser();
         Task<IEnumerable<UserAccount>> GetAllUser();
         Task<UserAccount> GetUserById(string id);

@@ -19,6 +19,11 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
 
         }
+        public string? GetRoleNameById(int roleId)
+        {
+            var role = _context.Roles.FirstOrDefault(r => r.Id == roleId);
+            return role?.RoleName;
+        }
         public DataTable getUser()
         {
             DataTable dt = new DataTable();
