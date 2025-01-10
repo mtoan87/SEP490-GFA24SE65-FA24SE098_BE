@@ -29,7 +29,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _imageService = imageService;
             _imageRepository = imageRepository;
         }
-
+        public string? GetRoleNameById(int roleId)
+        {
+            return _userAccountRepository.GetRoleNameById(roleId);
+        }
         public DataTable getUser()
         {
             return _userAccountRepository.getUser();

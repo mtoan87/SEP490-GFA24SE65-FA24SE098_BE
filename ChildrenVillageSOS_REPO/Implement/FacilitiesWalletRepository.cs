@@ -15,6 +15,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         public FacilitiesWalletRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+
         public async Task<FacilitiesWallet> GetFacilitiesWalletByUserIdAsync(string userAccountId)
         {
             // Use Entity Framework to query the FacilitiesWallet by UserAccountId

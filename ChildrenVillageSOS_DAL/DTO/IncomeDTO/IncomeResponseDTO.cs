@@ -13,7 +13,7 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
         public decimal? Amount { get; set; }
         public DateTime ReceiveDay { get; set; }
         public string? Status { get; set; }
-        public string UserAccountId { get; set; }
+        public string? UserAccountId { get; set; }
         public int? FacilitiesWalletId { get; set; }
         public int? FoodStuffWalletId { get; set; }
         public int? HealthWalletId { get; set; }
@@ -21,7 +21,6 @@ namespace ChildrenVillageSOS_DAL.DTO.IncomeDTO
         public int? SystemWalletId { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public DateTime? ModifiedDate
-                        { get; set;}
+        public DateTime? ModifiedDate { get; set;}
     }
 }

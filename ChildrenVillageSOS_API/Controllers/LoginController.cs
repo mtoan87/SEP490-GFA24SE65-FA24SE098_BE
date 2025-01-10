@@ -51,7 +51,7 @@ namespace ChildrenVillageSOS_API.Controllers
 
             var token = this.GenerateJSONWebToken(account);
             var user = await _customerService.GetUserById(account.Id);
-            var roleId = user.RoleId;
+            var roleId = account.RoleId;
             return Ok(new ApiResponse
             {
                 StatusCode = 200,
@@ -79,7 +79,7 @@ namespace ChildrenVillageSOS_API.Controllers
               new Claim[]
               {
               new(ClaimTypes.Email, userInfo.UserEmail),
-              new(ClaimTypes.Role, userInfo.RoleId.ToString()),
+              new(ClaimTypes.Role, _customerService.GetRoleNameById(userInfo.RoleId)),
               new("userId", userInfo.Id.ToString()),
               },
               expires: DateTime.Now.AddMinutes(120),

@@ -32,8 +32,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.NeedType.Contains(searchChildNeedsDTO.SearchTerm) ||
                      x.Priority.Contains(searchChildNeedsDTO.SearchTerm) ||
                      x.Remarks.Contains(searchChildNeedsDTO.SearchTerm) ||
-                     x.Status.Contains(searchChildNeedsDTO.SearchTerm) ||
-                     x.FulfilledDate.Value.ToString("yyyy-MM-dd").Contains(searchChildNeedsDTO.SearchTerm)
+                     x.Status.Contains(searchChildNeedsDTO.SearchTerm)
                     )
                 );
             }
