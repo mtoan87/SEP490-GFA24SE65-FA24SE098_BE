@@ -25,7 +25,7 @@ public partial class UserAccount
 
     public string? Status { get; set; }
 
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
     public bool IsDeleted { get; set; }
 
