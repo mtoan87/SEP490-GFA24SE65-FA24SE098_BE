@@ -34,6 +34,18 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _userAccountService.SearchUserAccounts(searchUserDTO);
             return Ok(result);
         }
+        [HttpGet("SearchArray")]
+        public async Task<IActionResult> SearchUserArray(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _userAccountService.SearchUserArrayAsync(searchTerm);
+            return Ok(result);
+        }
+
 
         [HttpGet("GetAllUserIsDelete")]
         public async Task<IActionResult> GetAllUserIsDeletedAsync()

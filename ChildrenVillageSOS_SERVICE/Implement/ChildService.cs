@@ -161,6 +161,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _childRepository.GetChildByIdWithImg(childid);
         }
+        public async Task<ChildResponseDTO[]> SearchChildrenAsync(string searchTerm)
+        {
+            return await _childRepository.SearchChildrenAsync(searchTerm);
+        }
 
         public async Task<Child> CreateChild(CreateChildDTO createChild)
         {

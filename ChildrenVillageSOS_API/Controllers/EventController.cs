@@ -34,7 +34,24 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _eventService.SearchEvents(searchEventDTO);
             return Ok(result);
         }
+        [HttpGet("SearchArrayEvent")]
+        public async Task<IActionResult> SearchEventArray(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
 
+            var result = await _eventService.SearchEventArrayAsync(searchTerm);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllEventsArray")]
+        public async Task<IActionResult> GetAllEventArrayAsync()
+        {
+            var deletedEvents = await _eventService.GetAllEventArrayAsync();
+            return Ok(deletedEvents);
+        }
         [HttpGet("GetAllEventsIsDelete")]
         public async Task<IActionResult> GetAllEventsIsDelete()
         {

@@ -90,6 +90,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return villageResponseDTOs;
         }
+        public async Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm)
+        {
+            return await _villageRepository.SearchVillagesAsync(searchTerm);
+        }
 
         public async Task<Village> GetVillageById(string villageId)
         {
