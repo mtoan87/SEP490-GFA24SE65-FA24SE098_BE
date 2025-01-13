@@ -159,6 +159,61 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return villageDetails;
         }
+        public async Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm)
+        {
+            var query = _context.Villages
+                .Include(v => v.Houses)  // Nạp dữ liệu Houses
+                .ThenInclude(h => h.Children)  // Nạp dữ liệu Children
+                .Where(v => !v.IsDeleted); // Lọc các villages chưa bị xóa
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                string[] searchTerms = searchTerm.Split(' ').ToArray();
+
+                query = query.Where(v =>
+                    searchTerms.All(term =>
+                        (v.Id.ToString().Contains(term) ||
+                         v.VillageName.Contains(term) ||
+                         v.Location.Contains(term) ||
+                         v.ContactNumber.Contains(term) ||
+                         v.TotalHouses.ToString().Contains(term) ||
+                         v.TotalChildren.ToString().Contains(term) ||
+                         v.UserAccountId.Contains(term) ||
+                         v.Status.Contains(term)
+                        )
+                    )
+                );
+            }
+
+            var villages = await query.ToListAsync(); // Lấy danh sách villages
+
+            var result = villages.Select(v => new VillageResponseDTO
+            {
+                Id = v.Id,
+                VillageName = v.VillageName ?? string.Empty,
+                EstablishedDate = v.EstablishedDate,
+                TotalHouses = v.Houses.Count(h => !h.IsDeleted), // Đếm Houses chưa bị xóa
+                TotalChildren = v.Houses
+                    .SelectMany(h => h.Children)
+                    .Count(c => !c.IsDeleted), // Đếm Children chưa bị xóa
+                ContactNumber = v.ContactNumber,
+                Location = v.Location ?? string.Empty,
+                Description = v.Description ?? string.Empty,
+                Status = v.Status ?? string.Empty,
+                UserAccountId = v.UserAccountId,
+                CreatedBy = v.CreatedBy,
+                ModifiedBy = v.ModifiedBy,
+                IsDeleted = v.IsDeleted,
+                CreatedDate = v.CreatedDate,
+                ModifiedDate = v.ModifiedDate,
+                ImageUrls = v.Images
+                    .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                    .Select(img => img.UrlPath)
+                    .ToArray()
+            }).ToArray();
+
+            return result;
+        }
 
         public List<Village> GetVillagesDonatedByUser(string userAccountId)
         {

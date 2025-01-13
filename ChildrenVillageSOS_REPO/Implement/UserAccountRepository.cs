@@ -131,6 +131,54 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync(); // Chuyển kết quả truy vấn thành mảng bất đồng bộ
         }
+        public async Task<UserResponseDTO[]> SearchUserArrayAsync(string searchTerm)
+        {
+            var query = _context.UserAccounts
+                .Where(x => !x.IsDeleted); // Filter out deleted accounts
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // Split the searchTerm into an array of terms
+                string[] searchTerms = searchTerm.Split(' ').ToArray();
+
+                // Apply search filters based on the array of search terms
+                query = query.Where(x =>
+                    searchTerms.All(term =>
+                        (x.RoleId.ToString().Contains(term) ||
+                         x.Status.Contains(term) ||
+                         x.Country.Contains(term) ||
+                         x.Gender.Contains(term) ||
+                         x.Address.Contains(term) ||
+                         x.Phone.Contains(term) ||
+                         x.UserEmail.Contains(term) ||
+                         x.UserName.Contains(term) ||
+                         x.Id.Contains(term)
+                        )
+                    )
+                );
+            }
+
+            return await query
+                .Select(x => new UserResponseDTO
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    UserEmail = x.UserEmail,
+                    Password = x.Password,
+                    Phone = x.Phone,
+                    Address = x.Address,
+                    Dob = x.Dob,
+                    Gender = x.Gender,
+                    Country = x.Country,
+                    Status = x.Status,
+                    RoleId = x.RoleId,
+                    IsDeleted = x.IsDeleted,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate
+                })
+                .ToArrayAsync(); // Convert the results to an array asynchronously
+        }
+
         public async Task<UserResponseDTO[]> GetAllUserArrayAsync()
         {
             return await _context.UserAccounts
@@ -192,23 +240,31 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             var query = _context.UserAccounts.AsQueryable();
 
-            // Nếu có SearchTerm, tìm kiếm trong các cột cần tìm
+            // Check if SearchTerm is provided
             if (!string.IsNullOrEmpty(searchUserDTO.SearchTerm))
             {
+                // Convert the search term into an array by splitting on spaces
+                string[] searchTerms = searchUserDTO.SearchTerm.Split(' ').ToArray();
+
+                // Search across all fields using multiple terms in the array
                 query = query.Where(x =>
-                    (x.RoleId.ToString().Contains(searchUserDTO.SearchTerm) ||
-                     x.Status.Contains(searchUserDTO.SearchTerm) ||
-                     x.Country.Contains(searchUserDTO.SearchTerm) ||
-                     x.Gender.Contains(searchUserDTO.SearchTerm) ||
-                     x.Address.Contains(searchUserDTO.SearchTerm) ||
-                     x.Phone.Contains(searchUserDTO.SearchTerm) ||
-                     x.UserEmail.Contains(searchUserDTO.SearchTerm) ||
-                     x.UserName.Contains(searchUserDTO.SearchTerm) ||
-                     x.Id.Contains(searchUserDTO.SearchTerm)
+                    searchTerms.All(term =>
+                        (x.RoleId.ToString().Contains(term) ||
+                         x.Status.Contains(term) ||
+                         x.Country.Contains(term) ||
+                         x.Gender.Contains(term) ||
+                         x.Address.Contains(term) ||
+                         x.Phone.Contains(term) ||
+                         x.UserEmail.Contains(term) ||
+                         x.UserName.Contains(term) ||
+                         x.Id.Contains(term)
+                        )
                     )
                 );
             }
+
             return await query.ToListAsync();
         }
+
     }
 }

@@ -23,5 +23,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<UserResponseDTO[]> GetAllUserArrayAsync();
         UserResponseDTO GetUserByIdArray(string userid);
         Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO);
+        Task<UserResponseDTO[]> SearchUserArrayAsync(string searchTerm);
     }
 }

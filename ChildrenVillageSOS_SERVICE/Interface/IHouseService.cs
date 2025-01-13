@@ -14,6 +14,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         House? GetHouseByUserAccountId(string userAccountId);
         Task<IEnumerable<House>> GetAllHouses();
+        Task<HouseResponseDTO[]> SearchHousesAsync(string searchTerm);
         Task<House> GetHouseById(string id);
         Task<House> CreateHouse(CreateHouseDTO createHouse);
         Task<House> UpdateHouse(string id, UpdateHouseDTO updateHouse);
