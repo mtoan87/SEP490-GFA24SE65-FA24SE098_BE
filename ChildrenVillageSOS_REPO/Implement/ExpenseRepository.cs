@@ -40,11 +40,49 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(e => !e.IsDeleted && e.Expenseday >= firstDayOfMonth)
                 .Sum(e => e.ExpenseAmount);
         }
-        public async Task<List<Expense>> GetExpensesByVillageExpenseIdAsync(int villageExpenseId)
+
+        public async Task ApproveHouseExpensesByVillageIdAsync(string villageId)
+        {
+            // Bước 1: Lấy các nhà thuộc villageId
+            var housesInVillage = await _context.Houses
+                .Where(h => h.VillageId == villageId && !h.IsDeleted)  // Lọc theo VillageId và nhà không bị xóa
+                .ToListAsync();
+
+            if (!housesInVillage.Any())
+            {
+                throw new InvalidOperationException("No houses found for this village.");
+            }
+
+            // Bước 2: Lấy các Expense thuộc các houseId của những nhà đó có status là "OnRequestToEvent" và ExpenseType là "Special"
+            var houseExpenses = await _context.Expenses
+                .Where(e => housesInVillage.Select(h => h.Id).Contains(e.HouseId)  // Lọc các Expense thuộc HouseId trong các nhà trên
+                            && e.Status == "OnRequestToEvent"
+                            && e.ExpenseType == "Special"
+                            && !e.IsDeleted)  // Lọc các Expense không bị xóa
+                .ToListAsync();
+
+            if (!houseExpenses.Any())
+            {
+                throw new InvalidOperationException("No expenses found with status 'OnRequestToEvent' and 'Special'.");
+            }
+
+            // Bước 3: Cập nhật trạng thái của các Expense này thành "EventApproved"
+            foreach (var houseExpense in houseExpenses)
+            {
+                houseExpense.Status = "EventApproved";  // Cập nhật trạng thái
+                houseExpense.ModifiedDate = DateTime.Now;  // Cập nhật thời gian sửa đổi
+                await UpdateAsync(houseExpense);  // Lưu lại thay đổi
+            }
+        }
+
+        public async Task<List<Expense>> GetExpensesByVillageIdAsync(string villageId)
         {
             return await _context.Expenses
-                .Where(e => e.Id == villageExpenseId && !e.IsDeleted)
-                .ToListAsync();
+         .Where(e => e.VillageId == villageId
+                     && e.Status == "OnRequestToEvent"
+                     && !e.IsDeleted
+                     && e.HouseId != null) // Lọc các Expense thuộc House và có trạng thái 'OnRequestToEvent'
+         .ToListAsync();
         }
         public ExpenseResponseDTO[] GetAllExpenses()
         {

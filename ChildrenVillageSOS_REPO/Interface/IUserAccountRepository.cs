@@ -15,6 +15,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         string? GetRoleNameById(int roleId);
         Task<UserAccount> Login(string email, string password);
         Task<UserAccount> GetHighestIdUser();
+
         Task<UserAccount> GetUserWithImagesByIdAsync(string id);
         Task<TotalUsersStatDTO> GetTotalUsersStatAsync(); //Dashboard
         DataTable getUser();
