@@ -239,6 +239,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _userAccountRepository.GetAllUserIsDeletedAsync();
         }
+        public Task<UserResponseDTO[]> GetAllUserArrayAsync()
+        {
+            return _userAccountRepository.GetAllUserArrayAsync();
+        }
 
         public async Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken)
         {

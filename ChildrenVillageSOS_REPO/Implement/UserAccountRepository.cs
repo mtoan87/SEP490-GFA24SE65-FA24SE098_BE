@@ -131,6 +131,29 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync(); // Chuyển kết quả truy vấn thành mảng bất đồng bộ
         }
+        public async Task<UserResponseDTO[]> GetAllUserArrayAsync()
+        {
+            return await _context.UserAccounts
+                .Where(x => !x.IsDeleted) // Lọc các tài khoản đã bị xóa
+                .Select(x => new UserResponseDTO
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    UserEmail = x.UserEmail,
+                    Password = x.Password,
+                    Phone = x.Phone,
+                    Address = x.Address,
+                    Dob = x.Dob,
+                    Gender = x.Gender,
+                    Country = x.Country,
+                    Status = x.Status,
+                    RoleId = x.RoleId,
+                    IsDeleted = x.IsDeleted,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate
+                })
+                .ToArrayAsync(); // Chuyển kết quả truy vấn thành mảng bất đồng bộ
+        }
 
         public async Task<TotalUsersStatDTO> GetTotalUsersStatAsync()
         {

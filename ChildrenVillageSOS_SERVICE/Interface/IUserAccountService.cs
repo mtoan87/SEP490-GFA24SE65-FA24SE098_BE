@@ -23,6 +23,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<UserAccount> RestoreUser(string id);
         Task<UserAccount> Login(string email, string password);
         Task<UserResponseDTO[]> GetAllUserIsDeletedAsync();
+        Task<UserResponseDTO[]> GetAllUserArrayAsync();
         Task<UserResponseDTO> GetUserByIdArray(string userid);
         Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken);
         Task<List<UserAccount>> SearchUserAccounts(SearchUserDTO searchUserDTO);
