@@ -41,6 +41,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var children = await _userAccountService.GetAllUserIsDeletedAsync();
             return Ok(children);
         }
+        [HttpGet("GetAllUserArray")]
+        public async Task<IActionResult> GetAllUserArrayAsync()
+        {
+            var children = await _userAccountService.GetAllUserArrayAsync();
+            return Ok(children);
+        }
 
         [HttpGet("GetUserById/{Id}")]
         public async Task<IActionResult> GetUserById(string Id)
