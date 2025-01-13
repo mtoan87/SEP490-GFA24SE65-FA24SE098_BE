@@ -23,6 +23,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 {
     public class EventService : IEventService
     {
+        private readonly IExpenseRepository _expenseRepository;
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IEventRepository _eventRepository;        
         private readonly IPaymentRepository _paymentRepository;       
@@ -32,6 +33,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
         public EventService(IEventRepository eventRepository,
+            IExpenseRepository expenseRepository,
             IUserAccountRepository userAccountRepository,
             IImageService imageService,
             IImageRepository imageRepository,          
@@ -40,6 +42,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IDonationService donationService,           
             IIncomeRepository incomeRepository)
         {
+            _expenseRepository = expenseRepository;
+            _eventRepository = eventRepository;
             _userAccountRepository = userAccountRepository;
             _eventRepository = eventRepository;
             _imageService = imageService;
@@ -93,7 +97,73 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return eventResponseDTOs;
         }
+        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId)
+        {
+        // Lấy thông tin villageExpense từ database
+            var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
+            if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
+        {
+            throw new InvalidOperationException("Invalid village expense for creating an event.");
+        }
 
+        // Tạo sự kiện mới với thông tin từ villageExpense
+        var newEvent = new Event
+        {
+            Name = createEvent.Name,
+            Description = createEvent.Description,
+            CreatedBy = createEvent.CreatedBy,
+            FacilitiesWalletId = villageExpense.FacilitiesWalletId,
+            FoodStuffWalletId = villageExpense.FoodStuffWalletId,
+            SystemWalletId = villageExpense.SystemWalletId,
+            HealthWalletId = villageExpense.HealthWalletId,
+            NecessitiesWalletId = villageExpense.NecessitiesWalletId,
+            StartTime = createEvent.StartTime,
+            EndTime = createEvent.EndTime,
+            EventCode = createEvent.EventCode,
+            Status = "Active",
+            IsDeleted = false,
+            CreatedDate = DateTime.Now,
+            Amount = null,
+            CurrentAmount = null,
+            AmountLimit = villageExpense.ExpenseAmount, // Gán ExpenseAmount từ villageExpense
+            VillageId = villageExpense.VillageId,       // Gán VillageId từ villageExpense
+        };
+
+        // Lưu sự kiện mới vào database
+        await _eventRepository.AddAsync(newEvent);
+
+        // Upload danh sách ảnh và nhận về các URL
+            List<string> imageUrls = await _imageService.UploadEventImage(createEvent.Img, newEvent.Id);
+
+        // Lưu thông tin các ảnh vào bảng Image
+        foreach (var url in imageUrls)
+            {
+                var image = new Image
+                {
+                    UrlPath = url,
+                    EventId = newEvent.Id,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = false,
+                };
+            await _imageRepository.AddAsync(image);
+        }
+
+    // Cập nhật trạng thái của các houseExpense liên quan đến villageExpense
+        var relatedHouseExpenses = await _expenseRepository.GetExpensesByVillageExpenseIdAsync(villageExpense.Id);
+        foreach (var houseExpense in relatedHouseExpenses)
+            {
+        houseExpense.Status = "EventApproved";
+        houseExpense.ModifiedDate = DateTime.Now;
+        await _expenseRepository.UpdateAsync(houseExpense);
+            }
+
+    // Cập nhật trạng thái của villageExpense
+        villageExpense.Status = "EventApproved";
+        villageExpense.ModifiedDate = DateTime.Now;
+        await _expenseRepository.UpdateAsync(villageExpense);
+
+        return newEvent;
+        }
 
 
         public async Task<EventResponseDTO> GetEventById(int id)
@@ -107,21 +177,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 Name = createEvent.Name,
                 Description = createEvent.Description,
-                FacilitiesWalletId = createEvent.FacilitiesWalletId,
-                FoodStuffWalletId = createEvent.FoodStuffWalletId,
-                SystemWalletId = createEvent.SystemWalletId,
-                HealthWalletId = createEvent.HealthWalletId,
-                NecessitiesWalletId = createEvent.NecessitiesWalletId,
+                FacilitiesWalletId = null,
+                FoodStuffWalletId = null,
+                SystemWalletId = null,
+                HealthWalletId = 1,
+                NecessitiesWalletId = null,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 EventCode = createEvent.EventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
-                Amount = createEvent.Amount,
-                CurrentAmount = createEvent.Amount,
-                AmountLimit = createEvent.AmountLimit, 
-                VillageId = createEvent.VillageId,
+                Amount = null,
+                CurrentAmount = null,
+                AmountLimit = null, 
+                VillageId = null,
                
             };
             await _eventRepository.AddAsync(newEvent);
