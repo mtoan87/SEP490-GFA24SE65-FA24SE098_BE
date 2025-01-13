@@ -5,6 +5,7 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -320,7 +321,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 .Distinct()
                 .ToList();
 
-            if (villageIds.Count > 1 || !villageIds.FirstOrDefault().HasValue)
+            if (villageIds.Count > 1)
             {
                 throw new InvalidOperationException("Selected houses must belong to the same village.");
             }

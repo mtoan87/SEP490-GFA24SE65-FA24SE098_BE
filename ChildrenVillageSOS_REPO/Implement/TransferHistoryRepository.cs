@@ -32,7 +32,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                      x.ToHouseId.Contains(searchTransferHistoryDTO.SearchTerm) ||
                      x.Notes.Contains(searchTransferHistoryDTO.SearchTerm) ||
                      x.Status.Contains(searchTransferHistoryDTO.SearchTerm) ||
-                     x.TransferDate.Value.ToString("yyyy-MM-dd").Contains(searchTransferHistoryDTO.SearchTerm)
+                     x.TransferDate.ToString("yyyy-MM-dd").Contains(searchTransferHistoryDTO.SearchTerm)
                     )
                 );
             }

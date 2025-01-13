@@ -27,7 +27,7 @@ namespace ChildrenVillageSOS_REPO.Implement
             {
                 query = query.Where(x =>
                     (x.Id.ToString().Contains(searchSubjectDTO.SearchTerm) ||
-                     x.AcademicReportId.Value.ToString().Contains(searchSubjectDTO.SearchTerm) ||
+                     x.AcademicReportId.ToString().Contains(searchSubjectDTO.SearchTerm) ||
                      x.SubjectName.Contains(searchSubjectDTO.SearchTerm) ||
                      x.Remarks.Contains(searchSubjectDTO.SearchTerm) ||
                      x.Score.Value.ToString().Contains(searchSubjectDTO.SearchTerm) 
