@@ -48,6 +48,17 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _houseService.SearchHouses(searchHouseDTO);
             return Ok(result);
         }
+        [HttpGet("SearchHouse")]
+        public async Task<IActionResult> SearchHousesAsync([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _houseService.SearchHousesAsync(searchTerm);
+            return Ok(result);
+        }
         [HttpGet("GetHouseByAccountId")]
         public  IActionResult getHouseByAccountId(string userAccountId)
         {

@@ -38,6 +38,18 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("SearchChildren")]
+        public async Task<IActionResult> SearchChildrenAsync([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _childService.SearchChildrenAsync(searchTerm);
+            return Ok(result);
+        }
+
         [HttpGet("GetAllChildIsDelete")]
         public async Task<IActionResult> GetAllChildIsDeleteAsync()
         {

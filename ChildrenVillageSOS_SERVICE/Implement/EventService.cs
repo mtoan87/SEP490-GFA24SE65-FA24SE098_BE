@@ -55,6 +55,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _eventRepository.GetAllEventIsDeleteAsync();
         }
+        public Task<EventResponseDTO[]> GetAllEventArrayAsync()
+        {
+            return _eventRepository.GetAllEventArrayAsync();
+        }
+        public Task<EventResponseDTO[]> SearchEventArrayAsync(string searchTerm)
+        {
+            return _eventRepository.SearchEventArrayAsync(searchTerm);
+        }
 
         public async Task<EventDetailsDTO> GetEventDetails(int eventId)
         {

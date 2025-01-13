@@ -59,6 +59,88 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync(); // Thực thi truy vấn và trả về mảng
         }
+        public async Task<EventResponseDTO[]> GetAllEventArrayAsync()
+        {
+            return await _context.Events
+                .Where(e => !e.IsDeleted)
+                .Select(e => new EventResponseDTO
+                {
+                    Id = e.Id,
+                    EventCode = e.EventCode,
+                    Name = e.Name,
+                    FacilitiesWalletId = e.FacilitiesWalletId,
+                    FoodStuffWalletId = e.FoodStuffWalletId,
+                    SystemWalletId = e.SystemWalletId,
+                    HealthWalletId = e.HealthWalletId,
+                    NecessitiesWalletId = e.NecessitiesWalletId,
+                    Description = e.Description,
+                    StartTime = e.StartTime,
+                    EndTime = e.EndTime,
+                    Amount = e.Amount ?? 0, // Sử dụng giá trị mặc định nếu null
+                    CurrentAmount = e.CurrentAmount ?? 0,
+                    AmountLimit = e.AmountLimit ?? 0,
+                    Status = e.Status,
+                    VillageId = e.VillageId,
+                    CreatedDate = e.CreatedDate,
+                    ImageUrls = e.Images
+                                .Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
+                                .Select(img => img.UrlPath)
+                                .ToArray() // Chuyển thành mảng
+                })
+                .ToArrayAsync(); // Thực thi truy vấn và trả về mảng
+        }
+        public async Task<EventResponseDTO[]> SearchEventArrayAsync(string searchTerm)
+        {
+            var query = _context.Events
+                .Where(e => !e.IsDeleted); // Filter out deleted events
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // Split the searchTerm into an array of terms
+                string[] searchTerms = searchTerm.Split(' ').ToArray();
+
+                // Apply search filters based on the array of search terms
+                query = query.Where(e =>
+                    searchTerms.All(term =>
+                        (e.Id.ToString().Contains(term) ||
+                         e.EventCode.Contains(term) ||
+                         e.Name.Contains(term) ||
+                         e.Status.Contains(term)
+                        )
+                    )
+                );
+            }
+
+            var events = await query.ToListAsync(); // Fetch the events from the database
+
+            // Now handle the date formatting on the client-side
+            var result = events.Select(e => new EventResponseDTO
+            {
+                Id = e.Id,
+                EventCode = e.EventCode,
+                Name = e.Name,
+                FacilitiesWalletId = e.FacilitiesWalletId,
+                FoodStuffWalletId = e.FoodStuffWalletId,
+                SystemWalletId = e.SystemWalletId,
+                HealthWalletId = e.HealthWalletId,
+                NecessitiesWalletId = e.NecessitiesWalletId,
+                Description = e.Description,
+                StartTime = e.StartTime,
+                EndTime = e.EndTime,
+                Amount = e.Amount ?? 0, // Use default value if null
+                CurrentAmount = e.CurrentAmount ?? 0,
+                AmountLimit = e.AmountLimit ?? 0,
+                Status = e.Status,
+                VillageId = e.VillageId,
+                CreatedDate = e.CreatedDate,
+                ImageUrls = e.Images
+                            .Where(img => !img.IsDeleted) // Filter out deleted images
+                            .Select(img => img.UrlPath)
+                            .ToArray(), // Convert to array
+            }).ToArray();
+
+            return result;
+        }
 
         public EventResponseDTO GetEventById(int eventId)
         {

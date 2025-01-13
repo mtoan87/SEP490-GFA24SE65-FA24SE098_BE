@@ -128,6 +128,61 @@ namespace ChildrenVillageSOS_REPO.Implement
             return childDetails;
         }
 
+        public async Task<ChildResponseDTO[]> SearchChildrenAsync(string searchTerm)
+        {
+            var query = _context.Children
+                .Include(c => c.House)  // Nạp dữ liệu House liên kết với Child
+                .Where(c => !c.IsDeleted); // Lọc các Children chưa bị xóa
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                string[] searchTerms = searchTerm.Split(' ').ToArray();
+
+                query = query.Where(c =>
+                    searchTerms.All(term =>
+                        (c.Id.ToString().Contains(term) ||
+                         c.ChildName.Contains(term) ||
+                         c.HealthStatus.Contains(term) ||
+                         c.HouseId.Contains(term) ||
+                         c.SchoolId.Contains(term) ||
+                         c.Gender.Contains(term) ||
+                         c.Status.Contains(term)
+                        )
+                    )
+                );
+            }
+
+            var children = await query.ToListAsync(); // Lấy danh sách Children
+
+            var result = children.Select(c => new ChildResponseDTO
+            {
+                Id = c.Id,
+                ChildName = c.ChildName ?? string.Empty,
+                HealthStatus = c.HealthStatus ?? string.Empty,
+                HouseId = c.HouseId ?? string.Empty,
+                SchoolId = c.SchoolId ?? string.Empty,
+                FacilitiesWalletId = c.FacilitiesWalletId,
+                SystemWalletId = c.SystemWalletId,
+                FoodStuffWalletId = c.FoodStuffWalletId,
+                HealthWalletId = c.HealthWalletId,
+                NecessitiesWalletId = c.NecessitiesWalletId,
+                Amount = c.Amount ?? 0,
+                CurrentAmount = c.CurrentAmount ?? 0,
+                AmountLimit = c.AmountLimit ?? 0,
+                Gender = c.Gender ?? string.Empty,
+                Dob = c.Dob,
+                CreatedDate = c.CreatedDate,
+                ModifiedDate = c.ModifiedDate,
+                Status = c.Status ?? string.Empty,
+                ImageUrls = c.Images
+                    .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                    .Select(img => img.UrlPath)
+                    .ToArray()
+            }).ToArray();
+
+            return result;
+        }
+
         // Lấy toàn bộ danh sách các Child thuộc HouseId cụ thể.
         public async Task<List<Child>> GetChildByHouseIdAsync(string houseId)
         {

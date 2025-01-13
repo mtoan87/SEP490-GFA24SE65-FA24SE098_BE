@@ -35,6 +35,17 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _villageService.SearchVillages(searchVillageDTO);
             return Ok(result);
         }
+        [HttpGet("SearchVillage")]
+        public async Task<IActionResult> SearchVillagesAsync([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var result = await _villageService.SearchVillagesAsync(searchTerm);
+            return Ok(result);
+        }
 
         [HttpGet("GetVillageByEventId")]
         public async Task<IActionResult> GetVillageByEventId(int eventId)

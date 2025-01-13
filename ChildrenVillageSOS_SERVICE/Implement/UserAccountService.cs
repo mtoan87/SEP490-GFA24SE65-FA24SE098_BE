@@ -301,5 +301,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return await _userAccountRepository.SearchUserAccounts(searchUserDTO);
         }
+        public async Task<UserResponseDTO[]> SearchUserArrayAsync(string searchUserDTO)
+        {
+            return await _userAccountRepository.SearchUserArrayAsync(searchUserDTO);
+        }
     }
 }

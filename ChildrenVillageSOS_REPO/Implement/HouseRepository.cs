@@ -166,6 +166,64 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync();  // Execute query and convert the result to an array asynchronously
         }
+        public async Task<HouseResponseDTO[]> SearchHousesAsync(string searchTerm)
+        {
+            var query = _context.Houses
+                .Include(h => h.Children) // Include Children if needed
+                .Where(h => !h.IsDeleted); // Filter houses that are not deleted
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                string[] searchTerms = searchTerm.Split(' ').ToArray();
+
+                query = query.Where(h =>
+                    searchTerms.All(term =>
+                        (h.Id.ToString().Contains(term) ||
+                         h.HouseName.Contains(term) ||
+                         h.HouseNumber.Value.ToString().Contains(term) ||
+                         h.Location.Contains(term) ||
+                         h.HouseOwner.Contains(term) ||
+                         h.UserAccountId.Contains(term) ||
+                         h.VillageId.Contains(term) ||
+                         h.MaintenanceStatus.Contains(term) ||
+                         h.Status.Contains(term)
+                        )
+                    )
+                );
+            }
+
+            var houses = await query.ToListAsync(); // Get list of houses
+
+            var result = houses.Select(h => new HouseResponseDTO
+            {
+                Id = h.Id,
+                HouseName = h.HouseName ?? string.Empty,
+                HouseNumber = h.HouseNumber,
+                Location = h.Location ?? string.Empty,
+                HouseOwner = h.HouseOwner ?? string.Empty,
+                Description = h.Description ?? string.Empty,
+                HouseMember = h.HouseMember,
+                Status = h.Status ?? string.Empty,
+                UserAccountId = h.UserAccountId ?? string.Empty,
+                VillageId = h.VillageId ?? string.Empty,
+                FoundationDate = h.FoundationDate,
+                LastInspectionDate = h.LastInspectionDate,
+                MaintenanceStatus = h.MaintenanceStatus ?? string.Empty,
+                CreatedBy = h.CreatedBy,
+                ModifiedBy = h.ModifiedBy,
+                IsDeleted = h.IsDeleted,
+                CreatedDate = h.CreatedDate,
+                ModifiedDate = h.ModifiedDate,
+                ImageUrls = h.Images
+                    .Where(img => !img.IsDeleted) // Exclude deleted images
+                    .Select(img => img.UrlPath)
+                    .ToArray(),
+                CurrentMembers = _context.Children.Count(c => c.HouseId == h.Id && !c.IsDeleted) // Count non-deleted children in house
+            }).ToArray();
+
+            return result;
+        }
+
         public async Task<HouseResponseDTO[]> GetHouseByVillageIdAsync(string villageId)
         {
             return await _context.Houses
