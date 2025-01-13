@@ -18,6 +18,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ExpenseService : IExpenseService
     {
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IHouseRepository _houseRepository;
         private readonly IChildRepository _childRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletService;
         private readonly IHealthWalletRepository _healthWalletService;
@@ -31,15 +32,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IFoodStuffWalletRepository foodStuffWalletService,
             IFacilitiesWalletRepository facilitiesWalletService,
             IWalletRepository walletRepository,
-            ISystemWalletRepository systemWalletService)
+            ISystemWalletRepository systemWalletService,
+            IHouseRepository houseRepository)
         {
             _childRepository = childRepository;
             _expenseRepository = expenseRepository;
             _necessitiesWalletService = necessitiesWalletService;
             _healthWalletService = healthWalletService;
             _facilitiesWalletService = facilitiesWalletService;
-            _foodStuffWalletService = foodStuffWalletService;          
+            _foodStuffWalletService = foodStuffWalletService;
             _systemWalletService = systemWalletService;
+            _houseRepository = houseRepository;
         }
 
         public DataTable getExpense()
@@ -298,13 +301,41 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }           
             return exp;
         }
-        public async Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds)
+        public async Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds, string description, string userName)
         {
             // Kiểm tra danh sách HouseId
             if (selectedHouseIds == null || !selectedHouseIds.Any())
             {
                 throw new ArgumentException("No houses selected for confirmation.");
             }
+
+            // Kiểm tra description
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentException("Description cannot be null or empty.");
+            }
+
+            // Lấy danh sách House từ selectedHouseIds
+            var houses = await _houseRepository.GetHousesByIdsAsync(selectedHouseIds);
+
+            if (!houses.Any())
+            {
+                throw new InvalidOperationException("No houses found for the provided IDs.");
+            }
+
+            // Lấy VillageId từ các House và kiểm tra xem chúng có thuộc cùng một Village
+            var villageIds = houses
+                .Select(h => h.VillageId)
+                .Distinct()
+                .ToList();
+
+            if (villageIds.Count > 1 || villageIds.FirstOrDefault() == null)
+            {
+                throw new InvalidOperationException("Selected houses must belong to the same village.");
+            }
+
+            // Lấy VillageId (tất cả House đã xác nhận thuộc cùng một Village)
+            var villageId = villageIds.First();
 
             // Lấy danh sách Expense từ các House đã chọn
             var houseExpenses = await _expenseRepository.GetExpensesByHouseIdsAsync(
@@ -315,24 +346,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new InvalidOperationException("No pending special expenses found for the selected houses.");
             }
 
-            // Lấy VillageId từ các House và kiểm tra xem chúng có thuộc cùng một Village
-            var villageIds = houseExpenses
-                .Select(e => e.VillageId)
-                .Distinct()
-                .ToList();
-
-            if (villageIds.Count > 1)
-            {
-                throw new InvalidOperationException("Selected houses must belong to the same village.");
-            }
-
-            // Lấy VillageId (tất cả House đã xác nhận thuộc cùng một Village)
-            var villageId = villageIds.First();
-
             // Cập nhật trạng thái của các Expense đã chọn
             foreach (var expense in houseExpenses)
             {
-                expense.Status = "EventRequest";
+                expense.ApprovedBy = userName;
+                expense.Status = "OnRequestToEvent";
                 expense.ModifiedDate = DateTime.Now;
                 await _expenseRepository.UpdateAsync(expense);
             }
@@ -344,11 +362,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var villageExpense = new Expense
             {
                 ExpenseType = "Special",
-                Status = "EventRequest",
+                Status = "OnRequestToEvent",
                 ExpenseAmount = totalExpenseAmount,
                 Expenseday = DateTime.Now,
+                Description = description, // Gán description
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now,
+                RequestedBy = userName,
+                HealthWalletId = 1,
                 IsDeleted = false,
                 HouseId = null, // Đây là Expense của Village
                 VillageId = villageId,
@@ -359,6 +380,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return villageExpense;
         }
+
 
 
 

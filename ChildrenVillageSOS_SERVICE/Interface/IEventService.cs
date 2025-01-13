@@ -10,6 +10,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IEventService
     {
+        Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId);
         Task<IEnumerable<EventResponseDTO>> GetAllEvent();
         Task<EventResponseDTO> GetEventById(int id);
         Task<Event> CreateEvent(CreateEventDTO createEvent);

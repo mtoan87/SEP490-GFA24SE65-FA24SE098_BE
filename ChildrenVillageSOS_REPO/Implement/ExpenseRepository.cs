@@ -21,11 +21,11 @@ namespace ChildrenVillageSOS_REPO.Implement
         public async Task<IEnumerable<Expense>> GetExpensesByHouseIdsAsync(IEnumerable<string> houseIds, string expenseType, string status)
         {
             return await _context.Expenses
-                .Where(e => houseIds.Contains(e.HouseId) &&
-                            e.ExpenseType.Equals(expenseType, StringComparison.OrdinalIgnoreCase) &&
-                            e.Status.Equals(status, StringComparison.OrdinalIgnoreCase) &&
-                            !e.IsDeleted)
-                .ToListAsync();
+                    .Where(e => houseIds.Contains(e.HouseId)
+                    && e.ExpenseType.ToLower() == expenseType.ToLower()
+                    && e.Status.ToLower() == status.ToLower()
+                    && !e.IsDeleted)
+        .ToListAsync();
         }
         public decimal GetTotalExpenseAmount()
         {
@@ -39,6 +39,12 @@ namespace ChildrenVillageSOS_REPO.Implement
             return _context.Expenses
                 .Where(e => !e.IsDeleted && e.Expenseday >= firstDayOfMonth)
                 .Sum(e => e.ExpenseAmount);
+        }
+        public async Task<List<Expense>> GetExpensesByVillageExpenseIdAsync(int villageExpenseId)
+        {
+            return await _context.Expenses
+                .Where(e => e.Id == villageExpenseId && !e.IsDeleted)
+                .ToListAsync();
         }
         public ExpenseResponseDTO[] GetAllExpenses()
         {

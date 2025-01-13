@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IExpenseRepository : IRepositoryGeneric<Expense>
     {
+        Task<List<Expense>> GetExpensesByVillageExpenseIdAsync(int villageExpenseId);
         decimal GetTotalExpenseAmount();
         Task<IEnumerable<Expense>> GetExpensesByHouseIdsAsync(IEnumerable<string> houseIds, string expenseType, string status);
         decimal GetCostPerChild();

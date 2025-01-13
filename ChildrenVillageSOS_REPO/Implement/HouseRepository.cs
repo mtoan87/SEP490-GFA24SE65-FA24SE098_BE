@@ -373,7 +373,17 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return result;
         }
+        public async Task<List<House>> GetHousesByIdsAsync(List<string> houseIds)
+        {
+            if (houseIds == null || !houseIds.Any())
+            {
+                throw new ArgumentException("The houseIds list cannot be null or empty.");
+            }
 
+            return await _context.Houses
+                .Where(h => houseIds.Contains(h.Id) && !h.IsDeleted) // Kiểm tra danh sách HouseId và loại bỏ các bản ghi đã bị xóa
+                .ToListAsync();
+        }
         public async Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO)
         {
             var query = _context.Houses.AsQueryable();

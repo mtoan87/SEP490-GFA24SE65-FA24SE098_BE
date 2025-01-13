@@ -84,6 +84,13 @@ namespace ChildrenVillageSOS_API.Controllers
             var newEvent = await _eventService.CreateEvent(creEvent);
             return Ok(newEvent);    
         }
+        [HttpPost]
+        [Route("ApproveEvent")]
+        public async Task<ActionResult<Event>> ApprovedEvent([FromForm] CreateEventDTO creEvent, int villageExpenseId)
+        {
+            var newEvent = await _eventService.ApprovedEvent(creEvent, villageExpenseId);
+            return Ok(newEvent);
+        }
         [HttpPut]
         [Route("UpdateEvent")]
         public async Task<IActionResult> UpdateEvent(int id, [FromForm] UpdateEventDTO updateEvent)

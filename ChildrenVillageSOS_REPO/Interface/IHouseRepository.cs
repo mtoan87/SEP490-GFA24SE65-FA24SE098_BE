@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IHouseRepository : IRepositoryGeneric<House>
     {
+        Task<List<House>> GetHousesByIdsAsync(List<string> houseIds);
         House? GetHouseByUserAccountId(string userAccountId);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         HouseResponseDTO GetHouseByIdWithImg(string houseId);

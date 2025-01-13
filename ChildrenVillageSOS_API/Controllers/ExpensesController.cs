@@ -129,9 +129,9 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPut]
         [Route("ConfirmSpecialExpense")]
-        public async Task<IActionResult> ConfirmSpecialExpense(List<string> id)
+        public async Task<IActionResult> ConfirmSpecialExpense(List<string> id,string description,string userName)
         {
-            var rs = await _expenseService.ConfirmSpecialExpense(id);
+            var rs = await _expenseService.ConfirmSpecialExpense(id, description, userName);
             return Ok(rs);
         }
         [HttpDelete]
