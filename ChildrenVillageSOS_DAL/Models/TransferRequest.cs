@@ -9,7 +9,7 @@ public partial class TransferRequest
 
     public string ChildId { get; set; } = null!;
 
-    public string? FromHouseId { get; set; } = null!;
+    public string FromHouseId { get; set; } = null!;
 
     public string? ToHouseId { get; set; }
 

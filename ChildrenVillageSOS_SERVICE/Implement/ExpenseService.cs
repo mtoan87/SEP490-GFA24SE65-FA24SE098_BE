@@ -1,5 +1,6 @@
 ﻿using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
+using ChildrenVillageSOS_DAL.Enum;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
@@ -16,12 +17,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class ExpenseService : IExpenseService
     {
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IChildRepository _childRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletService;
         private readonly IHealthWalletRepository _healthWalletService;
         private readonly IFacilitiesWalletRepository _facilitiesWalletService;
         private readonly IFoodStuffWalletRepository _foodStuffWalletService;   
         private readonly ISystemWalletRepository _systemWalletService;
         public ExpenseService(IExpenseRepository expenseRepository,
+            IChildRepository childRepository,
             INecessitiesWalletRepository necessitiesWalletService,
             IHealthWalletRepository healthWalletService,
             IFoodStuffWalletRepository foodStuffWalletService,
@@ -29,6 +32,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IWalletRepository walletRepository,
             ISystemWalletRepository systemWalletService)
         {
+            _childRepository = childRepository;
             _expenseRepository = expenseRepository;
             _necessitiesWalletService = necessitiesWalletService;
             _healthWalletService = healthWalletService;
@@ -158,18 +162,64 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createExepense.Description,
                 Expenseday = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                Status = "Pending",
+                Status = DonateStatus.Pending.ToString(),
+                ExpenseType = ExpenseType.Regular.ToString(),
                 HouseId = createExepense.HouseId,
                 IsDeleted = false,
                 SystemWalletId = createExepense.SystemWalletId,
                 FacilitiesWalletId = createExepense.FacilitiesWalletId,
                 FoodStuffWalletId = createExepense.FoodStuffWalletId,
                 HealthWalletId = createExepense.HealthWalletId,
-                NecessitiesWalletId = createExepense.NecessitiesWalletId
+                NecessitiesWalletId = createExepense.NecessitiesWalletId,
+                ChildId = createExepense.ChildId,
+                RequestedBy = createExepense.RequestedBy,            
             };
                      
             await _expenseRepository.AddAsync(newExpense);                     
             return newExpense;
+        }
+        public async Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense)
+        {
+            // Lấy danh sách các trẻ em dựa trên danh sách ChildId được chọn
+            var selectedChildren = await _childRepository.GetChildrenByIdsAsync(requestSpecialExpense.SelectedChildrenIds);
+
+            if (selectedChildren == null || !selectedChildren.Any())
+            {
+                throw new InvalidOperationException("No children selected or children do not exist.");
+            }
+
+            // Lọc những trẻ có HealthStatus là "Bad"
+            var childrenWithBadHealth = selectedChildren
+                .Where(c => c.HealthStatus.Equals("Bad", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (!childrenWithBadHealth.Any())
+            {
+                throw new InvalidOperationException("None of the selected children have a health status of 'Bad'.");
+            }
+
+            // Tính tổng số tiền của những trẻ có HealthStatus là "Bad"
+            var totalAmount = childrenWithBadHealth.Sum(c => c.Amount);
+
+            // Tạo đối tượng Special Expense
+            var specialExpense = new Expense
+            {
+                ExpenseAmount = totalAmount ?? 0,
+                Description = requestSpecialExpense.Description,
+                Expenseday = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                Status = DonateStatus.Pending.ToString(),
+                ExpenseType = ExpenseType.Special.ToString(),
+                HouseId = requestSpecialExpense.HouseId,
+                IsDeleted = false,
+                HealthWalletId = 1,
+                RequestedBy = requestSpecialExpense.RequestedBy,
+            };
+
+            // Lưu vào cơ sở dữ liệu
+            await _expenseRepository.AddAsync(specialExpense);
+
+            return specialExpense;
         }
         public async Task<Expense> DeleteExpense(int id)
         {
@@ -247,6 +297,69 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }           
             return exp;
         }
+        public async Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds)
+        {
+            // Kiểm tra danh sách HouseId
+            if (selectedHouseIds == null || !selectedHouseIds.Any())
+            {
+                throw new ArgumentException("No houses selected for confirmation.");
+            }
+
+            // Lấy danh sách Expense từ các House đã chọn
+            var houseExpenses = await _expenseRepository.GetExpensesByHouseIdsAsync(
+                selectedHouseIds, "Special", "Pending");
+
+            if (!houseExpenses.Any())
+            {
+                throw new InvalidOperationException("No pending special expenses found for the selected houses.");
+            }
+
+            // Lấy VillageId từ các House và kiểm tra xem chúng có thuộc cùng một Village
+            var villageIds = houseExpenses
+                .Select(e => e.VillageId)
+                .Distinct()
+                .ToList();
+
+            if (villageIds.Count > 1 || !villageIds.FirstOrDefault().HasValue)
+            {
+                throw new InvalidOperationException("Selected houses must belong to the same village.");
+            }
+
+            // Lấy VillageId (tất cả House đã xác nhận thuộc cùng một Village)
+            var villageId = villageIds.First();
+
+            // Cập nhật trạng thái của các Expense đã chọn
+            foreach (var expense in houseExpenses)
+            {
+                expense.Status = "EventRequest";
+                expense.ModifiedDate = DateTime.Now;
+                await _expenseRepository.UpdateAsync(expense);
+            }
+
+            // Tính tổng ExpenseAmount
+            var totalExpenseAmount = houseExpenses.Sum(e => e.ExpenseAmount);
+
+            // Tạo Expense mới cho Village
+            var villageExpense = new Expense
+            {
+                ExpenseType = "Special",
+                Status = "EventRequest",
+                ExpenseAmount = totalExpenseAmount,
+                Expenseday = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now,
+                IsDeleted = false,
+                HouseId = null, // Đây là Expense của Village
+                VillageId = villageId,
+            };
+
+            // Lưu Expense mới cho Village
+            await _expenseRepository.AddAsync(villageExpense);
+
+            return villageExpense;
+        }
+
+
 
         public async Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO)
         {

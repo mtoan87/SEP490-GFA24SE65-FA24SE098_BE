@@ -11,6 +11,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IExpenseService
     {
+        Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds);
+        Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense);
         DataTable getExpense();
         Task<IEnumerable<Expense>> GetAllExpenses();
         Task<Expense> GetExpenseById(int id);

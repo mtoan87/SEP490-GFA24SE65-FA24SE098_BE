@@ -341,5 +341,19 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<Child>> GetChildrenWithBadHealthAsync(string houseId)
+        {
+            return await _context.Children
+                .Where(c => c.HouseId == houseId && c.HealthStatus == "Bad")
+                .ToListAsync();
+        }
+
+        public async Task<List<Child>> GetChildrenByIdsAsync(List<string> childIds)
+        {
+            return await _context.Children
+                .Where(c => childIds.Contains(c.Id) && !c.IsDeleted && c.HealthStatus == "Bad") // Chỉ lấy trẻ có HealthStatus là "Bad"
+                .ToListAsync();
+        }
     }
 }

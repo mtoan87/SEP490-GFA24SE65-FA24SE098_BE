@@ -17,6 +17,8 @@ namespace ChildrenVillageSOS_REPO.Interface
         ChildResponseDTO GetChildByIdWithImg(string childId);
         Task<List<Child>> GetChildByHouseIdAsync(string houseId);
         //Dashboard
+        Task<List<Child>> GetChildrenByIdsAsync(List<string> childIds);
+        Task<IEnumerable<Child>> GetChildrenWithBadHealthAsync(string houseId);
         Task<ActiveChildrenStatDTO> GetActiveChildrenStatAsync();
         Task<IEnumerable<Child>> GetChildrenForDemographics();
         Task<ChildResponseDTO[]> GetAllChildIsDeleteAsync();

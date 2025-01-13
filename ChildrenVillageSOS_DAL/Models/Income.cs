@@ -9,7 +9,7 @@ public partial class Income
 
     public int? DonationId { get; set; }
 
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     public int? SystemWalletId { get; set; }
 

@@ -18,6 +18,15 @@ namespace ChildrenVillageSOS_REPO.Implement
         public ExpenseRepository(SoschildrenVillageDbContext context) : base(context)
         {
         }
+        public async Task<IEnumerable<Expense>> GetExpensesByHouseIdsAsync(IEnumerable<string> houseIds, string expenseType, string status)
+        {
+            return await _context.Expenses
+                .Where(e => houseIds.Contains(e.HouseId) &&
+                            e.ExpenseType.Equals(expenseType, StringComparison.OrdinalIgnoreCase) &&
+                            e.Status.Equals(status, StringComparison.OrdinalIgnoreCase) &&
+                            !e.IsDeleted)
+                .ToListAsync();
+        }
         public decimal GetTotalExpenseAmount()
         {
             return _context.Expenses

@@ -11,9 +11,9 @@ namespace ChildrenVillageSOS_DAL.DTO.ExpenseDTO
         public decimal ExpenseAmount { get; set; }
 
         public string Description { get; set; }
-
+        
         public int? SystemWalletId { get; set; }
-
+      
         public int? FacilitiesWalletId { get; set; }
 
         public int? FoodStuffWalletId { get; set; }
@@ -24,6 +24,11 @@ namespace ChildrenVillageSOS_DAL.DTO.ExpenseDTO
 
         public string HouseId { get; set; }
 
-        
+        public string? RequestedBy { get; set; }
+
+        public string? ApprovedBy { get; set; }
+
+        public string? ChildId { get; set; }
+
     }
 }

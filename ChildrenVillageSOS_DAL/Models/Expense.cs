@@ -7,7 +7,7 @@ public partial class Expense
 {
     public int Id { get; set; }
 
-    public decimal ExpenseAmount { get; set; }
+    public decimal? ExpenseAmount { get; set; }
 
     public string? Description { get; set; }
 
@@ -35,6 +35,8 @@ public partial class Expense
 
     public string? ChildId { get; set; }
 
+    public string? VillageId { get; set; }
+
     public int? EventId { get; set; }
 
     public bool IsDeleted { get; set; }
@@ -56,4 +58,6 @@ public partial class Expense
     public virtual House? House { get; set; }
 
     public virtual NecessitiesWallet? NecessitiesWallet { get; set; }
+
+    public virtual Village? Village { get; set; }
 }

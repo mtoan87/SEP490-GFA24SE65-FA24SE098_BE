@@ -53,6 +53,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _expenseService.GetAllExpenses();
             return Ok(exp);
         }
+        [HttpPost("RequestChildExpense")]
+        public async Task<IActionResult> RequestChildExpense(RequestSpecialExpenseDTO rq)
+        {
+            var exp = await _expenseService.RequestChildExpense(rq);
+            return Ok(exp);
+        }
         [HttpGet("Search")]
         public async Task<IActionResult> Search([FromQuery] SearchExpenseDTO searchExpenseDTO)
         {
@@ -119,6 +125,13 @@ namespace ChildrenVillageSOS_API.Controllers
         public async Task<IActionResult> UpdateExpense(int id)
         {
             var rs = await _expenseService.ConfirmExpense(id);
+            return Ok(rs);
+        }
+        [HttpPut]
+        [Route("ConfirmSpecialExpense")]
+        public async Task<IActionResult> ConfirmSpecialExpense(List<string> id)
+        {
+            var rs = await _expenseService.ConfirmSpecialExpense(id);
             return Ok(rs);
         }
         [HttpDelete]

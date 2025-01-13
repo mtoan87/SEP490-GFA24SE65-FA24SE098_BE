@@ -7,7 +7,7 @@ public partial class SubjectDetail
 {
     public int Id { get; set; }
 
-    public int? AcademicReportId { get; set; }
+    public int AcademicReportId { get; set; }
 
     public string? SubjectName { get; set; }
 

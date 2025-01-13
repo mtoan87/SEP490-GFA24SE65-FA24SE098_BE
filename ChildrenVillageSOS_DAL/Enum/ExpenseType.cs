@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChildrenVillageSOS_DAL.Enum
 {
-    public enum DonateStatus
+    public enum ExpenseType
     {
-        Pending,
-        Cancelled,
-        Paid,
-        OnEvent
+        Regular,
+        Special
     }
 }

@@ -43,6 +43,8 @@ public partial class Village
 
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
 
+    public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
