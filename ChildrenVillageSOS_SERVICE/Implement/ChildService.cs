@@ -151,7 +151,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Filter children based on HealthStatus == "Bad" and house association
             var badHealthChildren = house.Children
-                .Where(x => x.HealthStatus == "Bad")
+                .Where(x => x.HealthStatus == "Bad" && x.ExpenseRequestStatus == "Available")
                 .Select(x => new ChildResponseDTO
                 {
                     Id = x.Id,

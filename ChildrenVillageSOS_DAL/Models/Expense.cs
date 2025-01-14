@@ -15,6 +15,8 @@ public partial class Expense
 
     public string? Status { get; set; }
 
+    public decimal? AmountReceive { get; set; }
+
     public int? SystemWalletId { get; set; }
 
     public string? ExpenseType { get; set; }
@@ -33,9 +35,9 @@ public partial class Expense
 
     public string? HouseId { get; set; }
 
-    public string? ChildId { get; set; }
-
     public string? VillageId { get; set; }
+
+    public string? ChildId { get; set; }
 
     public int? EventId { get; set; }
 

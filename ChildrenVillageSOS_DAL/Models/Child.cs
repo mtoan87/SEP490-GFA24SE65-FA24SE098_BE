@@ -37,6 +37,8 @@ public partial class Child
 
     public string? Status { get; set; }
 
+    public string? ExpenseRequestStatus { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public string? CreatedBy { get; set; }
@@ -79,4 +81,3 @@ public partial class Child
 
     public virtual ICollection<TransferRequest> TransferRequests { get; set; } = new List<TransferRequest>();
 }
-

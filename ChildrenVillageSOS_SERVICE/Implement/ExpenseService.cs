@@ -226,6 +226,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Tính tổng số tiền của những trẻ có HealthStatus là "Bad"
             var totalAmount = childrenWithBadHealth.Sum(c => c.Amount);
 
+            // Cập nhật trạng thái của những trẻ được chọn thành "OnRequest"
+            foreach (var child in childrenWithBadHealth)
+            {
+                child.ExpenseRequestStatus = "OnRequest";
+                await _childRepository.UpdateAsync(child); // Cập nhật từng trẻ
+            }
+
             // Tạo đối tượng Special Expense
             var specialExpense = new Expense
             {
@@ -247,6 +254,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return specialExpense;
         }
+
 
 
         public async Task<Expense> DeleteExpense(int id)

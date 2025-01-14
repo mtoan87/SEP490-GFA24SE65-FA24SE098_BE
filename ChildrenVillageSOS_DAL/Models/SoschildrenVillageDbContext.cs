@@ -123,7 +123,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Activity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC07854EF07D");
+            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC0746E6B96A");
 
             entity.ToTable("Activity");
 
@@ -166,7 +166,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC07609FCA60");
+            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC07CAC5425B");
 
             entity.ToTable("Booking");
 
@@ -195,7 +195,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<BookingSlot>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC07E94C3D59");
+            entity.HasKey(e => e.Id).HasName("PK__BookingS__3214EC070287C695");
 
             entity.ToTable("BookingSlot");
 
@@ -210,7 +210,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Child>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC0795CFC0A0");
+            entity.HasKey(e => e.Id).HasName("PK__Child__3214EC079B34D387");
 
             entity.ToTable("Child");
 
@@ -226,6 +226,7 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.CurrentAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Dob).HasColumnType("datetime");
+            entity.Property(e => e.ExpenseRequestStatus).HasMaxLength(100);
             entity.Property(e => e.FacilitiesWalletId).HasColumnName("FacilitiesWallet_Id");
             entity.Property(e => e.FoodStuffWalletId).HasColumnName("FoodStuffWallet_Id");
             entity.Property(e => e.Gender).HasMaxLength(100);
@@ -281,7 +282,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<ChildNeed>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ChildNee__3214EC075DD0E8CE");
+            entity.HasKey(e => e.Id).HasName("PK__ChildNee__3214EC07EE22513F");
 
             entity.Property(e => e.ChildId)
                 .HasMaxLength(100)
@@ -311,7 +312,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<ChildProgress>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ChildPro__3214EC07DB8A776C");
+            entity.HasKey(e => e.Id).HasName("PK__ChildPro__3214EC0708D97521");
 
             entity.ToTable("ChildProgress");
 
@@ -350,7 +351,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC07171AFE2A");
+            entity.HasKey(e => e.Id).HasName("PK__Donation__3214EC07ABA60D13");
 
             entity.ToTable("Donation");
 
@@ -365,6 +366,7 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.DateTime)
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Time");
+            entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.DonationType)
                 .HasMaxLength(200)
                 .HasColumnName("Donation_Type");
@@ -479,10 +481,13 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Expense>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC07E038D39B");
+            entity.HasKey(e => e.Id).HasName("PK__Expense__3214EC074A848D24");
 
             entity.ToTable("Expense");
 
+            entity.Property(e => e.AmountReceive)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("Amount_Receive");
             entity.Property(e => e.ApprovedBy)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -491,6 +496,7 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("Child_Id");
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.EventId).HasColumnName("Event_Id");
             entity.Property(e => e.ExpenseAmount)
                 .HasColumnType("decimal(18, 2)")
@@ -554,7 +560,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<FacilitiesWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Faciliti__3214EC073846F73F");
+            entity.HasKey(e => e.Id).HasName("PK__Faciliti__3214EC07408E7DEA");
 
             entity.ToTable("FacilitiesWallet");
 
@@ -571,7 +577,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<FoodStuffWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FoodStuf__3214EC07D4282CC6");
+            entity.HasKey(e => e.Id).HasName("PK__FoodStuf__3214EC076A329BBE");
 
             entity.ToTable("FoodStuffWallet");
 
@@ -632,7 +638,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<HealthWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__HealthWa__3214EC07E20CD6B8");
+            entity.HasKey(e => e.Id).HasName("PK__HealthWa__3214EC07BC2E1F45");
 
             entity.ToTable("HealthWallet");
 
@@ -649,7 +655,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<House>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__House__3214EC07E09B7297");
+            entity.HasKey(e => e.Id).HasName("PK__House__3214EC074B6BF83C");
 
             entity.ToTable("House");
 
@@ -659,6 +665,7 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.CreatedBy).HasMaxLength(100);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.CurrentMembers).HasDefaultValue(0);
+            entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.ExpenseAmount)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("Expense_Amount");
@@ -675,6 +682,7 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .IsRequired()
                 .HasDefaultValueSql("('0')");
             entity.Property(e => e.LastInspectionDate).HasColumnType("datetime");
+            entity.Property(e => e.Location).HasMaxLength(200);
             entity.Property(e => e.MaintenanceStatus)
                 .HasMaxLength(50)
                 .HasDefaultValue("Good");
@@ -777,7 +785,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Income>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC079EB9F32A");
+            entity.HasKey(e => e.Id).HasName("PK__Income__3214EC0737A57E2B");
 
             entity.ToTable("Income");
 
@@ -831,7 +839,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Inventor__3214EC074FF7F2D7");
+            entity.HasKey(e => e.Id).HasName("PK__Inventor__3214EC0730E1C8A9");
 
             entity.ToTable("Inventory", tb => tb.HasTrigger("trg_CheckBelongsTo"));
 
@@ -862,7 +870,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<NecessitiesWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Necessit__3214EC078F94C64B");
+            entity.HasKey(e => e.Id).HasName("PK__Necessit__3214EC079F5B43C9");
 
             entity.ToTable("NecessitiesWallet");
 
@@ -879,7 +887,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC072E2107D1");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07393D62D3");
 
             entity.ToTable("Payment");
 
@@ -905,7 +913,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC0768D0BEDF");
+            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC073AB44968");
 
             entity.ToTable("Role");
 
@@ -958,7 +966,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<SystemWallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC0748555021");
+            entity.HasKey(e => e.Id).HasName("PK__SystemWa__3214EC074DF80C85");
 
             entity.ToTable("SystemWallet");
 
@@ -975,7 +983,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC0754B95483");
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC07E0590F3D");
 
             entity.ToTable("Transaction");
 
@@ -1031,7 +1039,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<TransferHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transfer__3214EC07A08C4476");
+            entity.HasKey(e => e.Id).HasName("PK__Transfer__3214EC07B2CDA63A");
 
             entity.ToTable("TransferHistory");
 
@@ -1082,7 +1090,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<TransferRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transfer__3214EC07EF7E90FB");
+            entity.HasKey(e => e.Id).HasName("PK__Transfer__3214EC07B57E0EBC");
 
             entity.ToTable("TransferRequest");
 
@@ -1132,13 +1140,14 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC07D319910F");
+            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC074E8B333F");
 
             entity.ToTable("UserAccount");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.Address).HasMaxLength(300);
             entity.Property(e => e.Country).HasMaxLength(100);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Dob).HasColumnType("datetime");
@@ -1148,7 +1157,7 @@ public partial class SoschildrenVillageDbContext : DbContext
                 .HasDefaultValueSql("('0')");
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(200);
-            entity.Property(e => e.Phone).HasMaxLength(200);
+            entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.RoleId).HasColumnName("Role_Id");
             entity.Property(e => e.Status).HasMaxLength(100);
             entity.Property(e => e.UserEmail)
@@ -1165,7 +1174,7 @@ public partial class SoschildrenVillageDbContext : DbContext
 
         modelBuilder.Entity<Village>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC07A816667B");
+            entity.HasKey(e => e.Id).HasName("PK__Village__3214EC07D298684B");
 
             entity.ToTable("Village");
 
@@ -1175,6 +1184,7 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.ContactNumber).HasMaxLength(200);
             entity.Property(e => e.CreatedBy).HasMaxLength(100);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.EstablishedDate).HasColumnType("datetime");
             entity.Property(e => e.ExpenseAmount)
                 .HasColumnType("decimal(18, 2)")
@@ -1182,6 +1192,7 @@ public partial class SoschildrenVillageDbContext : DbContext
             entity.Property(e => e.IsDeleted)
                 .IsRequired()
                 .HasDefaultValueSql("('0')");
+            entity.Property(e => e.Location).HasMaxLength(200);
             entity.Property(e => e.ModifiedBy).HasMaxLength(100);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(100);
