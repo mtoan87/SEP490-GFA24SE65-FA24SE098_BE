@@ -406,5 +406,12 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+        public async Task<House?> GetHouseByUserAccountIdAsync(string userAccountId)
+        {
+            return await _context.Houses
+                                 .Include(h => h.Children) // Ensure you include children to filter later
+                                 .FirstOrDefaultAsync(h => h.UserAccountId == userAccountId && !h.IsDeleted);
+        }
+
     }
 }

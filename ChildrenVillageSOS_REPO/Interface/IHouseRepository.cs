@@ -20,6 +20,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         //Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<HouseResponseDTO[]> GetAllHouseIsDeleteAsync();
         Task<HouseResponseDTO[]> SearchHousesAsync(string searchTerm);
+        Task<House?> GetHouseByUserAccountIdAsync(string userAccountId);
         DataTable getHouse();
         Task<HouseDetailsDTO> GetHouseDetails(string houseId);
         Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO);

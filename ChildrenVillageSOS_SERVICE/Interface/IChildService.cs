@@ -17,6 +17,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<ChildResponseDTO> GetChildByIdWithImg(string childid);
         Task<Child> CreateChild(CreateChildDTO createChild);
         Task<ChildResponseDTO[]> SearchChildrenAsync(string searchTerm);
+        Task<IEnumerable<ChildResponseDTO>> GetChildrenBadStatusByUserId(string userAccountId);
         Task<Child> UpdateChild(string id, UpdateChildDTO updateChild);
         Task<Child> DeleteChild(string id);
         Task<Child> RestoreChild(string id);
