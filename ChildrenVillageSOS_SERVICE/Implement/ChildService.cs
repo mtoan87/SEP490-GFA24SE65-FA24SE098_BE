@@ -34,6 +34,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly ISystemWalletRepository _systemWalletRepository;
         private readonly IHealthWalletRepository _healthWalletRepository;
         private readonly IIncomeRepository _incomeRepository;
+        private readonly IHouseRepository _houseRepository;
 
 
         public ChildService(IChildRepository childRepository,
@@ -48,7 +49,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             INecessitiesWalletRepository necessitiesWalletRepository,            
             IFoodStuffWalletRepository foodStuffWalletRepository,
             IHealthWalletRepository healthWalletRepository,
-            IIncomeRepository incomeRepository)
+            IIncomeRepository incomeRepository,
+            IHouseRepository houseRepository)
         {
             _userAccountRepository = userAccountRepository;
             _childRepository = childRepository;
@@ -63,6 +65,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _healthWalletRepository = healthWalletRepository;
             _incomeRepository = incomeRepository;
+            _houseRepository = houseRepository;
 
         }
 
@@ -136,6 +139,47 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return childResponseDTOs;
 
         }
+        public async Task<IEnumerable<ChildResponseDTO>> GetChildrenBadStatusByUserId(string userAccountId)
+        {
+            // Get the house associated with the user
+            var house = await _houseRepository.GetHouseByUserAccountIdAsync(userAccountId);
+
+            if (house == null)
+            {
+                return Enumerable.Empty<ChildResponseDTO>();
+            }
+
+            // Filter children based on HealthStatus == "Bad" and house association
+            var badHealthChildren = house.Children
+                .Where(x => x.HealthStatus == "Bad")
+                .Select(x => new ChildResponseDTO
+                {
+                    Id = x.Id,
+                    ChildName = x.ChildName,
+                    HealthStatus = x.HealthStatus,
+                    HouseId = x.HouseId,
+                    SchoolId = x.SchoolId,
+                    FacilitiesWalletId = x.FacilitiesWalletId,
+                    SystemWalletId = x.SystemWalletId,
+                    FoodStuffWalletId = x.FoodStuffWalletId,
+                    HealthWalletId = x.HealthWalletId,
+                    NecessitiesWalletId = x.NecessitiesWalletId,
+                    Amount = x.Amount ?? 0,
+                    CurrentAmount = x.CurrentAmount ?? 0,
+                    AmountLimit = x.AmountLimit ?? 0,
+                    Gender = x.Gender,
+                    Dob = x.Dob,
+                    Status = x.Status,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate,
+                    ImageUrls = x.Images.Where(img => !img.IsDeleted)
+                                         .Select(img => img.UrlPath)
+                                         .ToArray()
+                }).ToArray();
+
+            return badHealthChildren;
+        }
+
 
         // GET ID
         public async Task<Child> GetChildById(string id)

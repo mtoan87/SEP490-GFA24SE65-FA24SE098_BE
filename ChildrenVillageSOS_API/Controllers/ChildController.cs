@@ -49,6 +49,18 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _childService.SearchChildrenAsync(searchTerm);
             return Ok(result);
         }
+        [HttpGet("GetChildrenBadStatusByUserId")]
+        public async Task<IActionResult> GetChildrenBadStatusByUserId([FromQuery] string userAccountId)
+        {
+            var children = await _childService.GetChildrenBadStatusByUserId(userAccountId);
+            if (!children.Any())
+            {
+                return NotFound("No children found with bad health status.");
+            }
+
+            return Ok(children);
+        }
+
 
         [HttpGet("GetAllChildIsDelete")]
         public async Task<IActionResult> GetAllChildIsDeleteAsync()
