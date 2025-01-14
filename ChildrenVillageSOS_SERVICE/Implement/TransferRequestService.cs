@@ -108,22 +108,79 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto)
         {
-            // Lấy thông tin chi tiết TransferRequest
             var transferRequest = await _transferRequestRepository.GetTransferRequestWithDetails(id);
             if (transferRequest == null)
                 throw new InvalidOperationException("Transfer request not found");
 
-            // Kiểm tra trạng thái hiện tại của TransferRequest
-            if (transferRequest.Status == TransferStatus.Approved.ToString())
-                throw new InvalidOperationException("Cannot update an approved transfer request");
+            if (transferRequest.Status == TransferStatus.Completed.ToString())
+                throw new InvalidOperationException("Cannot update a completed transfer request");
 
             if (transferRequest.Status == TransferStatus.Rejected.ToString())
                 throw new InvalidOperationException("Cannot update a rejected transfer request");
 
-            // Nếu trạng thái là Approved
-            if (dto.Status == TransferStatus.Approved.ToString())
+            // Admin/Director confirms lần 1
+            if (transferRequest.Status == TransferStatus.Pending.ToString())
             {
-                // Thêm vào TransferHistory
+                if (dto.Status == TransferStatus.InProcess.ToString())
+                {
+                    transferRequest.Status = TransferStatus.InProcess.ToString();
+                    transferRequest.ModifiedBy = dto.ModifiedBy;
+                    transferRequest.ModifiedDate = DateTime.Now;
+                    transferRequest.DirectorNote = dto.DirectorNote;
+
+                    await _transferRequestRepository.UpdateAsync(transferRequest);
+                    return transferRequest;
+                }
+                else if (dto.Status == TransferStatus.Rejected.ToString())
+                {
+                    var transferHistory = new TransferHistory
+                    {
+                        ChildId = transferRequest.ChildId,
+                        FromHouseId = transferRequest.FromHouseId,
+                        ToHouseId = transferRequest.ToHouseId,
+                        TransferDate = DateTime.Now,
+                        Status = TransferStatus.Rejected.ToString(),
+                        HandledBy = dto.ModifiedBy,
+                        CreatedDate = DateTime.Now,
+                        IsDeleted = false,
+                        RejectionReason = dto.DirectorNote,
+                        CreatedBy = transferRequest.CreatedBy
+                    };
+
+                    await _transferHistoryRepository.AddAsync(transferHistory);
+
+                    await _transferRequestRepository.RemoveAsync(transferRequest);
+
+                    transferRequest.Status = TransferStatus.Rejected.ToString();
+                    transferRequest.ModifiedBy = dto.ModifiedBy;
+                    transferRequest.ModifiedDate = DateTime.Now;
+                    transferRequest.DirectorNote = dto.DirectorNote;
+
+                    await _transferRequestRepository.UpdateAsync(transferRequest);
+                    return transferRequest;
+                }
+            }
+
+            // HouseMother2 confirms
+            if (transferRequest.Status == TransferStatus.InProcess.ToString())
+            {
+                if (dto.Status == TransferStatus.ReadyToTransfer.ToString() ||
+                    dto.Status == TransferStatus.DeclinedToTransfer.ToString())
+                {
+                    transferRequest.Status = dto.Status;
+                    transferRequest.ModifiedBy = dto.ModifiedBy;
+                    transferRequest.ModifiedDate = DateTime.Now;
+                    transferRequest.DirectorNote = dto.DirectorNote;
+
+                    await _transferRequestRepository.UpdateAsync(transferRequest);
+                    return transferRequest;
+                }
+            }
+
+            // Admin/Director confirms lần 2 - Final approval
+            if (transferRequest.Status == TransferStatus.ReadyToTransfer.ToString() &&
+                dto.Status == TransferStatus.Completed.ToString())
+            {
                 var transferHistory = new TransferHistory
                 {
                     ChildId = transferRequest.ChildId,
@@ -132,7 +189,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     TransferDate = DateTime.Now,
                     Status = TransferStatus.Completed.ToString(),
                     Notes = dto.DirectorNote,
-                    HandledBy = dto.ApprovedBy,
+                    HandledBy = dto.ModifiedBy,
                     CreatedDate = DateTime.Now,
                     IsDeleted = false,
                     CreatedBy = transferRequest.CreatedBy
@@ -140,19 +197,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
 
+                await _transferRequestRepository.RemoveAsync(transferRequest);
+
                 // Cập nhật thông tin nhà của trẻ
                 var child = await _childRepository.GetByIdAsync(transferRequest.ChildId);
                 child.HouseId = transferRequest.ToHouseId;
                 await _childRepository.UpdateAsync(child);
 
-                // Xóa TransferRequest khỏi hệ thống
-                await _transferRequestRepository.RemoveAsync(transferRequest);
+                transferRequest.Status = TransferStatus.Completed.ToString();
+                transferRequest.ModifiedBy = dto.ModifiedBy;
+                transferRequest.ModifiedDate = DateTime.Now;
+                transferRequest.DirectorNote = dto.DirectorNote;
 
+                await _transferRequestRepository.UpdateAsync(transferRequest);
                 return transferRequest;
             }
 
-            // Nếu trạng thái là Rejected
-            if (dto.Status == TransferStatus.Rejected.ToString())
+            // Admin/Director confirms lần 2 - Final rejection
+            if (transferRequest.Status == TransferStatus.DeclinedToTransfer.ToString() &&
+                dto.Status == TransferStatus.Rejected.ToString())
             {
                 var transferHistory = new TransferHistory
                 {
@@ -170,9 +233,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
                 await _transferHistoryRepository.AddAsync(transferHistory);
 
-                // Xóa TransferRequest khỏi hệ thống
                 await _transferRequestRepository.RemoveAsync(transferRequest);
 
+                transferRequest.Status = TransferStatus.Rejected.ToString();
+                transferRequest.ModifiedBy = dto.ModifiedBy;
+                transferRequest.ModifiedDate = DateTime.Now;
+                transferRequest.DirectorNote = dto.DirectorNote;
+
+                await _transferRequestRepository.UpdateAsync(transferRequest);
                 return transferRequest;
             }
 
@@ -189,6 +257,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _transferRequestRepository.UpdateAsync(transferRequest);
 
             return transferRequest;
+
+            throw new InvalidOperationException("Invalid status transition");
         }
 
         public async Task<TransferRequest> DeleteTransferRequest(int id)
