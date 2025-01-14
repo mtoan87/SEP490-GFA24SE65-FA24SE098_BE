@@ -11,6 +11,9 @@ namespace ChildrenVillageSOS_DAL.Enum
         Pending,
         Approved,
         Completed,
-        Rejected
+        Rejected,
+        InProcess,
+        ReadyToTransfer,
+        DeclinedToTransfer
     }
 }
