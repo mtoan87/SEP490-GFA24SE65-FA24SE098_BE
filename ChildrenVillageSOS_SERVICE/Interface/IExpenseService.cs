@@ -11,6 +11,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
 {
     public interface IExpenseService
     {
+        ExpenseResponseDTO[] GetUnComfirmVillageExpense();
+        ExpenseResponseDTO[] GetUnComfirmHouseExpense();
         Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds, string description, string userName);
         Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense);
         DataTable getExpense();

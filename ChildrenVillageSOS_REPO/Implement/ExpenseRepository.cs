@@ -109,7 +109,72 @@ namespace ChildrenVillageSOS_REPO.Implement
             return expenses;
         }
 
-        
+        public  ExpenseResponseDTO[] GetUnComfirmHouseExpense()
+        {
+            var  expenses = _context.Expenses
+                .Where(e => !e.IsDeleted && // Exclude deleted records
+                            e.ExpenseType == "Special" && // Filter by ExpenseType
+                            e.Status == "Pending" && // Filter by Status
+                            !string.IsNullOrEmpty(e.HouseId)) // Ensure HouseId has a value
+                .Select(e => new ExpenseResponseDTO
+                {
+                    Id = e.Id,
+                    ExpenseAmount = e.ExpenseAmount,
+                    Description = e.Description,
+                    Expenseday = e.Expenseday,
+                    ExpenseType = e.ExpenseType,
+                    Status = e.Status,
+                    RequestedBy = e.RequestedBy,
+                    ApprovedBy = e.ApprovedBy,
+                    SystemWalletId = e.SystemWalletId,
+                    FacilitiesWalletId = e.FacilitiesWalletId,
+                    FoodStuffWalletId = e.FoodStuffWalletId,
+                    HealthWalletId = e.HealthWalletId,
+                    NecessitiesWalletId = e.NecessitiesWalletId,
+                    ChildId = e.ChildId,
+                    VillageId = e.VillageId,
+                    HouseId = e.HouseId,
+                    CreatedDate = e.CreatedDate,
+                    ModifiedDate = e.ModifiedDate
+                })
+                .ToArray(); // Convert to an array
+
+            return expenses;
+        }
+
+        public ExpenseResponseDTO[] GetUnComfirmVillageExpense()
+        {
+            var expenses = _context.Expenses
+                .Where(e => !e.IsDeleted && // Exclude deleted records
+                            e.ExpenseType == "Special" && // Filter by ExpenseType
+                            e.Status == "OnRequestToEvent" && // Filter by Status
+                            !string.IsNullOrEmpty(e.VillageId)) // Ensure HouseId has a value
+                .Select(e => new ExpenseResponseDTO
+                {
+                    Id = e.Id,
+                    ExpenseAmount = e.ExpenseAmount,
+                    Description = e.Description,
+                    Expenseday = e.Expenseday,
+                    ExpenseType = e.ExpenseType,
+                    Status = e.Status,
+                    RequestedBy = e.RequestedBy,
+                    ApprovedBy = e.ApprovedBy,
+                    SystemWalletId = e.SystemWalletId,
+                    FacilitiesWalletId = e.FacilitiesWalletId,
+                    FoodStuffWalletId = e.FoodStuffWalletId,
+                    HealthWalletId = e.HealthWalletId,
+                    NecessitiesWalletId = e.NecessitiesWalletId,
+                    ChildId = e.ChildId,
+                    VillageId = e.VillageId,
+                    HouseId = e.HouseId,
+                    CreatedDate = e.CreatedDate,
+                    ModifiedDate = e.ModifiedDate
+                })
+                .ToArray(); // Convert to an array
+
+            return expenses;
+        }
+
 
         public Expense[] GetExpenseByFacilitiesWalletId(int id)
         {

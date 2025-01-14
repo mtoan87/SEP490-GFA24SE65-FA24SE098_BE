@@ -29,6 +29,18 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp =  _expenseService.GetFormatedExpenses();
             return Ok(exp);
         }
+        [HttpGet("GetUnConfirmHouseExpense")]
+        public IActionResult GetUnComfirmHouseExpense()
+        {
+            var exp = _expenseService.GetUnComfirmHouseExpense();
+            return Ok(exp);
+        }
+        [HttpGet("GetUnComfirmVillageExpense")]
+        public IActionResult GetUnComfirmVillageExpense()
+        {
+            var exp = _expenseService.GetUnComfirmVillageExpense();
+            return Ok(exp);
+        }
         [HttpGet("ExportExcel")]
         public ActionResult ExportExcel()
         {

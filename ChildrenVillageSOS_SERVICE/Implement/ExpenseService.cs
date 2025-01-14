@@ -182,6 +182,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _expenseRepository.AddAsync(newExpense);                     
             return newExpense;
         }
+
+        public ExpenseResponseDTO[] GetUnComfirmHouseExpense()
+        {
+            return _expenseRepository.GetUnComfirmHouseExpense();
+        }
         public async Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense)
         {
             // Lấy danh sách các trẻ em dựa trên danh sách ChildId được chọn
@@ -301,6 +306,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }           
             return exp;
         }
+        public ExpenseResponseDTO[] GetUnComfirmVillageExpense()
+        {
+            return _expenseRepository.GetUnComfirmVillageExpense();
+        }
+
         public async Task<Expense> ConfirmSpecialExpense(List<string> selectedHouseIds, string description, string userName)
         {
             // Kiểm tra danh sách HouseId
