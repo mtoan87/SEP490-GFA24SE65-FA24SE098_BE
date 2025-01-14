@@ -24,6 +24,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class EventService : IEventService
     {
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
+        private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
+        private readonly IHealthWalletRepository _healthWalletRepository;
+        private readonly IFoodStuffWalletService
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IEventRepository _eventRepository;        
         private readonly IPaymentRepository _paymentRepository;       
@@ -33,6 +37,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
         public EventService(IEventRepository eventRepository,
+            IFacilitiesWalletRepository failitiesWalletRepository,
             IExpenseRepository expenseRepository,
             IUserAccountRepository userAccountRepository,
             IImageService imageService,
@@ -42,6 +47,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IDonationService donationService,           
             IIncomeRepository incomeRepository)
         {
+            _failitiesWalletRepository = failitiesWalletRepository;
             _expenseRepository = expenseRepository;
             _eventRepository = eventRepository;
             _userAccountRepository = userAccountRepository;
@@ -156,6 +162,62 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 await _imageRepository.AddAsync(image);
             }
 
+            // Cập nhật ngân sách cho từng ví dựa trên ID
+            if (villageExpense.FacilitiesWalletId.HasValue)
+            {
+                var facilitiesWallet = await _facilitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
+                if (facilitiesWallet != null)
+                {
+                    facilitiesWallet.Budget -= villageExpense.ExpenseAmount;
+                    facilitiesWallet.ModifiedDate = DateTime.Now;
+                    await _facilitiesWalletRepository.UpdateAsync(facilitiesWallet);
+                }
+            }
+
+            if (villageExpense.FoodStuffWalletId.HasValue)
+            {
+                var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(villageExpense.FoodStuffWalletId.Value);
+                if (foodStuffWallet != null)
+                {
+                    foodStuffWallet.Budget -= villageExpense.ExpenseAmount;
+                    foodStuffWallet.ModifiedDate = DateTime.Now;
+                    await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+                }
+            }
+
+            if (villageExpense.SystemWalletId.HasValue)
+            {
+                var systemWallet = await _systemWalletRepository.GetByIdAsync(villageExpense.SystemWalletId.Value);
+                if (systemWallet != null)
+                {
+                    systemWallet.Budget -= villageExpense.ExpenseAmount;
+                    systemWallet.ModifiedDate = DateTime.Now;
+                    await _systemWalletRepository.UpdateAsync(systemWallet);
+                }
+            }
+
+            if (villageExpense.HealthWalletId.HasValue)
+            {
+                var healthWallet = await _healthWalletRepository.GetByIdAsync(villageExpense.HealthWalletId.Value);
+                if (healthWallet != null)
+                {
+                    healthWallet.Budget -= villageExpense.ExpenseAmount;
+                    healthWallet.ModifiedDate = DateTime.Now;
+                    await _healthWalletRepository.UpdateAsync(healthWallet);
+                }
+            }
+
+            if (villageExpense.NecessitiesWalletId.HasValue)
+            {
+                var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(villageExpense.NecessitiesWalletId.Value);
+                if (necessitiesWallet != null)
+                {
+                    necessitiesWallet.Budget -= villageExpense.ExpenseAmount;
+                    necessitiesWallet.ModifiedDate = DateTime.Now;
+                    await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+                }
+            }
+
             // Cập nhật trạng thái của các house expenses liên quan đến villageExpense
             await _expenseRepository.ApproveHouseExpensesByVillageIdAsync(villageExpense.VillageId);
 
@@ -167,6 +229,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return newEvent;
         }
+
 
 
 
@@ -402,6 +465,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
             var income = new Income
             {
+                
                 UserAccountId = updateEvent.UserAccountId,
                 FacilitiesWalletId = editEvent.FacilitiesWalletId,
                 FoodStuffWalletId = editEvent.FoodStuffWalletId,
