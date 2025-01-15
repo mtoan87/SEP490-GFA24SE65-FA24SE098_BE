@@ -167,42 +167,51 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 }
             }
 
-            if (!hasSufficientFunds)
-            {
-                // Update villageExpense status and return null to indicate no event was created
-                villageExpense.Status = "OnEvent";
-                villageExpense.ModifiedDate = DateTime.Now;
-                await _expenseRepository.UpdateAsync(villageExpense);
-                return null;
-            }
+            // Even if there are insufficient funds, we proceed to create the event
+            // Update villageExpense status
+            villageExpense.Status = "OnEvent";  // You can keep this or set another status based on your logic
+            villageExpense.ModifiedDate = DateTime.Now;
+            await _expenseRepository.UpdateAsync(villageExpense);
 
-            // Deduct amounts from wallets
+            // Deduct amounts from wallets (if funds are available)
             if (villageExpense.FacilitiesWalletId.HasValue)
             {
                 var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
-                facilitiesWallet.Budget -= totalExpenseAmount;
-                await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+                if (facilitiesWallet != null && facilitiesWallet.Budget >= totalExpenseAmount)
+                {
+                    facilitiesWallet.Budget -= totalExpenseAmount;
+                    await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+                }
             }
 
             if (villageExpense.FoodStuffWalletId.HasValue)
             {
                 var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(villageExpense.FoodStuffWalletId.Value);
-                foodStuffWallet.Budget -= totalExpenseAmount;
-                await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+                if (foodStuffWallet != null && foodStuffWallet.Budget >= totalExpenseAmount)
+                {
+                    foodStuffWallet.Budget -= totalExpenseAmount;
+                    await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+                }
             }
 
             if (villageExpense.HealthWalletId.HasValue)
             {
                 var healthWallet = await _healthWalletRepository.GetByIdAsync(villageExpense.HealthWalletId.Value);
-                healthWallet.Budget -= totalExpenseAmount;
-                await _healthWalletRepository.UpdateAsync(healthWallet);
+                if (healthWallet != null && healthWallet.Budget >= totalExpenseAmount)
+                {
+                    healthWallet.Budget -= totalExpenseAmount;
+                    await _healthWalletRepository.UpdateAsync(healthWallet);
+                }
             }
 
             if (villageExpense.NecessitiesWalletId.HasValue)
             {
                 var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(villageExpense.NecessitiesWalletId.Value);
-                necessitiesWallet.Budget -= totalExpenseAmount;
-                await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+                if (necessitiesWallet != null && necessitiesWallet.Budget >= totalExpenseAmount)
+                {
+                    necessitiesWallet.Budget -= totalExpenseAmount;
+                    await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+                }
             }
 
             // Create the new event
@@ -246,7 +255,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Update villageExpense status
             villageExpense.EventId = newEvent.Id;
-            villageExpense.Status = "Approved";
+            villageExpense.Status = "Approved";  // Set to Approved regardless of funds
             villageExpense.ModifiedDate = DateTime.Now;
             villageExpense.ApprovedBy = createEvent.CreatedBy;
             await _expenseRepository.UpdateAsync(villageExpense);

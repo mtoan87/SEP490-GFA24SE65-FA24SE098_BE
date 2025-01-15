@@ -120,7 +120,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 }
 
                 // Chờ một khoảng thời gian trước khi lặp lại (Ví dụ: 5 phút)
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
 
             _logger.LogInformation("EventStatusUpdaterService is stopping.");
