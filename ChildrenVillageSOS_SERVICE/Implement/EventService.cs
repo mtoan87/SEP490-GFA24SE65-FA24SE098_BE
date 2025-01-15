@@ -389,37 +389,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
 
         public async Task<string> DonateEvent(int id, EventDonateDTO updateEvent)
-        {          
+        {
             var editEvent = await _eventRepository.GetByIdAsync(id);
             if (editEvent == null)
             {
                 throw new Exception($"Event with ID {id} not found!");
-            }        
+            }
+
+            // Check if the event status is 'Closed' and prevent donation
+            if (editEvent.Status == "Close")
+            {
+                throw new InvalidOperationException("Donations are not allowed for closed events.");
+            }
+
             var newTotalAmount = (editEvent.CurrentAmount ?? 0) + (updateEvent.Amount ?? 0);
             if (newTotalAmount > (editEvent.AmountLimit ?? 0))
             {
                 throw new InvalidOperationException("Donation amount exceeds the allowed limit.");
             }
-            //var donationDto = new CreateDonationPayment
-            //{
-            //    UserAccountId = updateEvent.UserAccountId,
-            //    DonationType = "Online",
-            //    DateTime = DateTime.Now,
-            //    Amount = updateEvent.Amount ?? 0,
-            //    Description = $"Donation for Event: {editEvent.EventCode}",
-            //    IsDeleted = false,
-            //    Status = "Pending",
-            //    EventId = id
-            //};
-            //var donation = await _donationService.CreateDonationPayment(donationDto);
 
-
-            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
-
+            // Fetch user information
             string? userName, userEmail, address;
             string? phone;
 
-            // Lấy thông tin người dùng từ UserRepository nếu UserAccountId khác null
             if (!string.IsNullOrEmpty(updateEvent.UserAccountId))
             {
                 var user = await _userAccountRepository.GetByIdAsync(updateEvent.UserAccountId);
@@ -437,16 +429,13 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             else
             {
-                // Lấy thông tin từ request
                 userName = updateEvent.UserName;
                 userEmail = updateEvent.UserEmail;
                 phone = updateEvent.Phone;
                 address = updateEvent.Address;
             }
 
-
-
-            // Tạo đối tượng DonationDTO
+            // Proceed with donation creation
             var donationDto = new DonateDTO
             {
                 FoodStuffWalletId = editEvent.FoodStuffWalletId,
@@ -459,7 +448,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserName = userName,
                 UserEmail = userEmail,
                 Phone = phone,
-                Address = address,               
+                Address = address,
                 DonationType = DonateType.Event.ToString(),
                 DateTime = DateTime.Now,
                 Amount = updateEvent.Amount ?? 0,
@@ -467,6 +456,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 IsDeleted = false,
                 Status = DonateStatus.Pending.ToString(),
             };
+
             var donation = await _donationService.DonateNow(donationDto);
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -482,29 +472,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData(
-            "vnp_OrderInfo",
-            $"Thanh toán cho Donation {donation.Id}, eventId {id}, " +
-            string.Join(", ", new[]
-            {
+                "vnp_OrderInfo",
+                $"Thanh toán cho Donation {donation.Id}, eventId {id}, " +
+                string.Join(", ", new[]
+                {
             editEvent.FacilitiesWalletId != null ? $"walletId {editEvent.FacilitiesWalletId}" : null,
             editEvent.FoodStuffWalletId != null ? $"walletId {editEvent.FoodStuffWalletId}" : null,
             editEvent.NecessitiesWalletId != null ? $"walletId {editEvent.NecessitiesWalletId}" : null,
             editEvent.HealthWalletId != null ? $"walletId {editEvent.HealthWalletId}" : null
-            }.Where(s => s != null))
+                }.Where(s => s != null))
             );
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
             string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
             vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
-            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);   
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
             var income = new Income
             {
-                
                 UserAccountId = updateEvent.UserAccountId,
                 FacilitiesWalletId = editEvent.FacilitiesWalletId,
                 FoodStuffWalletId = editEvent.FoodStuffWalletId,
                 SystemWalletId = editEvent.SystemWalletId,
-                HealthWalletId = editEvent.HealthWalletId, 
+                HealthWalletId = editEvent.HealthWalletId,
                 NecessitiesWalletId = editEvent.NecessitiesWalletId,
                 Amount = updateEvent.Amount ?? 0,
                 Receiveday = DateTime.Now,
@@ -527,6 +517,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return paymentUrl;
         }
+
         public async Task<Event> CloseEvent(int eventId)
         {
             // Lấy Event từ cơ sở dữ liệu
