@@ -13,6 +13,7 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IExpenseRepository : IRepositoryGeneric<Expense>
     {
+        Task<Expense?> GetExpenseByEventAndStatusAsync(string villageId, int eventId, IEnumerable<string> statuses);
         ExpenseResponseDTO[] GetUnComfirmVillageExpense();
         ExpenseResponseDTO[] GetUnComfirmHouseExpense();
         Task ApproveHouseExpensesByVillageIdAsync(string villageId);

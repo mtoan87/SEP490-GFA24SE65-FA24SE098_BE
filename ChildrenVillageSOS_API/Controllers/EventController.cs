@@ -98,6 +98,13 @@ namespace ChildrenVillageSOS_API.Controllers
             var editEvent = await _eventService.UpdateEvent(id, updateEvent);
             return Ok(editEvent);
         }
+        [HttpPut]
+        [Route("CloseEvent")]
+        public async Task<IActionResult> CloseEvent(int id)
+        {
+            var rs = await _eventService.CloseEvent(id);
+            return Ok(rs);
+        }
         [HttpDelete]
         [Route("DeleteEvent")]
         public async Task<IActionResult> DeleteEvent(int id)

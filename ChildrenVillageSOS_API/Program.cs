@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using ChildrenVillageSOS_SERVICE.Implement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +40,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();   // Cho phép m?i ph??ng th?c (GET, POST, PUT, DELETE, etc.)
         });
 });
-
+builder.Services.AddHostedService<EventStatusUpdaterService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 var configuration = builder.Configuration;

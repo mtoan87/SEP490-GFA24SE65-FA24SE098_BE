@@ -141,6 +141,26 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return expenses;
         }
+        public async Task<Expense?> GetExpenseByEventAndStatusAsync(string villageId, int eventId, IEnumerable<string> statuses)
+        {
+            if (string.IsNullOrEmpty(villageId))
+            {
+                throw new ArgumentException("VillageId cannot be null or empty.", nameof(villageId));
+            }
+
+            if (statuses == null || !statuses.Any())
+            {
+                throw new ArgumentException("Statuses cannot be null or empty.", nameof(statuses));
+            }
+
+            // Query the database to find the matching expense
+            return await _context.Expenses
+                .Where(e => e.VillageId == villageId
+                            && e.EventId == eventId
+                            && statuses.Contains(e.Status)
+                            && !e.IsDeleted)
+                .FirstOrDefaultAsync();
+        }
 
         public ExpenseResponseDTO[] GetUnComfirmVillageExpense()
         {
@@ -148,7 +168,9 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(e => !e.IsDeleted && // Exclude deleted records
                             e.ExpenseType == "Special" && // Filter by ExpenseType
                             e.Status == "OnRequestToEvent" && // Filter by Status
-                            !string.IsNullOrEmpty(e.VillageId)) // Ensure HouseId has a value
+                            !string.IsNullOrEmpty(e.VillageId) &&
+                            e.HouseId == null) 
+                            // Ensure HouseId has a value
                 .Select(e => new ExpenseResponseDTO
                 {
                     Id = e.Id,

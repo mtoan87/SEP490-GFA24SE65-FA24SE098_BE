@@ -119,14 +119,93 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId)
         {
-            // Lấy thông tin villageExpense từ database
+            // Retrieve villageExpense from the database
             var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
             if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
             {
                 throw new InvalidOperationException("Invalid village expense for creating an event.");
             }
 
-            // Tạo sự kiện mới với thông tin từ villageExpense
+            decimal totalExpenseAmount = villageExpense.ExpenseAmount;
+
+            // Check if all wallets have sufficient balance
+            bool hasSufficientFunds = true;
+
+            if (villageExpense.FacilitiesWalletId.HasValue)
+            {
+                var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
+                if (facilitiesWallet == null || facilitiesWallet.Budget < totalExpenseAmount)
+                {
+                    hasSufficientFunds = false;
+                }
+            }
+
+            if (villageExpense.FoodStuffWalletId.HasValue)
+            {
+                var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(villageExpense.FoodStuffWalletId.Value);
+                if (foodStuffWallet == null || foodStuffWallet.Budget < totalExpenseAmount)
+                {
+                    hasSufficientFunds = false;
+                }
+            }
+
+            if (villageExpense.HealthWalletId.HasValue)
+            {
+                var healthWallet = await _healthWalletRepository.GetByIdAsync(villageExpense.HealthWalletId.Value);
+                if (healthWallet == null || healthWallet.Budget < totalExpenseAmount)
+                {
+                    hasSufficientFunds = false;
+                }
+            }
+
+            if (villageExpense.NecessitiesWalletId.HasValue)
+            {
+                var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(villageExpense.NecessitiesWalletId.Value);
+                if (necessitiesWallet == null || necessitiesWallet.Budget < totalExpenseAmount)
+                {
+                    hasSufficientFunds = false;
+                }
+            }
+
+            if (!hasSufficientFunds)
+            {
+                // Update villageExpense status and return null to indicate no event was created
+                villageExpense.Status = "OnEvent";
+                villageExpense.ModifiedDate = DateTime.Now;
+                await _expenseRepository.UpdateAsync(villageExpense);
+                return null;
+            }
+
+            // Deduct amounts from wallets
+            if (villageExpense.FacilitiesWalletId.HasValue)
+            {
+                var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
+                facilitiesWallet.Budget -= totalExpenseAmount;
+                await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+            }
+
+            if (villageExpense.FoodStuffWalletId.HasValue)
+            {
+                var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(villageExpense.FoodStuffWalletId.Value);
+                foodStuffWallet.Budget -= totalExpenseAmount;
+                await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+            }
+
+            if (villageExpense.HealthWalletId.HasValue)
+            {
+                var healthWallet = await _healthWalletRepository.GetByIdAsync(villageExpense.HealthWalletId.Value);
+                healthWallet.Budget -= totalExpenseAmount;
+                await _healthWalletRepository.UpdateAsync(healthWallet);
+            }
+
+            if (villageExpense.NecessitiesWalletId.HasValue)
+            {
+                var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(villageExpense.NecessitiesWalletId.Value);
+                necessitiesWallet.Budget -= totalExpenseAmount;
+                await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+            }
+
+            // Create the new event
             var newEvent = new Event
             {
                 Name = createEvent.Name,
@@ -145,17 +224,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = DateTime.Now,
                 Amount = null,
                 CurrentAmount = null,
-                AmountLimit = villageExpense.ExpenseAmount, // Gán ExpenseAmount từ villageExpense
-                VillageId = villageExpense.VillageId,       // Gán VillageId từ villageExpense
+                AmountLimit = villageExpense.ExpenseAmount,
+                VillageId = villageExpense.VillageId,
             };
 
-            // Lưu sự kiện mới vào database
             await _eventRepository.AddAsync(newEvent);
 
-            // Upload danh sách ảnh và nhận về các URL
+            // Upload event images
             List<string> imageUrls = await _imageService.UploadEventImage(createEvent.Img, newEvent.Id);
-
-            // Lưu thông tin các ảnh vào bảng Image
             foreach (var url in imageUrls)
             {
                 var image = new Image
@@ -167,60 +243,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 };
                 await _imageRepository.AddAsync(image);
             }
-            // Cập nhật ngân sách cho từng ví dựa trên ID
-            if (villageExpense.FacilitiesWalletId.HasValue)
-            {
-                var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
-                if (facilitiesWallet != null)
-                {
-                    facilitiesWallet.Budget -= villageExpense.ExpenseAmount;
-                    //facilitiesWallet.ModifiedDate = DateTime.Now;
-                    await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
-                }
-            }
-            if (villageExpense.FoodStuffWalletId.HasValue)
-            {
-                var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(villageExpense.FoodStuffWalletId.Value);
-                if (foodStuffWallet != null)
-                {
-                    foodStuffWallet.Budget -= villageExpense.ExpenseAmount;
-                    //foodStuffWallet.ModifiedDate = DateTime.Now;
-                    await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
-                }
-            }         
-            if (villageExpense.HealthWalletId.HasValue)
-            {
-                var healthWallet = await _healthWalletRepository.GetByIdAsync(villageExpense.HealthWalletId.Value);
-                if (healthWallet != null)
-                {
-                    healthWallet.Budget -= villageExpense.ExpenseAmount;
-                    //healthWallet.ModifiedDate = DateTime.Now;
-                    await _healthWalletRepository.UpdateAsync(healthWallet);
-                }
-            }
 
-            if (villageExpense.NecessitiesWalletId.HasValue)
-            {
-                var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(villageExpense.NecessitiesWalletId.Value);
-                if (necessitiesWallet != null)
-                {
-                    necessitiesWallet.Budget -= villageExpense.ExpenseAmount;
-                    //necessitiesWallet.ModifiedDate = DateTime.Now;
-                    await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
-                }
-            }
-
-            // Cập nhật trạng thái của các house expenses liên quan đến villageExpense
-            await _expenseRepository.ApproveHouseExpensesByVillageIdAsync(villageExpense.VillageId);
-
-            // Cập nhật trạng thái của villageExpense
-            villageExpense.Status = "EventApproved";
+            // Update villageExpense status
+            villageExpense.EventId = newEvent.Id;
+            villageExpense.Status = "Approved";
             villageExpense.ModifiedDate = DateTime.Now;
             villageExpense.ApprovedBy = createEvent.CreatedBy;
             await _expenseRepository.UpdateAsync(villageExpense);
 
             return newEvent;
         }
+
 
 
 
@@ -484,6 +517,84 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _paymentRepository.AddAsync(payment);
 
             return paymentUrl;
+        }
+        public async Task<Event> CloseEvent(int eventId)
+        {
+            // Lấy Event từ cơ sở dữ liệu
+            var eventToClose = await _eventRepository.GetByIdAsync(eventId);
+            if (eventToClose == null || eventToClose.Status != "Active")
+            {
+                throw new InvalidOperationException("Event not found or is not active.");
+            }
+
+            // Lấy Expense liên quan đến Event có Status = "OnEvent" hoặc "Approved"
+            var relatedExpense = await _expenseRepository.GetExpenseByEventAndStatusAsync(eventToClose.VillageId, eventId, new[] { "OnEvent", "Approved" });
+            if (relatedExpense == null)
+            {
+                throw new InvalidOperationException("Related expense for the event not found.");
+            }
+
+            // Gán CurrentAmount từ Event vào AmountReceive của Expense
+            relatedExpense.AmountReceive = eventToClose.CurrentAmount ?? 0;
+
+            // Nếu trạng thái của Expense là "OnEvent", thực hiện trừ tiền từ các ví
+            if (relatedExpense.Status == "OnEvent")
+            {
+                if (eventToClose.FacilitiesWalletId.HasValue)
+                {
+                    var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(eventToClose.FacilitiesWalletId.Value);
+                    if (facilitiesWallet != null)
+                    {
+                        facilitiesWallet.Budget -= relatedExpense.AmountReceive ?? 0;
+                        await _failitiesWalletRepository.UpdateAsync(facilitiesWallet);
+                    }
+                }
+
+                if (eventToClose.FoodStuffWalletId.HasValue)
+                {
+                    var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(eventToClose.FoodStuffWalletId.Value);
+                    if (foodStuffWallet != null)
+                    {
+                        foodStuffWallet.Budget -= relatedExpense.AmountReceive ?? 0;
+                        await _foodStuffWalletRepository.UpdateAsync(foodStuffWallet);
+                    }
+                }
+
+                if (eventToClose.HealthWalletId.HasValue)
+                {
+                    var healthWallet = await _healthWalletRepository.GetByIdAsync(eventToClose.HealthWalletId.Value);
+                    if (healthWallet != null)
+                    {
+                        healthWallet.Budget -= relatedExpense.AmountReceive ?? 0;
+                        await _healthWalletRepository.UpdateAsync(healthWallet);
+                    }
+                }
+
+                if (eventToClose.NecessitiesWalletId.HasValue)
+                {
+                    var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(eventToClose.NecessitiesWalletId.Value);
+                    if (necessitiesWallet != null)
+                    {
+                        necessitiesWallet.Budget -= relatedExpense.AmountReceive ?? 0;
+                        await _necessitiesWalletRepository.UpdateAsync(necessitiesWallet);
+                    }
+                }
+
+                
+            }
+
+            // Cập nhật trạng thái của Event thành "Close"
+            eventToClose.Status = "Close";
+            eventToClose.ModifiedDate = DateTime.Now;
+
+            // Cập nhật Expense
+            relatedExpense.Status = "Approved";
+            relatedExpense.ModifiedDate = DateTime.Now;
+
+            await _expenseRepository.UpdateAsync(relatedExpense);
+            await _eventRepository.UpdateAsync(eventToClose);
+
+            return eventToClose;
         }
 
 
