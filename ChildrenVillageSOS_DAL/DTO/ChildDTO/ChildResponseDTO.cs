@@ -16,7 +16,11 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string HouseId { get; set; }
 
+        public string HouseName { get; set; } = null!;
+
         public string SchoolId { get; set; }
+
+        public string SchoolName { get; set; } = null!;
 
         public int? FacilitiesWalletId { get; set; }
 

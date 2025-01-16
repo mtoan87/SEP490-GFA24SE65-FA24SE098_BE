@@ -410,5 +410,14 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(c => childIds.Contains(c.Id) && !c.IsDeleted && c.HealthStatus == "Bad") // Chỉ lấy trẻ có HealthStatus là "Bad"
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Child>> GetChildrenWithRelationsAsync()
+        {
+            return await _context.Children
+                .Include(c => c.House)
+                .Include(c => c.School)
+                .Where(c => !c.IsDeleted)
+                .ToListAsync();
+        }
     }
 }

@@ -28,5 +28,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<List<ChildTrendDTO>> GetChildTrendsByYearAsync(int year);
         Task<ChildResponseDTO[]> GetChildByHouseId(string houseId);
         Task<List<Child>> SearchChildren(SearchChildDTO searchChildDTO);
+        Task<IEnumerable<Child>> GetChildrenWithRelationsAsync();
     }
 }
