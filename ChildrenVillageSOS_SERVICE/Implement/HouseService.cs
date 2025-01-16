@@ -66,7 +66,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     Description = house.Description,
                     HouseMember = house.HouseMember,
                     CurrentMembers = currentMembers,
-                    HouseOwner = house.HouseOwner,
+                    //HouseOwner = house.HouseOwner,
                     Status = house.Status,
                     UserAccountId = house.UserAccountId,
                     UserName = house.UserAccount?.UserName ?? "Unknown",
@@ -126,7 +126,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = createHouse.Description,
                 HouseMember = createHouse.HouseMember,
                 CurrentMembers = 0,
-                HouseOwner = createHouse.HouseOwner,
+                //HouseOwner = createHouse.HouseOwner,
                 Status = "Active", // Nếu không được cung cấp, mặc định là "Active"
                 UserAccountId = createHouse.UserAccountId,
                 VillageId = createHouse.VillageId,
@@ -184,7 +184,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingHouse.Description = updateHouse.Description;
             existingHouse.HouseMember = updateHouse.HouseMember;
             existingHouse.CurrentMembers = updateHouse.CurrentMembers;
-            existingHouse.HouseOwner = updateHouse.HouseOwner;
+            //existingHouse.HouseOwner = updateHouse.HouseOwner;
             existingHouse.Status = updateHouse.Status;
             existingHouse.UserAccountId = updateHouse.UserAccountId;
             existingHouse.VillageId = updateHouse.VillageId;

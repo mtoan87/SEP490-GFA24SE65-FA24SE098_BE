@@ -21,7 +21,7 @@ namespace ChildrenVillageSOS_DAL.DTO.House
 
         public int? CurrentMembers { get; set; }
 
-        public string HouseOwner { get; set; }
+        //public string HouseOwner { get; set; }
 
         public string Status { get; set; }
 
