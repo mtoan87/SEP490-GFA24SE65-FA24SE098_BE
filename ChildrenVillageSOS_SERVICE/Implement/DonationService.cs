@@ -289,6 +289,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _donationRepository.GetDonationIsDeleteArray();
         }
+        public FormatDonationResponseDTO[] GetDonationByUserIdFormat(string userId)
+        {
+            return _donationRepository.GetDonationByUserIdFormat(userId);
+        }
         public FormatDonationResponseDTO[] GetDonationByEventIdAsync(int eventId)
         {
             return _donationRepository.GetDonationByEventIdArray(eventId);

@@ -333,11 +333,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return newEvent;
         }
 
-
-
-
-
-
         public async Task<EventResponseDTO> GetEventById(int id)
         {
             return _eventRepository.GetEventById(id);

@@ -16,6 +16,7 @@ namespace ChildrenVillageSOS_REPO.Interface
         decimal GetTotalDonateAmount();
         DataTable getDonate();
         Task<List<Donation>> GetDonationsByUserIdAsync(string userId);
+        FormatDonationResponseDTO[] GetDonationByUserIdFormat(string userId);
         Task<List<DonationResponseDTO>> GetDonationsByUserId(string userId);
         Task<List<Village>> GetDonatedVillageByUserId(string userAccountId);
         FormatDonationResponseDTO[] GetDonationArray();
