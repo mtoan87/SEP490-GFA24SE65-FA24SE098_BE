@@ -23,6 +23,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 {
     public class EventService : IEventService
     {
+        private readonly IVillageRepository _villageRepository;
         private readonly IExpenseRepository _expenseRepository;
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
@@ -36,7 +37,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IConfiguration _configuration;
         private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
-        public EventService(IEventRepository eventRepository,
+        public EventService(
+            IVillageRepository villageRepository,
+            IEventRepository eventRepository,
             INecessitiesWalletRepository necessitiesWalletRepository,
             IFoodStuffWalletRepository foodStuffWalletRepository,
             IHealthWalletRepository healthWalletRepository,
@@ -50,6 +53,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IDonationService donationService,           
             IIncomeRepository incomeRepository)
         {
+            _villageRepository = villageRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _foodStuffWalletRepository = foodStuffWalletRepository;
             _healthWalletRepository = healthWalletRepository;
@@ -117,13 +121,20 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return eventResponseDTOs;
         }
-        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId)
+        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId, string userId)
         {
             // Retrieve villageExpense from the database
             var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
             if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
             {
                 throw new InvalidOperationException("Invalid village expense for creating an event.");
+            }
+
+            // Retrieve the village and verify the director
+            var village = await _villageRepository.GetByIdAsync(villageExpense.VillageId);
+            if (village == null || village.UserAccountId != userId)
+            {
+                throw new UnauthorizedAccessException($"Only the Director:{village.UserAccountId} can approve the event.");
             }
 
             decimal totalExpenseAmount = villageExpense.ExpenseAmount;
@@ -167,13 +178,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 }
             }
 
-            // Even if there are insufficient funds, we proceed to create the event
             // Update villageExpense status
-            villageExpense.Status = "OnEvent";  // You can keep this or set another status based on your logic
+            villageExpense.Status = "OnEvent";  // Update status for event creation
             villageExpense.ModifiedDate = DateTime.Now;
             await _expenseRepository.UpdateAsync(villageExpense);
 
-            // Deduct amounts from wallets (if funds are available)
+            // Deduct amounts from wallets if funds are available
             if (villageExpense.FacilitiesWalletId.HasValue)
             {
                 var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(villageExpense.FacilitiesWalletId.Value);
@@ -255,13 +265,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Update villageExpense status
             villageExpense.EventId = newEvent.Id;
-            villageExpense.Status = "Approved";  // Set to Approved regardless of funds
+            villageExpense.Status = "Approved";
             villageExpense.ModifiedDate = DateTime.Now;
             villageExpense.ApprovedBy = createEvent.CreatedBy;
             await _expenseRepository.UpdateAsync(villageExpense);
 
             return newEvent;
         }
+
 
 
 
