@@ -28,11 +28,12 @@ namespace ChildrenVillageSOS_DAL.DTO.VillageDTO
 
         public string UserAccountId { get; set; }
 
+        public string UserName { get; set; }
+
         public string? CreatedBy { get; set; }
 
         public string? ModifiedBy { get; set; }
 
-     
         public bool IsDeleted { get; set; }
 
         public DateTime? CreatedDate { get; set; }

@@ -271,7 +271,8 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             return await _context.Villages
                 .Include(v => v.Houses)
-                .ThenInclude(h => h.Children)
+                    .ThenInclude(h => h.Children)
+                .Include(v => v.UserAccount)
                 .Include(v => v.Images)
                 .Where(v => !v.IsDeleted)
                 .ToListAsync();

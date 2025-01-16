@@ -57,11 +57,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
         {
-
-            //var villages = await _villageRepository.GetAllNotDeletedAsync();
-            // Lấy tất cả các village không bị xóa từ repository, bao gồm liên kết tới Houses và Children
+            // Lấy danh sách villages từ repository
             var villages = await _villageRepository.GetVillagesWithHousesAndChildrenAsync();
 
+            // Chuyển đổi sang DTO
             var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
             {
                 Id = village.Id,
@@ -76,20 +75,21 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Description = village.Description ?? string.Empty,
                 Status = "Active",
                 UserAccountId = village.UserAccountId,
+                UserName = village.UserAccount?.UserName ?? "Unknown",
                 CreatedBy = village.CreatedBy,
                 ModifiedBy = village.ModifiedBy,
-              
                 IsDeleted = village.IsDeleted,
                 CreatedDate = village.CreatedDate,
                 ModifiedDate = village.ModifiedDate,
                 ImageUrls = village.Images
-                .Where(img => !img.IsDeleted)
-                .Select(img => img.UrlPath)
-                .ToArray()
+                    .Where(img => !img.IsDeleted)
+                    .Select(img => img.UrlPath)
+                    .ToArray()
             }).ToArray();
 
             return villageResponseDTOs;
         }
+
         public async Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm)
         {
             return await _villageRepository.SearchVillagesAsync(searchTerm);

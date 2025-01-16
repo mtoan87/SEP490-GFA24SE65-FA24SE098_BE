@@ -258,7 +258,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return transferRequest;
 
-            throw new InvalidOperationException("Invalid status transition");
+            //throw new InvalidOperationException("Invalid status transition");
         }
 
         public async Task<TransferRequest> DeleteTransferRequest(int id)

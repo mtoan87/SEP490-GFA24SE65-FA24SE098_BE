@@ -29,7 +29,11 @@ namespace ChildrenVillageSOS_DAL.DTO.HouseDTO
 
         public string UserAccountId { get; set; }
 
+        public string? UserName { get; set; }
+
         public string VillageId { get; set; }
+
+        public string? VillageName { get; set; }
 
         public DateTime? FoundationDate { get; set; }
 
