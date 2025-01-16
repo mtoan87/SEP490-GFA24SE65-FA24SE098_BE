@@ -63,6 +63,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 TotalAmount = donations.Sum(d => d.Amount),
                 DonationDetails = donations.Select(d => new
                 {
+                    
                     d.Amount,
                     d.DateTime
                 }).OrderBy(d => d.DateTime)
@@ -86,6 +87,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 TotalAmount = donations.Sum(d => d.Amount),
                 DonationDetails = donations.Select(d => new
                 {
+                    
                     d.Amount,
                     d.DateTime
                 }).OrderBy(d => d.DateTime)

@@ -113,7 +113,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             var childs = await _childRepository.GetAllNotDeletedAsync();
 
             var childResponseDTOs = childs
-                .Where(x => x.HealthStatus == "Bad")
+                .Where(x => x.HealthStatus == "Bad" && x.ExpenseRequestStatus == "Available")
                 .Select(x => new ChildResponseDTO
             {
                 Id = x.Id,

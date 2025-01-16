@@ -151,6 +151,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<EventResponseDTO>> GetAllEvent()
         {
+           
             var events = await _eventRepository.GetAllNotDeletedAsync();
 
             // Sử dụng Include để tải hình ảnh liên quan đến mỗi Event
@@ -183,6 +184,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId, string userId)
         {
+            var allEventCodes = await _eventRepository.Entities()
+                                                   .Select(c => c.EventCode)
+                                                   .ToListAsync();
+
+            
+            string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
             // Retrieve villageExpense from the database
             var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
             if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
@@ -297,7 +304,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = villageExpense.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
-                EventCode = createEvent.EventCode,
+                EventCode = newEventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
