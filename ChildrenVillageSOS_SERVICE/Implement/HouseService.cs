@@ -69,9 +69,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     HouseOwner = house.HouseOwner,
                     Status = house.Status,
                     UserAccountId = house.UserAccountId,
-                    UserName = house.UserAccount?.UserName ?? "Unknown", // Gán UserName
+                    UserName = house.UserAccount?.UserName ?? "Unknown",
                     VillageId = house.VillageId,
-                    VillageName = house.Village?.VillageName ?? "Unknown", // Gán VillageName
+                    VillageName = house.Village?.VillageName ?? "Unknown",
                     FoundationDate = house.FoundationDate,
                     LastInspectionDate = house.LastInspectionDate,
                     MaintenanceStatus = house.MaintenanceStatus,
