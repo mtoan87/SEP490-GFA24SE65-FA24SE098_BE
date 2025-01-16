@@ -24,6 +24,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
     public class EventService : IEventService
     {
         private readonly IVillageRepository _villageRepository;
+        private readonly IHouseRepository _houseRepository;
+        private readonly IChildRepository _childRepository;
         private readonly IExpenseRepository _expenseRepository;
         private readonly IFacilitiesWalletRepository _failitiesWalletRepository;
         private readonly INecessitiesWalletRepository _necessitiesWalletRepository;
@@ -38,6 +40,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IDonationService _donationService;             
         private readonly IIncomeRepository _incomeRepository;
         public EventService(
+            IHouseRepository houseRepository,
+            IChildRepository childRepository,
             IVillageRepository villageRepository,
             IEventRepository eventRepository,
             INecessitiesWalletRepository necessitiesWalletRepository,
@@ -53,6 +57,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IDonationService donationService,           
             IIncomeRepository incomeRepository)
         {
+            _houseRepository = houseRepository;
+            _childRepository = childRepository;
             _villageRepository = villageRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _foodStuffWalletRepository = foodStuffWalletRepository;
@@ -71,6 +77,60 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         }
 
+       
+        public async Task<EventAmountLimitDto> CalculateAmountLimitAsync(int eventId)
+        {
+            // Lấy thông tin sự kiện
+            var eventEntity = await _eventRepository.GetByIdAsync(eventId);
+            if (eventEntity == null)
+            {
+                throw new Exception($"Event with ID {eventId} not found.");
+            }
+
+            // Lấy villageId từ event
+            string villageId = eventEntity.VillageId;
+
+            // Lấy danh sách nhà thuộc làng
+            var houses = await _houseRepository.GetHouseByVillageIdAsync(villageId);
+            decimal totalHouseExpense = 0;
+            var houseDetails = new List<HouseExpenseDto>();
+
+            foreach (var house in houses)
+            {
+                // Lấy danh sách trẻ trong nhà
+                var children = await _childRepository.GetChildByHouseIdAsync(house.Id);
+
+                // Lọc trẻ có `HealthStatus` là `Bad`
+                var badHealthChildren = children.Where(c => c.HealthStatus == "Bad" && c.ExpenseRequestStatus == "OnRequest");
+
+                // Tính tổng chi phí của nhà
+                decimal houseExpense = badHealthChildren.Sum(c => c.Amount ?? 0);
+
+                houseDetails.Add(new HouseExpenseDto
+                {
+                    HouseId = house.Id,
+                    HouseName = house.HouseName,
+                    BadHealthChildrenCount = badHealthChildren.Count(),
+                    HouseExpense = houseExpense
+                });
+
+                totalHouseExpense += houseExpense;
+            }
+
+          
+            return new EventAmountLimitDto
+            {
+                EventId = eventId,
+                AmountLimit = totalHouseExpense,
+                Village = new VillageExpenseDto
+                {
+                    VillageId = villageId,
+                    VillageName = eventEntity.Name,
+                    TotalHouseExpense = totalHouseExpense,
+                    Houses = houseDetails
+                }
+            };
+        }
         public Task<EventResponseDTO[]> GetAllEventIsDeleteAsync()
         {
             return _eventRepository.GetAllEventIsDeleteAsync();

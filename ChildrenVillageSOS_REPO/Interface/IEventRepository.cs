@@ -11,6 +11,8 @@ namespace ChildrenVillageSOS_REPO.Interface
 {
     public interface IEventRepository : IRepositoryGeneric<Event>
     {
+        Task<IEnumerable<Event>> GetByVillageIdAsync(string villageId);
+        Task<IEnumerable<Event>> GetByHouseIdAsync(string houseId);
         Task<IEnumerable<Event>> GetAllAsync();
         EventResponseDTO GetEventById(int eventId);
         Task<TotalEventsStatDTO> GetTotalEventsStatAsync();

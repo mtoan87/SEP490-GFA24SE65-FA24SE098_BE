@@ -86,9 +86,9 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("ApproveEvent")]
-        public async Task<ActionResult<Event>> ApprovedEvent([FromForm] CreateEventDTO creEvent, int villageExpenseId)
+        public async Task<ActionResult<Event>> ApprovedEvent([FromForm] CreateEventDTO creEvent, int villageExpenseId, string userId)
         {
-            var newEvent = await _eventService.ApprovedEvent(creEvent, villageExpenseId);
+            var newEvent = await _eventService.ApprovedEvent(creEvent, villageExpenseId, userId);
             return Ok(newEvent);
         }
         [HttpPut]
@@ -104,6 +104,19 @@ namespace ChildrenVillageSOS_API.Controllers
         {
             var rs = await _eventService.CloseEvent(id);
             return Ok(rs);
+        }
+        [HttpGet("amount-limit-detail")]
+        public async Task<IActionResult> GetAmountLimit(int eventId)
+        {
+            try
+            {
+                var result = await _eventService.CalculateAmountLimitAsync(eventId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
         [HttpDelete]
         [Route("DeleteEvent")]

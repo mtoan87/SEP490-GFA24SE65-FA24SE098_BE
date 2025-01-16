@@ -19,6 +19,22 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             
         }
+
+        public async Task<IEnumerable<Event>> GetByHouseIdAsync(string houseId)
+        {
+            return await _context.Events
+                .Include(e => e.Village) // Include related data if needed
+                .Where(e => e.Village.Houses.Any(h => h.Id == houseId))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Event>> GetByVillageIdAsync(string villageId)
+        {
+            return await _context.Events
+                .Include(e => e.Village) // Include related data if needed
+                .Where(e => e.VillageId == villageId)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Event>> GetAllNotDeletedAsync()
         {
             // Sử dụng Include để lấy các hình ảnh liên quan đến Event

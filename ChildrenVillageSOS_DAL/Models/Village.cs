@@ -34,7 +34,7 @@ public partial class Village
     public string? ModifiedBy { get; set; }
 
     public bool IsDeleted { get; set; }
-
+        
     public DateTime? CreatedDate { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
