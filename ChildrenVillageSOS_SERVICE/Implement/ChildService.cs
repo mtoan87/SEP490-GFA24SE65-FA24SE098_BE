@@ -11,6 +11,7 @@ using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,15 +77,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
         {
-            var childs = await _childRepository.GetAllNotDeletedAsync();
-            
-            var childResponseDTOs = childs.Select(x => new ChildResponseDTO
+            var children = await _childRepository.GetChildrenWithRelationsAsync();
+
+            var childResponseDTOs = children.Select(x => new ChildResponseDTO
             {
                 Id = x.Id,
                 ChildName = x.ChildName,
                 HealthStatus = x.HealthStatus,
                 HouseId = x.HouseId,
+                HouseName = x.House?.HouseName ?? "Unknown",
                 SchoolId = x.SchoolId,
+                SchoolName = x.School?.SchoolName ?? "Unknown",
                 FacilitiesWalletId = x.FacilitiesWalletId,
                 SystemWalletId = x.SystemWalletId,
                 FoodStuffWalletId = x.FoodStuffWalletId,
