@@ -79,7 +79,7 @@ namespace ChildrenVillageSOS_API.Controllers
 
         [HttpPost]
         [Route("CreateEvent")]
-        public async Task<ActionResult<Event>> CreateEvent([FromForm] CreateEventDTO creEvent)
+        public async Task<ActionResult<Event>> CreateEvent([FromForm] EventCreateDTO creEvent)
         {
             var newEvent = await _eventService.CreateEvent(creEvent);
             return Ok(newEvent);    

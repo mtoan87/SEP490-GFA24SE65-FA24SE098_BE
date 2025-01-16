@@ -387,7 +387,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             foreach (var expense in houseExpenses)
             {
                 expense.ApprovedBy = userName;
-                expense.Status = "OnRequestToEvent";
+                expense.Status = "Approved";
                 expense.ModifiedDate = DateTime.Now;
                 await _expenseRepository.UpdateAsync(expense);
             }
@@ -411,7 +411,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 HouseId = null, // Đây là Expense của Village
                 VillageId = villageId,
             };
-
+            
             // Lưu Expense mới cho Village
             await _expenseRepository.AddAsync(villageExpense);
 

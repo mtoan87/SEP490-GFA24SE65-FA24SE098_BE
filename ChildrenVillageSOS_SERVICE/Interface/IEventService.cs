@@ -14,7 +14,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId);
         Task<IEnumerable<EventResponseDTO>> GetAllEvent();
         Task<EventResponseDTO> GetEventById(int id);
-        Task<Event> CreateEvent(CreateEventDTO createEvent);
+        Task<Event> CreateEvent(EventCreateDTO createEvent);
         Task<Event> UpdateEvent(int id, UpdateEventDTO updateEvent);
         Task<Event> DeleteEvent(int id);
         Task<Event> RestoreEvent(int id);

@@ -272,27 +272,27 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return _eventRepository.GetEventById(id);
         }
 
-        public async Task<Event> CreateEvent(CreateEventDTO createEvent)
+        public async Task<Event> CreateEvent(EventCreateDTO createEvent)
         {
             var newEvent = new Event
             {
                 Name = createEvent.Name,
                 Description = createEvent.Description,
-                FacilitiesWalletId = null,
-                FoodStuffWalletId = null,
-                SystemWalletId = null,
-                HealthWalletId = 1,
-                NecessitiesWalletId = null,
+                FacilitiesWalletId = createEvent.FacilitiesWalletId,
+                FoodStuffWalletId = createEvent.FoodStuffWalletId,
+                SystemWalletId = createEvent.SystemWalletId,
+                HealthWalletId = createEvent.HealthWalletId,
+                NecessitiesWalletId = createEvent.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 EventCode = createEvent.EventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
-                Amount = null,
-                CurrentAmount = null,
-                AmountLimit = null, 
-                VillageId = null,
+                Amount = createEvent.Amount,
+                CurrentAmount = createEvent.Amount,
+                AmountLimit = createEvent.AmountLimit, 
+                VillageId = createEvent.VillageId,
                
             };
             await _eventRepository.AddAsync(newEvent);
@@ -396,7 +396,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Event with ID {id} not found!");
             }
 
-            // Check if the event status is 'Closed' and prevent donation
+            
             if (editEvent.Status == "Close")
             {
                 throw new InvalidOperationException("Donations are not allowed for closed events.");
