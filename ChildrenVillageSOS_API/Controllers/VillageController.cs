@@ -75,7 +75,7 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(vil);
         }
 
-        [HttpGet("GetVillageByIdWithImg/{Id}")]
+        [HttpGet("GetVillageByIdWithImg")]
         public async Task<IActionResult> GetVillageByIdWithImg(string Id)
         {
             var vil = await _villageService.GetVillageByIdWithImg(Id);

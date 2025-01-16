@@ -105,6 +105,7 @@ namespace ChildrenVillageSOS_REPO.Implement
                     ChildName = x.ChildName,
                     HealthStatus = x.HealthStatus,
                     HouseId = x.HouseId,
+                    HouseName = x.House.HouseName,
                     SchoolId = x.SchoolId,
                     FacilitiesWalletId = x.FacilitiesWalletId,
                     SystemWalletId = x.SystemWalletId,

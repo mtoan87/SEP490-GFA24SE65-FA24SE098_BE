@@ -27,6 +27,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<Dictionary<int, Dictionary<string, decimal>>> GetMonthlyDonations();
         Task<int> GetTotalDonationsByYear(int year);
         Task<List<DonationResponseDTO>> GetDonationsByUserIdAsync(string userId);
+        FormatDonationResponseDTO[] GetDonationByUserIdFormat(string userId);
         DataTable getDonate();
         Task<List<Village>> GetDonatedVillageByUserId(string userAccountId);
         Task<object> GetDonationsByUserAndEventAsync(string userId, int eventId);
