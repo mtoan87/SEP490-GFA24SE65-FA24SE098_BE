@@ -223,16 +223,42 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Sử dụng hàm GenerateId từ IdGenerator
             string newChildId = IdGenerator.GenerateId(allChildIds, "C");
 
+            // Khởi tạo các giá trị ví mặc định là null
+            int? facilitiesWalletId = null;
+            int? systemWalletId = null;
+            int? foodStuffWalletId = null;
+            int? healthWalletId = null;
+            int? necessitiesWalletId = null;
+
+            switch (createChild.WalletType)
+            {
+                case "facilitiesWalletId":
+                    facilitiesWalletId = 1;
+                    break;
+                case "systemWalletId":
+                    systemWalletId = 1;
+                    break;
+                case "foodStuffWalletId":
+                    foodStuffWalletId = 1;
+                    break;
+                case "healthWalletId":
+                    healthWalletId = 1;
+                    break;
+                case "necessitiesWalletId":
+                    necessitiesWalletId = 1;
+                    break;
+            }
+
             var newChild = new Child
             {
                 Id = newChildId,  // Gán ID mới
                 ChildName = createChild.ChildName,
                 HealthStatus = createChild.HealthStatus,
-                FacilitiesWalletId = createChild.FacilitiesWalletId,
-                SystemWalletId = createChild.SystemWalletId,
-                FoodStuffWalletId = createChild.FoodStuffWalletId,
-                HealthWalletId = createChild.HealthWalletId,
-                NecessitiesWalletId = createChild.NecessitiesWalletId,
+                FacilitiesWalletId = facilitiesWalletId,
+                SystemWalletId = systemWalletId,
+                FoodStuffWalletId = foodStuffWalletId,
+                HealthWalletId = healthWalletId,
+                NecessitiesWalletId = necessitiesWalletId,
                 Amount = createChild.Amount,
                 CurrentAmount = createChild.Amount,
                 AmountLimit = createChild.AmountLimit,
