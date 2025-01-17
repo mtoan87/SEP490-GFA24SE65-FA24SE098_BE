@@ -56,6 +56,37 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync();
         }
+        public async Task<VillageResponseDTO[]> GetVillageByIdWithImg(string villageId)
+        {
+            return await _context.Villages
+                .Where(village => village.Id == villageId && !village.IsDeleted) // Kiểm tra ID và không bị xóa
+                .Select(village => new VillageResponseDTO
+                {
+                    Id = village.Id,
+                    VillageName = village.VillageName ?? string.Empty,
+                    EstablishedDate = village.EstablishedDate,
+                    TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                    TotalChildren = village.Houses
+                        .SelectMany(h => h.Children)
+                        .Count(c => !c.IsDeleted),
+                    ContactNumber = village.ContactNumber,
+                    Location = village.Location ?? string.Empty,
+                    Description = village.Description ?? string.Empty,
+                    Status = "Active",
+                    UserAccountId = village.UserAccountId,
+                    CreatedBy = village.CreatedBy,
+                    ModifiedBy = village.ModifiedBy,
+
+                    IsDeleted = village.IsDeleted,
+                    CreatedDate = village.CreatedDate,
+                    ModifiedDate = village.ModifiedDate,
+                    ImageUrls = village.Images
+                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
+                        .Select(img => img.UrlPath)
+                        .ToArray() // Chuyển thành mảng                // Chuyển thành mảng
+                })
+                .ToArrayAsync();
+        }
 
         public async Task<VillageResponseDTO[]> GetAllVillageIsDelete()
         {
@@ -126,39 +157,6 @@ namespace ChildrenVillageSOS_REPO.Implement
                                  .ToListAsync();
         }
 
-        public VillageResponseDTO GetVillageByIdWithImg(string villageId)
-        {
-            var villageDetails = _context.Villages
-                .Where(village => village.Id == villageId && !village.IsDeleted) // Kiểm tra ID và không bị xóa
-                .Select(village => new VillageResponseDTO
-                {
-                    Id = village.Id,
-                    VillageName = village.VillageName ?? string.Empty,
-                    EstablishedDate = village.EstablishedDate,
-                    TotalHouses = village.Houses.Count(h => !h.IsDeleted),
-                    TotalChildren = village.Houses
-                        .SelectMany(h => h.Children)
-                        .Count(c => !c.IsDeleted),
-                    ContactNumber = village.ContactNumber,
-                    Location = village.Location ?? string.Empty,
-                    Description = village.Description ?? string.Empty,
-                    Status = "Active",
-                    UserAccountId = village.UserAccountId,
-                    CreatedBy = village.CreatedBy,
-                    ModifiedBy = village.ModifiedBy,
-                   
-                    IsDeleted = village.IsDeleted,
-                    CreatedDate = village.CreatedDate,
-                    ModifiedDate = village.ModifiedDate,
-                    ImageUrls = village.Images
-                        .Where(img => !img.IsDeleted) // Lọc các hình ảnh chưa bị xóa
-                        .Select(img => img.UrlPath)
-                        .ToArray() // Chuyển thành mảng                // Chuyển thành mảng
-                })
-                .FirstOrDefault(); // Lấy kết quả đầu tiên hoặc null nếu không tìm thấy
-
-            return villageDetails;
-        }
         public async Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm)
         {
             var query = _context.Villages

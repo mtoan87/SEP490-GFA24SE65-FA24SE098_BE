@@ -13,7 +13,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string HealthStatus { get; set; }
 
-        public string WalletType { get; set; }
+        public string? WalletType { get; set; }
 
         //public int? FacilitiesWalletId { get; set; }
 
@@ -36,8 +36,6 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
         public string Gender { get; set; }
 
         public DateTime Dob { get; set; }
-
-        public string Status { get; set; }
 
         public List<IFormFile>? Img { get; set; }
     }

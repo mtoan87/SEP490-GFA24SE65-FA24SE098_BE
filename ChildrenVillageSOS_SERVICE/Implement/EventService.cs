@@ -186,9 +186,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             //var allEventCodes = await _eventRepository.Entities()
             //                                       .Select(c => c.EventCode)
-            //                                       .ToListAsync();
-
-            
+            //                                       .ToListAsync();           
             //string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
             // Retrieve villageExpense from the database
             var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);

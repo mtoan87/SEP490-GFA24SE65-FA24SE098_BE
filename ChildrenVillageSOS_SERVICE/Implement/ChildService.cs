@@ -223,35 +223,47 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Sử dụng hàm GenerateId từ IdGenerator
             string newChildId = IdGenerator.GenerateId(allChildIds, "C");
 
-            // Khởi tạo các giá trị ví mặc định là null
+            // Khởi tạo các giá trị ví mặc định là null và Amount mặc định là 0
             int? facilitiesWalletId = null;
             int? systemWalletId = null;
             int? foodStuffWalletId = null;
             int? healthWalletId = null;
             int? necessitiesWalletId = null;
 
-            switch (createChild.WalletType)
+            // Kiểm tra HealthStatus
+            if (createChild.HealthStatus == "Bad")
             {
-                case "facilitiesWalletId":
-                    facilitiesWalletId = 1;
-                    break;
-                case "systemWalletId":
-                    systemWalletId = 1;
-                    break;
-                case "foodStuffWalletId":
-                    foodStuffWalletId = 1;
-                    break;
-                case "healthWalletId":
-                    healthWalletId = 1;
-                    break;
-                case "necessitiesWalletId":
-                    necessitiesWalletId = 1;
-                    break;
+                if (string.IsNullOrEmpty(createChild.WalletType) || createChild.Amount <= 0)
+                {
+                    throw new ArgumentException("WalletType and Amount cannot be blank if HealthStatus is 'Bad'.");
+                }
+
+                // Xác định loại ví theo WalletType
+                switch (createChild.WalletType)
+                {
+                    case "facilitiesWalletId":
+                        facilitiesWalletId = 1;
+                        break;
+                    case "systemWalletId":
+                        systemWalletId = 1;
+                        break;
+                    case "foodStuffWalletId":
+                        foodStuffWalletId = 1;
+                        break;
+                    case "healthWalletId":
+                        healthWalletId = 1;
+                        break;
+                    case "necessitiesWalletId":
+                        necessitiesWalletId = 1;
+                        break;
+                    default:
+                        throw new ArgumentException("WalletType not valid.");
+                }
             }
 
             var newChild = new Child
             {
-                Id = newChildId,  // Gán ID mới
+                Id = newChildId,
                 ChildName = createChild.ChildName,
                 HealthStatus = createChild.HealthStatus,
                 FacilitiesWalletId = facilitiesWalletId,
@@ -259,18 +271,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FoodStuffWalletId = foodStuffWalletId,
                 HealthWalletId = healthWalletId,
                 NecessitiesWalletId = necessitiesWalletId,
-                Amount = createChild.Amount,
-                CurrentAmount = createChild.Amount,
-                AmountLimit = createChild.AmountLimit,
+                Amount = createChild.Amount ?? 0,
+                AmountLimit = createChild.AmountLimit ?? 0,
                 HouseId = createChild.HouseId,
                 SchoolId = createChild.SchoolId,
                 Gender = createChild.Gender,
                 Dob = createChild.Dob,
                 CreatedDate = DateTime.Now,
-                Status = createChild.Status,
+                Status = "Active",
                 IsDeleted = false
-                
             };
+
             await _childRepository.AddAsync(newChild);
 
             // Upload danh sách ảnh và nhận về các URL
@@ -290,6 +301,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newChild;
         }
+
         public async Task<string> DonateChild(string id, ChildDonateDTO updateChild)
         {
             // Step 1: Retrieve the event by ID
@@ -445,9 +457,42 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.SchoolId = updateChild.SchoolId;
             existingChild.Gender = updateChild.Gender;
             existingChild.Dob = updateChild.Dob;
-            existingChild.Status = updateChild.Status;
-            existingChild.IsDeleted = false;
+            existingChild.Amount = updateChild.Amount ?? existingChild.Amount;
+            existingChild.AmountLimit = updateChild.AmountLimit ?? existingChild.AmountLimit;
             existingChild.ModifiedDate = DateTime.Now;
+
+            // Xử lý cập nhật WalletType và Amount dựa trên HealthStatus
+            if (updateChild.HealthStatus == "Bad")
+            {
+                existingChild.Amount = updateChild.Amount ?? existingChild.Amount;
+
+                existingChild.FacilitiesWalletId = null;
+                existingChild.SystemWalletId = null;
+                existingChild.FoodStuffWalletId = null;
+                existingChild.HealthWalletId = null;
+                existingChild.NecessitiesWalletId = null;
+
+                switch (updateChild.WalletType)
+                {
+                    case "facilitiesWalletId":
+                        existingChild.FacilitiesWalletId = 1;
+                        break;
+                    case "systemWalletId":
+                        existingChild.SystemWalletId = 1;
+                        break;
+                    case "foodStuffWalletId":
+                        existingChild.FoodStuffWalletId = 1;
+                        break;
+                    case "healthWalletId":
+                        existingChild.HealthWalletId = 1;
+                        break;
+                    case "necessitiesWalletId":
+                        existingChild.NecessitiesWalletId = 1;
+                        break;
+                }
+            }
+
+            await _childRepository.UpdateAsync(existingChild);
 
             var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
 
@@ -487,7 +532,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Lỗi khi xóa ảnh: {ex.Message}");
+                        throw new Exception($"Error occur when delete image: {ex.Message}");
                     }
                 }
             }
@@ -514,64 +559,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _childRepository.UpdateAsync(existingChild);
             return existingChild;
         }
-
-
-        //public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
-        //{
-        //    var existingChild = await _childRepository.GetByIdAsync(id);
-        //    if (existingChild == null)
-        //    {
-        //        throw new Exception($"Child with ID {id} not found!");
-        //    }
-
-        //    // Cập nhật các thuộc tính cơ bản
-        //    existingChild.ChildName = updateChild.ChildName;
-        //    existingChild.HealthStatus = updateChild.HealthStatus;
-        //    existingChild.HouseId = updateChild.HouseId;
-        //    existingChild.Gender = updateChild.Gender;
-        //    existingChild.Dob = updateChild.Dob;
-        //    existingChild.Status = updateChild.Status;
-        //    existingChild.IsDeleted =false;
-        //    existingChild.ModifiedDate = DateTime.Now;
-
-        //    // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
-        //    if (updateChild.Img != null && updateChild.Img.Any())
-        //    {
-        //        // Lấy danh sách ảnh hiện tại của CHild từ database Image
-        //        var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
-
-        //        // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
-        //        foreach (var existingImage in existingImages)
-        //        {
-        //            // Xóa ảnh trên Cloudinary
-        //            bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "ChildImages");
-        //            if (!isDeleted)
-        //            {
-        //                throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
-        //            }
-        //            // Xóa ảnh khỏi database
-        //            await _imageRepository.RemoveAsync(existingImage);
-        //        }
-        //    }
-
-        //    // Upload danh sách ảnh mới và lưu thông tin vào database
-        //    List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
-        //    foreach (var newImageUrl in newImageUrls)
-        //    {
-        //        var newImage = new Image
-        //        {
-        //            UrlPath = newImageUrl,
-        //            ChildId = existingChild.Id,
-        //            ModifiedDate = DateTime.Now,
-        //            IsDeleted = false,
-        //        };
-        //        await _imageRepository.AddAsync(newImage);
-        //    }
-
-        //    // Lưu thay đổi
-        //    await _childRepository.UpdateAsync(existingChild);
-        //    return existingChild;
-        //}
 
         public async Task<Child> DeleteChild(string id)
         {
