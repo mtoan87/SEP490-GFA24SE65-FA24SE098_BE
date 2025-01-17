@@ -86,9 +86,9 @@ namespace ChildrenVillageSOS_API.Controllers
         }
         [HttpPost]
         [Route("ApproveEvent")]
-        public async Task<ActionResult<Event>> ApprovedEvent([FromForm] CreateEventDTO creEvent, int villageExpenseId, string userId)
+        public async Task<ActionResult<Event>> ApprovedEvent([FromForm] CreateEventDTO creEvent, int villageExpenseId/*, string userId*/)
         {
-            var newEvent = await _eventService.ApprovedEvent(creEvent, villageExpenseId, userId);
+            var newEvent = await _eventService.ApprovedEvent(creEvent, villageExpenseId/*, userId*/);
             return Ok(newEvent);
         }
         [HttpPut]
