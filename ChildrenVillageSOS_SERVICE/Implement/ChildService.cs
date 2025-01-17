@@ -223,35 +223,47 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Sử dụng hàm GenerateId từ IdGenerator
             string newChildId = IdGenerator.GenerateId(allChildIds, "C");
 
-            // Khởi tạo các giá trị ví mặc định là null
+            // Khởi tạo các giá trị ví mặc định là null và Amount mặc định là 0
             int? facilitiesWalletId = null;
             int? systemWalletId = null;
             int? foodStuffWalletId = null;
             int? healthWalletId = null;
             int? necessitiesWalletId = null;
 
-            switch (createChild.WalletType)
+            // Kiểm tra HealthStatus
+            if (createChild.HealthStatus == "Bad")
             {
-                case "facilitiesWalletId":
-                    facilitiesWalletId = 1;
-                    break;
-                case "systemWalletId":
-                    systemWalletId = 1;
-                    break;
-                case "foodStuffWalletId":
-                    foodStuffWalletId = 1;
-                    break;
-                case "healthWalletId":
-                    healthWalletId = 1;
-                    break;
-                case "necessitiesWalletId":
-                    necessitiesWalletId = 1;
-                    break;
+                if (string.IsNullOrEmpty(createChild.WalletType) || createChild.Amount <= 0)
+                {
+                    throw new ArgumentException("WalletType and Amount cannot be blank if HealthStatus is 'Bad'.");
+                }
+
+                // Xác định loại ví theo WalletType
+                switch (createChild.WalletType)
+                {
+                    case "facilitiesWalletId":
+                        facilitiesWalletId = 1;
+                        break;
+                    case "systemWalletId":
+                        systemWalletId = 1;
+                        break;
+                    case "foodStuffWalletId":
+                        foodStuffWalletId = 1;
+                        break;
+                    case "healthWalletId":
+                        healthWalletId = 1;
+                        break;
+                    case "necessitiesWalletId":
+                        necessitiesWalletId = 1;
+                        break;
+                    default:
+                        throw new ArgumentException("WalletType not valid.");
+                }
             }
 
             var newChild = new Child
             {
-                Id = newChildId,  // Gán ID mới
+                Id = newChildId,
                 ChildName = createChild.ChildName,
                 HealthStatus = createChild.HealthStatus,
                 FacilitiesWalletId = facilitiesWalletId,
@@ -259,9 +271,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FoodStuffWalletId = foodStuffWalletId,
                 HealthWalletId = healthWalletId,
                 NecessitiesWalletId = necessitiesWalletId,
-                Amount = createChild.Amount,
-                CurrentAmount = createChild.Amount,
-                AmountLimit = createChild.AmountLimit,
+                Amount = createChild.Amount ?? 0,
+                AmountLimit = createChild.AmountLimit ?? 0,
                 HouseId = createChild.HouseId,
                 SchoolId = createChild.SchoolId,
                 Gender = createChild.Gender,
@@ -269,8 +280,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = DateTime.Now,
                 Status = "Active",
                 IsDeleted = false
-                
             };
+
             await _childRepository.AddAsync(newChild);
 
             // Upload danh sách ảnh và nhận về các URL
@@ -290,6 +301,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
             return newChild;
         }
+
         public async Task<string> DonateChild(string id, ChildDonateDTO updateChild)
         {
             // Step 1: Retrieve the event by ID
@@ -449,30 +461,35 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.AmountLimit = updateChild.AmountLimit ?? existingChild.AmountLimit;
             existingChild.ModifiedDate = DateTime.Now;
 
-            existingChild.FacilitiesWalletId = null;
-            existingChild.SystemWalletId = null;
-            existingChild.FoodStuffWalletId = null;
-            existingChild.HealthWalletId = null;
-            existingChild.NecessitiesWalletId = null;
-
-            // Xử lý cập nhật ví
-            switch (updateChild.WalletType)
+            // Xử lý cập nhật WalletType và Amount dựa trên HealthStatus
+            if (updateChild.HealthStatus == "Bad")
             {
-                case "facilitiesWalletId":
-                    existingChild.FacilitiesWalletId = 1;
-                    break;
-                case "systemWalletId":
-                    existingChild.SystemWalletId = 1;
-                    break;
-                case "foodStuffWalletId":
-                    existingChild.FoodStuffWalletId = 1;
-                    break;
-                case "healthWalletId":
-                    existingChild.HealthWalletId = 1;
-                    break;
-                case "necessitiesWalletId":
-                    existingChild.NecessitiesWalletId = 1;
-                    break;
+                existingChild.Amount = updateChild.Amount ?? existingChild.Amount;
+
+                existingChild.FacilitiesWalletId = null;
+                existingChild.SystemWalletId = null;
+                existingChild.FoodStuffWalletId = null;
+                existingChild.HealthWalletId = null;
+                existingChild.NecessitiesWalletId = null;
+
+                switch (updateChild.WalletType)
+                {
+                    case "facilitiesWalletId":
+                        existingChild.FacilitiesWalletId = 1;
+                        break;
+                    case "systemWalletId":
+                        existingChild.SystemWalletId = 1;
+                        break;
+                    case "foodStuffWalletId":
+                        existingChild.FoodStuffWalletId = 1;
+                        break;
+                    case "healthWalletId":
+                        existingChild.HealthWalletId = 1;
+                        break;
+                    case "necessitiesWalletId":
+                        existingChild.NecessitiesWalletId = 1;
+                        break;
+                }
             }
 
             await _childRepository.UpdateAsync(existingChild);

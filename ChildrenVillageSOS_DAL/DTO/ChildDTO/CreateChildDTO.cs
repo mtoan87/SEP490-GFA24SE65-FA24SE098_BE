@@ -13,7 +13,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         public string HealthStatus { get; set; }
 
-        public string WalletType { get; set; }
+        public string? WalletType { get; set; }
 
         //public int? FacilitiesWalletId { get; set; }
 
