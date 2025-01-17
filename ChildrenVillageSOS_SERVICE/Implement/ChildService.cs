@@ -267,7 +267,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Gender = createChild.Gender,
                 Dob = createChild.Dob,
                 CreatedDate = DateTime.Now,
-                Status = createChild.Status,
+                Status = "Active",
                 IsDeleted = false
                 
             };
@@ -445,9 +445,37 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.SchoolId = updateChild.SchoolId;
             existingChild.Gender = updateChild.Gender;
             existingChild.Dob = updateChild.Dob;
-            existingChild.Status = updateChild.Status;
-            existingChild.IsDeleted = false;
+            existingChild.Amount = updateChild.Amount ?? existingChild.Amount;
+            existingChild.AmountLimit = updateChild.AmountLimit ?? existingChild.AmountLimit;
             existingChild.ModifiedDate = DateTime.Now;
+
+            existingChild.FacilitiesWalletId = null;
+            existingChild.SystemWalletId = null;
+            existingChild.FoodStuffWalletId = null;
+            existingChild.HealthWalletId = null;
+            existingChild.NecessitiesWalletId = null;
+
+            // Xử lý cập nhật ví
+            switch (updateChild.WalletType)
+            {
+                case "facilitiesWalletId":
+                    existingChild.FacilitiesWalletId = 1;
+                    break;
+                case "systemWalletId":
+                    existingChild.SystemWalletId = 1;
+                    break;
+                case "foodStuffWalletId":
+                    existingChild.FoodStuffWalletId = 1;
+                    break;
+                case "healthWalletId":
+                    existingChild.HealthWalletId = 1;
+                    break;
+                case "necessitiesWalletId":
+                    existingChild.NecessitiesWalletId = 1;
+                    break;
+            }
+
+            await _childRepository.UpdateAsync(existingChild);
 
             var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
 
@@ -487,7 +515,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Lỗi khi xóa ảnh: {ex.Message}");
+                        throw new Exception($"Error occur when delete image: {ex.Message}");
                     }
                 }
             }
@@ -514,64 +542,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _childRepository.UpdateAsync(existingChild);
             return existingChild;
         }
-
-
-        //public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
-        //{
-        //    var existingChild = await _childRepository.GetByIdAsync(id);
-        //    if (existingChild == null)
-        //    {
-        //        throw new Exception($"Child with ID {id} not found!");
-        //    }
-
-        //    // Cập nhật các thuộc tính cơ bản
-        //    existingChild.ChildName = updateChild.ChildName;
-        //    existingChild.HealthStatus = updateChild.HealthStatus;
-        //    existingChild.HouseId = updateChild.HouseId;
-        //    existingChild.Gender = updateChild.Gender;
-        //    existingChild.Dob = updateChild.Dob;
-        //    existingChild.Status = updateChild.Status;
-        //    existingChild.IsDeleted =false;
-        //    existingChild.ModifiedDate = DateTime.Now;
-
-        //    // Nếu có danh sách ảnh được upload trong yêu cầu cập nhật
-        //    if (updateChild.Img != null && updateChild.Img.Any())
-        //    {
-        //        // Lấy danh sách ảnh hiện tại của CHild từ database Image
-        //        var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
-
-        //        // Xóa tất cả các ảnh cũ trên Cloudinary và trong cơ sở dữ liệu
-        //        foreach (var existingImage in existingImages)
-        //        {
-        //            // Xóa ảnh trên Cloudinary
-        //            bool isDeleted = await _imageService.DeleteImageAsync(existingImage.UrlPath, "ChildImages");
-        //            if (!isDeleted)
-        //            {
-        //                throw new Exception("Không thể xóa ảnh cũ trên Cloudinary");
-        //            }
-        //            // Xóa ảnh khỏi database
-        //            await _imageRepository.RemoveAsync(existingImage);
-        //        }
-        //    }
-
-        //    // Upload danh sách ảnh mới và lưu thông tin vào database
-        //    List<string> newImageUrls = await _imageService.UploadChildImage(updateChild.Img, existingChild.Id);
-        //    foreach (var newImageUrl in newImageUrls)
-        //    {
-        //        var newImage = new Image
-        //        {
-        //            UrlPath = newImageUrl,
-        //            ChildId = existingChild.Id,
-        //            ModifiedDate = DateTime.Now,
-        //            IsDeleted = false,
-        //        };
-        //        await _imageRepository.AddAsync(newImage);
-        //    }
-
-        //    // Lưu thay đổi
-        //    await _childRepository.UpdateAsync(existingChild);
-        //    return existingChild;
-        //}
 
         public async Task<Child> DeleteChild(string id)
         {
