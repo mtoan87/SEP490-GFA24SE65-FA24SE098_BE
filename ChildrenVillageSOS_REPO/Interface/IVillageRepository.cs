@@ -12,7 +12,7 @@ namespace ChildrenVillageSOS_REPO.Interface
     public interface IVillageRepository : IRepositoryGeneric<Village>
     {
         List<Village> GetVillagesDonatedByUser(string userAccountId);
-        VillageResponseDTO GetVillageByIdWithImg(string villageId);
+        Task<VillageResponseDTO[]> GetVillageByIdWithImg(string villageId);
         //Dashboard:
         Task<IEnumerable<Village>> GetVillagesWithHouses();
         Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId);

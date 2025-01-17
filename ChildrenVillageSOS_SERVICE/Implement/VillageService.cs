@@ -54,6 +54,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _villageRepository.GetVillageByEventIDAsync(eventId);
         }
+        public Task<VillageResponseDTO[]> GetVillageByIdWithImg(string villageId)
+        {
+            return _villageRepository.GetVillageByIdWithImg(villageId);
+        }
 
         public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
         {
@@ -103,11 +107,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<VillageDetailsDTO> GetVillageDetails(string villageId)
         {
             return await _villageRepository.GetVillageDetails(villageId);
-        }
-
-        public async Task<VillageResponseDTO> GetVillageByIdWithImg(string villageId)
-        {
-            return _villageRepository.GetVillageByIdWithImg(villageId);
         }
 
         public async Task<Village> CreateVillage(CreateVillageDTO createVillage)
