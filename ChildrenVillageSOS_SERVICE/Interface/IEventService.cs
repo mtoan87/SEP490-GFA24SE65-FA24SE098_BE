@@ -13,7 +13,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         
         Task<EventAmountLimitDto> CalculateAmountLimitAsync(int eventId);
         Task<Event> CloseEvent(int eventId);
-        Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId/*, string userId*/);
+        Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId, string userid);
         Task<IEnumerable<EventResponseDTO>> GetAllEvent();
         Task<EventResponseDTO> GetEventById(int id);
         Task<Event> CreateEvent(EventCreateDTO createEvent);
