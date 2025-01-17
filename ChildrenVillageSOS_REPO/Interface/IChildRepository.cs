@@ -29,5 +29,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<ChildResponseDTO[]> GetChildByHouseId(string houseId);
         Task<List<Child>> SearchChildren(SearchChildDTO searchChildDTO);
         Task<IEnumerable<Child>> GetChildrenWithRelationsAsync();
+        Task<IEnumerable<Donation>> GetDonationsByChildIdAsync(string childId);
     }
 }

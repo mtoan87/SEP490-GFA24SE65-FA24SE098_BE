@@ -37,17 +37,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IIncomeRepository _incomeRepository;
         private readonly IHouseRepository _houseRepository;
 
-
         public ChildService(IChildRepository childRepository,
             IUserAccountRepository userAccountRepository,
             IImageService imageService,
             IImageRepository imageRepository,                   
-            IPaymentRepository paymentRepository,              
+            IPaymentRepository paymentRepository,
             IConfiguration configuration,
             IDonationService donationService,
-            IFacilitiesWalletRepository facilitiesWalletRepository,           
+            IFacilitiesWalletRepository facilitiesWalletRepository,
             ISystemWalletRepository systemWalletRepository,
-            INecessitiesWalletRepository necessitiesWalletRepository,            
+            INecessitiesWalletRepository necessitiesWalletRepository,
             IFoodStuffWalletRepository foodStuffWalletRepository,
             IHealthWalletRepository healthWalletRepository,
             IIncomeRepository incomeRepository,
@@ -56,18 +55,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _userAccountRepository = userAccountRepository;
             _childRepository = childRepository;
             _imageService = imageService;
-            _imageRepository = imageRepository;         
-            _paymentRepository = paymentRepository;           
+            _imageRepository = imageRepository;
+            _paymentRepository = paymentRepository;
             _configuration = configuration;
             _donationService = donationService;
-            _failitiesWalletRepository = facilitiesWalletRepository;          
+            _failitiesWalletRepository = facilitiesWalletRepository;
             _systemWalletRepository = systemWalletRepository;
             _foodStuffWalletRepository = foodStuffWalletRepository;
             _necessitiesWalletRepository = necessitiesWalletRepository;
             _healthWalletRepository = healthWalletRepository;
             _incomeRepository = incomeRepository;
             _houseRepository = houseRepository;
-
         }
 
         public async Task<IEnumerable<Child>> GetAllChildren()
@@ -608,5 +606,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _childRepository.SearchChildren(searchChildDTO);
         }
 
+        public async Task<IEnumerable<ChildDonatedDTO>> GetDonationsForChildAsync(string childId)
+        {
+            var donations = await _childRepository.GetDonationsByChildIdAsync(childId);
+
+            return donations.Select(d => new ChildDonatedDTO
+            {
+                UserName = d.UserName,
+                DateTime = d.DateTime,
+                Amount = d.Amount
+            });
+        }
     }
 }

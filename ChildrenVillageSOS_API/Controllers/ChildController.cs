@@ -147,5 +147,23 @@ namespace ChildrenVillageSOS_API.Controllers
             var restoredChild = await _childService.RestoreChild(id);
             return Ok(restoredChild);
         }
+
+        [HttpGet("Child-donations/{childId}")]
+        public async Task<IActionResult> GetChildDonations(string childId)
+        {
+            if (string.IsNullOrWhiteSpace(childId))
+            {
+                return BadRequest("Child ID cannot be null or empty.");
+            }
+
+            var donations = await _childService.GetDonationsForChildAsync(childId);
+
+            if (!donations.Any())
+            {
+                return NotFound($"No donations found for child with ID: {childId}");
+            }
+
+            return Ok(donations);
+        }
     }
 }
