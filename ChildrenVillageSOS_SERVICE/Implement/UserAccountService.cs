@@ -159,6 +159,75 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return updaUser;
         }
 
+        public async Task<UserAccount> UserUpdate(string id, UserUpdate updateUser)
+        {
+            var updaUser = await _userAccountRepository.GetByIdAsync(id);
+            if (updaUser == null)
+            {
+                throw new Exception($"User with ID{id} not found!");
+            }
+            updaUser.UserName = updateUser.UserName;
+            updaUser.UserEmail = updateUser.UserEmail;           
+            updaUser.Phone = updateUser.Phone;
+            updaUser.Address = updateUser.Address;
+            updaUser.Dob = updateUser.Dob;
+            updaUser.Gender = updateUser.Gender;
+            updaUser.Country = updateUser.Country;
+            updaUser.RoleId = updateUser.RoleId;
+            updaUser.Status = updateUser.Status;
+            updaUser.ModifiedDate = DateTime.Now;
+
+            var existingImages = await _imageRepository.GetByUserAccountIdAsync(updaUser.Id);
+
+            // Xóa các ảnh được yêu cầu xóa
+            if (updateUser.ImgToDelete != null && updateUser.ImgToDelete.Any())
+            {
+                foreach (var imageIdToDelete in updateUser.ImgToDelete)
+                {
+                    var imageToDelete = existingImages.FirstOrDefault(img => img.UrlPath == imageIdToDelete);
+                    if (imageToDelete != null)
+                    {
+                        imageToDelete.IsDeleted = true;
+                        imageToDelete.ModifiedDate = DateTime.Now;
+
+                        // Cập nhật trạng thái ảnh trong database
+                        await _imageRepository.UpdateAsync(imageToDelete);
+
+                        // Xóa ảnh khỏi Cloudinary
+                        bool isDeleted = await _imageService.DeleteImageAsync(imageToDelete.UrlPath, "UserAccountImages");
+                        if (isDeleted)
+                        {
+                            await _imageRepository.RemoveAsync(imageToDelete);
+                        }
+                    }
+                }
+            }
+
+            // Thêm các ảnh mới nếu có
+            if (updateUser.Img != null && updateUser.Img.Any())
+            {
+                var newImageUrls = await _imageService.UploadUserAccountImage(updateUser.Img, updaUser.Id);
+                foreach (var newImageUrl in newImageUrls)
+                {
+                    var newImage = new Image
+                    {
+                        UrlPath = newImageUrl,
+                        UserAccountId = updaUser.Id,
+                        ModifiedDate = DateTime.Now,
+                        IsDeleted = false,
+                    };
+                    await _imageRepository.AddAsync(newImage);
+                }
+            }
+            else
+            {
+            }
+
+            // Lưu thông tin cập nhật
+            await _userAccountRepository.UpdateAsync(updaUser);
+            return updaUser;
+        }
+
         public async Task ChangePassword(string id, ChangePassUserDTO changePassUserDTO)
         {
             // Tìm kiếm người dùng theo ID
