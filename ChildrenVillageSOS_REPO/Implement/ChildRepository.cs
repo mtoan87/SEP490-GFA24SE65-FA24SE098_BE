@@ -416,6 +416,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         {
             return await _context.Children
                 .Include(c => c.House)
+                .Include(c => c.Images)
                 .Include(c => c.School)
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();

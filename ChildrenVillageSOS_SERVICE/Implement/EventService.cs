@@ -184,12 +184,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId/*, string userId*/)
         {
-            var allEventCodes = await _eventRepository.Entities()
-                                                   .Select(c => c.EventCode)
-                                                   .ToListAsync();
-
-            
-            string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
+            //var allEventCodes = await _eventRepository.Entities()
+            //                                       .Select(c => c.EventCode)
+            //                                       .ToListAsync();           
+            //string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
             // Retrieve villageExpense from the database
             var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
             if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
@@ -304,7 +302,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = villageExpense.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
-                EventCode = newEventCode,
+                EventCode = createEvent.EventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
