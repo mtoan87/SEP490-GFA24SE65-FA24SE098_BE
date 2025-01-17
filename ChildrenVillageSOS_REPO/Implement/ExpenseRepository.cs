@@ -92,6 +92,11 @@ namespace ChildrenVillageSOS_REPO.Implement
                 {
                     Id = e.Id,
                     ExpenseAmount = e.ExpenseAmount,
+                    AmountReceive = e.AmountReceive,
+                    ExpenseType = e.ExpenseType,
+                    RequestedBy = e.RequestedBy,
+                    ApprovedBy = e.ApprovedBy,
+                    EventId = e.EventId,
                     Description = e.Description,
                     Expenseday = e.Expenseday,
                     Status = e.Status,
@@ -100,6 +105,8 @@ namespace ChildrenVillageSOS_REPO.Implement
                     FoodStuffWalletId = e.FoodStuffWalletId,
                     HealthWalletId = e.HealthWalletId,
                     NecessitiesWalletId = e.NecessitiesWalletId,
+                    VillageId = e.VillageId,
+                    ChildId = e.ChildId,                   
                     HouseId = e.HouseId,
                     CreatedDate = e.CreatedDate,
                     ModifiedDate = e.ModifiedDate

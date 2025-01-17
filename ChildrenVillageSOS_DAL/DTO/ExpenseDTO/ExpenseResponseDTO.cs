@@ -11,14 +11,14 @@ namespace ChildrenVillageSOS_DAL.DTO.ExpenseDTO
         public int Id { get; set; }
 
         public decimal? ExpenseAmount { get; set; }
-
+        public decimal? AmountReceive { get; set; }
         public string Description { get; set; }
 
         public DateTime? Expenseday { get; set; }
         public string? ExpenseType { get; set; }
         public string Status { get; set; }
         public string? RequestedBy { get; set; }
-
+        public int? EventId { get; set; }
         public string? ApprovedBy { get; set; }
         public int? SystemWalletId { get; set; }
 

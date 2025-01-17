@@ -187,7 +187,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _expenseRepository.GetUnComfirmHouseExpense();
         }
-        public async Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense)
+        public async Task<Expense> RequestChildExpense(RequestSpecialExpenseDTO requestSpecialExpense, string userId)
         {
             // Lấy thông tin ngôi nhà dựa trên HouseId
             var house = await _houseRepository.GetByIdAsync(requestSpecialExpense.HouseId);
@@ -196,7 +196,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new InvalidOperationException("House not found.");
             }
-
+            if (house.UserAccountId != userId)
+            {
+                throw new InvalidOperationException($"Only house mother staff of house: {house.HouseName} can request those child expense!");
+            }
             // Lấy VillageId từ ngôi nhà
             var villageId = house.VillageId;
 
@@ -243,7 +246,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = DonateStatus.Pending.ToString(),
                 ExpenseType = ExpenseType.Special.ToString(),
                 HouseId = requestSpecialExpense.HouseId,
-                VillageId = villageId, // Gán VillageId vào expense
+                VillageId = villageId, 
                 IsDeleted = false,
                 HealthWalletId = 1,
                 RequestedBy = requestSpecialExpense.RequestedBy,
