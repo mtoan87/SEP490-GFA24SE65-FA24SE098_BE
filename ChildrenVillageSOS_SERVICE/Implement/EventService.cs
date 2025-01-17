@@ -182,25 +182,26 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return eventResponseDTOs;
         }
-        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId/*, string userId*/)
+        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId, string userId)
         {
-            //var allEventCodes = await _eventRepository.Entities()
-            //                                       .Select(c => c.EventCode)
-            //                                       .ToListAsync();           
-            //string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
-            // Retrieve villageExpense from the database
-            var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
+            var allEventCodes = await _eventRepository.Entities()
+                                                   .Select(c => c.EventCode)
+                                                   .ToListAsync();
+            string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
+            //Retrieve villageExpense from the database
+
+           var villageExpense = await _expenseRepository.GetByIdAsync(villageExpenseId);
             if (villageExpense == null || villageExpense.ExpenseType != "Special" || villageExpense.Status != "OnRequestToEvent")
             {
                 throw new InvalidOperationException("Invalid village expense for creating an event.");
             }
 
-            // Retrieve the village and verify the director
-            //var village = await _villageRepository.GetByIdAsync(villageExpense.VillageId);
-            //if (village == null || village.UserAccountId != userId)
-            //{
-            //    throw new UnauthorizedAccessException($"Only the Director:{village.UserAccountId} can approve the event.");
-            //}
+            //Retrieve the village and verify the director
+           var village = await _villageRepository.GetByIdAsync(villageExpense.VillageId);
+            if (village == null || village.UserAccountId != userId)
+            {
+                throw new UnauthorizedAccessException($"Only the Director:{village.UserAccountId} can approve the event.");
+            }
 
             decimal totalExpenseAmount = villageExpense.ExpenseAmount;
 
@@ -302,7 +303,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = villageExpense.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
-                EventCode = createEvent.EventCode,
+                EventCode = newEventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
