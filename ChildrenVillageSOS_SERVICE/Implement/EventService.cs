@@ -182,7 +182,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return eventResponseDTOs;
         }
-        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId, string userId)
+        public async Task<Event> ApprovedEvent(CreateEventDTO createEvent, int villageExpenseId/*, string userId*/)
         {
             var allEventCodes = await _eventRepository.Entities()
                                                    .Select(c => c.EventCode)
@@ -198,11 +198,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Retrieve the village and verify the director
-            var village = await _villageRepository.GetByIdAsync(villageExpense.VillageId);
-            if (village == null || village.UserAccountId != userId)
-            {
-                throw new UnauthorizedAccessException($"Only the Director:{village.UserAccountId} can approve the event.");
-            }
+            //var village = await _villageRepository.GetByIdAsync(villageExpense.VillageId);
+            //if (village == null || village.UserAccountId != userId)
+            //{
+            //    throw new UnauthorizedAccessException($"Only the Director:{village.UserAccountId} can approve the event.");
+            //}
 
             decimal totalExpenseAmount = villageExpense.ExpenseAmount;
 
