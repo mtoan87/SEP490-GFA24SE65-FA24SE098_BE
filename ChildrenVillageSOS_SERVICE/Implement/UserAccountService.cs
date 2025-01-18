@@ -62,7 +62,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Dob = createUser.Dob,
                 Gender = createUser.Gender,
                 Country = createUser.Country,
-                RoleId = 2,
+                RoleId = createUser.RoleId,
                 Status = "Active",
                 CreatedDate = DateTime.Now,
             };
