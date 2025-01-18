@@ -72,6 +72,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var result = await _transferRequestService.UpdateTransferRequest(id, dto);
             return Ok(result);
         }
+        [HttpPut("UpdateTransferRequestVer1/{id}")]
+        public async Task<ActionResult<TransferRequest>> UpdateTransferRequest(int id, [FromForm] UpdateTransferRequestDTO dto, string userId)
+        {
+            var result = await _transferRequestService.UpdateTransferRequest(id, dto, userId);
+            return Ok(result);
+        }
 
         [HttpDelete("DeleteTransferRequest/{id}")]
         public async Task<ActionResult<TransferRequest>> DeleteTransferRequest(int id)

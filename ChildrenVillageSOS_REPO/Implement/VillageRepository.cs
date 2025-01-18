@@ -23,6 +23,16 @@ namespace ChildrenVillageSOS_REPO.Implement
 
         }
 
+        public Village? GetVillageByHouseId(string houseId)
+        {
+            // Truy vấn House và bao gồm Village
+            var house = _context.Houses
+                .Include(h => h.Village) // Bao gồm quan hệ đến Village
+                .FirstOrDefault(h => h.Id == houseId);
+
+            // Trả về thông tin Village nếu tìm thấy
+            return house?.Village;
+        }
         public async Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId)
         {
             return await _context.Events

@@ -66,9 +66,9 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(exp);
         }
         [HttpPost("RequestChildExpense")]
-        public async Task<IActionResult> RequestChildExpense(RequestSpecialExpenseDTO rq, string userId)
+        public async Task<IActionResult> RequestChildExpense(RequestSpecialExpenseDTO rq/*, string userId*/)
         {
-            var exp = await _expenseService.RequestChildExpense(rq, userId);
+            var exp = await _expenseService.RequestChildExpense(rq/*, userId*/);
             return Ok(exp);
         }
         [HttpGet("Search")]
