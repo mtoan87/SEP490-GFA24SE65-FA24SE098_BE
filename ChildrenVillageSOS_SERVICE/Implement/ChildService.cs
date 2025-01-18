@@ -9,11 +9,13 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_REPO.Implement;
 using ChildrenVillageSOS_REPO.Interface;
 using ChildrenVillageSOS_SERVICE.Interface;
+using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +38,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IHealthWalletRepository _healthWalletRepository;
         private readonly IIncomeRepository _incomeRepository;
         private readonly IHouseRepository _houseRepository;
+        private readonly IVillageRepository _villageRepository;
 
         public ChildService(IChildRepository childRepository,
             IUserAccountRepository userAccountRepository,
@@ -50,7 +53,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             IFoodStuffWalletRepository foodStuffWalletRepository,
             IHealthWalletRepository healthWalletRepository,
             IIncomeRepository incomeRepository,
-            IHouseRepository houseRepository)
+            IHouseRepository houseRepository,
+            IVillageRepository villageRepository)
         {
             _userAccountRepository = userAccountRepository;
             _childRepository = childRepository;
@@ -66,6 +70,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             _healthWalletRepository = healthWalletRepository;
             _incomeRepository = incomeRepository;
             _houseRepository = houseRepository;
+            _villageRepository = villageRepository;
         }
 
         public async Task<IEnumerable<Child>> GetAllChildren()
@@ -73,39 +78,164 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _childRepository.GetAllNotDeletedAsync();
         }
 
-        public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
+        //public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
+        //{
+        //    var children = await _childRepository.GetChildrenWithRelationsAsync();
+
+        //    var childResponseDTOs = children.Select(x => new ChildResponseDTO
+        //    {
+        //        Id = x.Id,
+        //        ChildName = x.ChildName,
+        //        HealthStatus = x.HealthStatus,
+        //        HouseId = x.HouseId,
+        //        HouseName = x.House?.HouseName ?? "Unknown",
+        //        SchoolId = x.SchoolId,
+        //        SchoolName = x.School?.SchoolName ?? "Unknown",
+        //        FacilitiesWalletId = x.FacilitiesWalletId,
+        //        SystemWalletId = x.SystemWalletId,
+        //        FoodStuffWalletId = x.FoodStuffWalletId,
+        //        HealthWalletId = x.HealthWalletId,
+        //        NecessitiesWalletId = x.NecessitiesWalletId,
+        //        Amount = x.Amount ?? 0,
+        //        CurrentAmount = x.CurrentAmount ?? 0,
+        //        AmountLimit = x.AmountLimit ?? 0,
+        //        Gender = x.Gender,
+        //        Dob = x.Dob,
+        //        Status = x.Status,
+        //        CreatedDate = x.CreatedDate,
+        //        ModifiedDate = x.ModifiedDate,
+        //        ImageUrls = x.Images.Where(img => !img.IsDeleted)
+        //                             .Select(img => img.UrlPath)
+        //                             .ToArray()
+        //    }).ToArray();
+
+        //    return childResponseDTOs;
+        //}
+
+        public async Task<IEnumerable<ChildResponseDTO>> GetChildrenByUserAsync(string userId, string role)
         {
             var children = await _childRepository.GetChildrenWithRelationsAsync();
 
-            var childResponseDTOs = children.Select(x => new ChildResponseDTO
+            // Nếu là Admin, trả về toàn bộ danh sách Children
+            if (role == "Admin")
             {
-                Id = x.Id,
-                ChildName = x.ChildName,
-                HealthStatus = x.HealthStatus,
-                HouseId = x.HouseId,
-                HouseName = x.House?.HouseName ?? "Unknown",
-                SchoolId = x.SchoolId,
-                SchoolName = x.School?.SchoolName ?? "Unknown",
-                FacilitiesWalletId = x.FacilitiesWalletId,
-                SystemWalletId = x.SystemWalletId,
-                FoodStuffWalletId = x.FoodStuffWalletId,
-                HealthWalletId = x.HealthWalletId,
-                NecessitiesWalletId = x.NecessitiesWalletId,
-                Amount = x.Amount ?? 0,
-                CurrentAmount = x.CurrentAmount ?? 0,
-                AmountLimit = x.AmountLimit ?? 0,
-                Gender = x.Gender,
-                Dob = x.Dob,
-                Status = x.Status,
-                CreatedDate = x.CreatedDate,
-                ModifiedDate = x.ModifiedDate,
-                ImageUrls = x.Images.Where(img => !img.IsDeleted)  
-                                     .Select(img => img.UrlPath)  
-                                     .ToArray()
-            }).ToArray();
+                var allChildren = await _childRepository.GetAllAsync();
 
-            return childResponseDTOs;
+                var adminChildResponseDTOs = allChildren.Where(c => !c.IsDeleted)
+                    .Select(x => new ChildResponseDTO
+                    {
+                        Id = x.Id,
+                        ChildName = x.ChildName,
+                        HealthStatus = x.HealthStatus,
+                        HouseId = x.HouseId,
+                        HouseName = x.House?.HouseName ?? "Unknown",
+                        SchoolId = x.SchoolId,
+                        SchoolName = x.School?.SchoolName ?? "Unknown",
+                        FacilitiesWalletId = x.FacilitiesWalletId,
+                        SystemWalletId = x.SystemWalletId,
+                        FoodStuffWalletId = x.FoodStuffWalletId,
+                        HealthWalletId = x.HealthWalletId,
+                        NecessitiesWalletId = x.NecessitiesWalletId,
+                        Amount = x.Amount ?? 0,
+                        CurrentAmount = x.CurrentAmount ?? 0,
+                        AmountLimit = x.AmountLimit ?? 0,
+                        Gender = x.Gender,
+                        Dob = x.Dob,
+                        Status = x.Status,
+                        CreatedDate = x.CreatedDate,
+                        ModifiedDate = x.ModifiedDate,
+                        ImageUrls = x.Images.Where(img => !img.IsDeleted).Select(img => img.UrlPath).ToArray()
+                    }).ToArray();
+
+                return adminChildResponseDTOs;
+            }
+
+            // Nếu là Director, lọc danh sách Children theo VillageId
+            if (role == "Director")
+            {
+                var village = await _villageRepository.GetVillageByUserAccountIdAsync(userId);
+
+                if (village == null)
+                {
+                    return Enumerable.Empty<ChildResponseDTO>();
+                }
+
+                var houses = await _houseRepository.GetHousesByVillageIdAsync(village.Id);
+
+                var childrenInVillage = houses.SelectMany(h => h.Children).Where(c => !c.IsDeleted);
+
+                var directorChildResponseDTOs = childrenInVillage.Select(x => new ChildResponseDTO
+                {
+                    Id = x.Id,
+                    ChildName = x.ChildName,
+                    HealthStatus = x.HealthStatus,
+                    HouseId = x.HouseId,
+                    HouseName = x.House?.HouseName ?? "Unknown",
+                    SchoolId = x.SchoolId,
+                    SchoolName = x.School?.SchoolName ?? "Unknown",
+                    FacilitiesWalletId = x.FacilitiesWalletId,
+                    SystemWalletId = x.SystemWalletId,
+                    FoodStuffWalletId = x.FoodStuffWalletId,
+                    HealthWalletId = x.HealthWalletId,
+                    NecessitiesWalletId = x.NecessitiesWalletId,
+                    Amount = x.Amount ?? 0,
+                    CurrentAmount = x.CurrentAmount ?? 0,
+                    AmountLimit = x.AmountLimit ?? 0,
+                    Gender = x.Gender,
+                    Dob = x.Dob,
+                    Status = x.Status,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate,
+                    ImageUrls = x.Images.Where(img => !img.IsDeleted).Select(img => img.UrlPath).ToArray()
+                }).ToArray();
+
+                return directorChildResponseDTOs;
+            }
+
+            // Nếu là HouseMother, lọc danh sách Children theo HouseId
+            if (role == "HouseMother")
+            {
+                var house = await _houseRepository.GetHouseByUserAccountIdAsync(userId);
+
+                if (house == null)
+                {
+                    return Enumerable.Empty<ChildResponseDTO>();
+                }
+
+                var childrenInHouse = house.Children.Where(c => !c.IsDeleted);
+
+                var houseMotherChildResponseDTOs = childrenInHouse.Select(x => new ChildResponseDTO
+                {
+                    Id = x.Id,
+                    ChildName = x.ChildName,
+                    HealthStatus = x.HealthStatus,
+                    HouseId = x.HouseId,
+                    HouseName = house.HouseName ?? "Unknown",
+                    SchoolId = x.SchoolId,
+                    SchoolName = x.School?.SchoolName ?? "Unknown",
+                    FacilitiesWalletId = x.FacilitiesWalletId,
+                    SystemWalletId = x.SystemWalletId,
+                    FoodStuffWalletId = x.FoodStuffWalletId,
+                    HealthWalletId = x.HealthWalletId,
+                    NecessitiesWalletId = x.NecessitiesWalletId,
+                    Amount = x.Amount ?? 0,
+                    CurrentAmount = x.CurrentAmount ?? 0,
+                    AmountLimit = x.AmountLimit ?? 0,
+                    Gender = x.Gender,
+                    Dob = x.Dob,
+                    Status = x.Status,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedDate = x.ModifiedDate,
+                    ImageUrls = x.Images.Where(img => !img.IsDeleted).Select(img => img.UrlPath).ToArray()
+                }).ToArray();
+
+                return houseMotherChildResponseDTOs;
+            }
+
+            // Trường hợp không thuộc vai trò nào
+            return Enumerable.Empty<ChildResponseDTO>();
         }
+
         public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithHealthStatusBad()
         {
             var childs = await _childRepository.GetAllNotDeletedAsync();

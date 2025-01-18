@@ -365,5 +365,15 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+
+        public async Task<Village?> GetVillageByUserAccountIdAsync(string userAccountId)
+        {
+            // Tìm Village dựa trên UserAccountId của Director
+            var village = await _context.Villages
+                .Include(v => v.Houses) // Bao gồm các House liên quan
+                .FirstOrDefaultAsync(v => v.UserAccountId == userAccountId);
+
+            return village;
+        }
     }
 }

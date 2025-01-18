@@ -4,7 +4,10 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
@@ -69,11 +72,41 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(children);
         }
 
+        //[HttpGet("GetAllChildWithImg")]
+        //public async Task<IActionResult> GetAllChildrenImage()
+        //{
+        //    var children = await _childService.GetAllChildrenWithImg();
+        //    return Ok(children);
+        //}
+
         [HttpGet("GetAllChildWithImg")]
         public async Task<IActionResult> GetAllChildrenImage()
         {
-            var children = await _childService.GetAllChildrenWithImg();
-            return Ok(children);
+            // Lấy userAccountId từ JWT Token hoặc HttpContext
+            var userId = User.FindFirst("userId")?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+            try
+            {
+                // Gọi service để lấy danh sách Children theo userAccountId và role
+                var children = await _childService.GetChildrenByUserAsync(userId, role);
+
+                if (children == null || !children.Any())
+                {
+                    return NotFound("No children found for the given user.");
+                }
+
+                return Ok(children);
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần thiết
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpGet("GetAllChildWithHealthStatusBad")]

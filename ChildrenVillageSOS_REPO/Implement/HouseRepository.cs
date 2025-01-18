@@ -406,11 +406,23 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+        // HouseMother view
         public async Task<House?> GetHouseByUserAccountIdAsync(string userAccountId)
         {
             return await _context.Houses
                                  .Include(h => h.Children) // Ensure you include children to filter later
                                  .FirstOrDefaultAsync(h => h.UserAccountId == userAccountId && !h.IsDeleted);
+        }
+
+        //Director view
+        public async Task<IEnumerable<House>> GetHousesByVillageIdAsync(string villageId)
+        {
+            // Tìm tất cả các House thuộc VillageId
+            var houses = await _context.Houses
+                .Where(h => h.VillageId == villageId && !h.IsDeleted) // Lọc theo VillageId và IsDeleted = false
+                .ToListAsync();
+
+            return houses;
         }
 
         public async Task<IEnumerable<House>> GetHousesWithRelationsAsync(IEnumerable<string> houseIds)
