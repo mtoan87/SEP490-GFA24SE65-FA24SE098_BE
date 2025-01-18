@@ -307,8 +307,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
-                Amount = null,
-                CurrentAmount = null,
+                Amount = 0,
+                CurrentAmount = 0,
                 AmountLimit = villageExpense.ExpenseAmount,
                 VillageId = villageExpense.VillageId,
             };
