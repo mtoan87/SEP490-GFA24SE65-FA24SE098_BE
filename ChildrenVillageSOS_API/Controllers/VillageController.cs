@@ -4,6 +4,7 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
@@ -61,11 +62,45 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(deletedVillages);
         }
 
+        //[HttpGet("GetAllVillageWithImg")]
+        //public async Task<IActionResult> GetAllVillageWithImg()
+        //{
+        //    var vil = await _villageService.GetAllVillageWithImg();
+        //    return Ok(vil);
+        //}
+
         [HttpGet("GetAllVillageWithImg")]
         public async Task<IActionResult> GetAllVillageWithImg()
         {
-            var vil = await _villageService.GetAllVillageWithImg();
-            return Ok(vil);
+            // Lấy userId và role từ JWT Token (hoặc từ claim trong token)
+            var userId = User.FindFirst("userId")?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Kiểm tra xem userId và role có tồn tại hay không
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            try
+            {
+                // Gọi service để lấy danh sách Village theo userId và role
+                var villages = await _villageService.GetVillagesByRoleWithImg(userId, role);
+
+                // Kiểm tra nếu không có dữ liệu village nào trả về
+                if (villages == null || !villages.Any())
+                {
+                    return NotFound("No villages found for the given user.");
+                }
+
+                // Trả về kết quả dưới dạng OK nếu có dữ liệu
+                return Ok(villages);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có (ví dụ: log lỗi)
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpGet("GetVillageById/{Id}")]

@@ -67,15 +67,15 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(houses);
         }
 
-        //[HttpGet("GetAllHousesWithImg")]
-        //public async Task<IActionResult> GetAllHousesWithImg()
-        //{
-        //    var house = await _houseService.GetAllHousesWithImg();
-        //    return Ok(house);
-        //}
-
         [HttpGet("GetAllHousesWithImg")]
         public async Task<IActionResult> GetAllHousesWithImg()
+        {
+            var house = await _houseService.GetAllHousesWithImg();
+            return Ok(house);
+        }
+
+        [HttpGet("GetHousesByRoleWithImg")]
+        public async Task<IActionResult> GetHousesByRoleWithImg()
         {
             // Lấy userId và role từ JWT Token (hoặc từ claim trong token)
             var userId = User.FindFirst("userId")?.Value;

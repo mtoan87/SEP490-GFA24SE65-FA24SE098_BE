@@ -13,7 +13,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     {
         DataTable getVillage();
         Task<IEnumerable<Village>> GetAllVillage();
-        Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg();
+        //Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg();
         Task<Village> GetVillageById(string villageId);
         Task<VillageResponseDTO[]> GetVillageByEventIDAsync(int eventId);
         Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm);
@@ -26,5 +26,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<VillageResponseDTO[]> GetAllVillageIsDelete();
         Task<VillageDetailsDTO> GetVillageDetails(string villageId);
         Task<List<Village>> SearchVillages(SearchVillageDTO searchVillageDTO);
+        Task<IEnumerable<VillageResponseDTO>> GetVillagesByRoleWithImg(string userId, string role);
     }
 }
