@@ -407,7 +407,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 healthWalletId = 1;
 
                 // Đảm bảo Amount được cung cấp và > 0
-                if (createChild.Amount <= 0)
+                if (createChild.AmountLimit <= 0)
                 {
                     throw new ArgumentException("Amount must be greater than 0 when HealthStatus is 'Bad'.");
                 }
@@ -423,7 +423,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 FoodStuffWalletId = foodStuffWalletId,
                 HealthWalletId = healthWalletId,
                 NecessitiesWalletId = necessitiesWalletId,
-                Amount = createChild.Amount ?? 0,
+                Amount = 0,
+                CurrentAmount = 0,
                 AmountLimit = createChild.AmountLimit ?? 0,
                 HouseId = createChild.HouseId,
                 SchoolId = createChild.SchoolId,

@@ -229,16 +229,16 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Tính tổng số tiền của những trẻ có HealthStatus là "Bad"
-            var totalAmount = childrenWithBadHealth.Sum(c => c.Amount);
+            var totalAmount = childrenWithBadHealth.Sum(c => c.AmountLimit);
 
             // Cập nhật trạng thái của những trẻ được chọn thành "OnRequest"
             foreach (var child in childrenWithBadHealth)
             {
-                child.ExpenseRequestStatus = "OnRequest";
-                await _childRepository.UpdateAsync(child); // Cập nhật từng trẻ
+                child.ExpenseRequestStatus = ExpenseChildStatus.OnRequest.ToString();
+                await _childRepository.UpdateAsync(child);
             }
 
-            // Tạo đối tượng Special Expense
+          
             var specialExpense = new Expense
             {
                 ExpenseAmount = totalAmount ?? 0,
@@ -254,7 +254,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 RequestedBy = requestSpecialExpense.RequestedBy,
             };
 
-            // Lưu vào cơ sở dữ liệu
+            
             await _expenseRepository.AddAsync(specialExpense);
 
             return specialExpense;
@@ -291,7 +291,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 throw new Exception($"Expense with ID{id} is not found");
             }
-            exp.Status = "Approved";
+            exp.Status = ExpenseStatus.Approved.ToString();
             exp.ModifiedDate = DateTime.Now;
             await _expenseRepository.UpdateAsync(exp);
             if (exp.FacilitiesWalletId.HasValue)
@@ -392,7 +392,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             foreach (var expense in houseExpenses)
             {
                 expense.ApprovedBy = userName;
-                expense.Status = "Approved";
+                expense.Status = ExpenseStatus.Approved.ToString();
                 expense.ModifiedDate = DateTime.Now;
                 await _expenseRepository.UpdateAsync(expense);
             }
@@ -403,8 +403,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Tạo Expense mới cho Village
             var villageExpense = new Expense
             {
-                ExpenseType = "Special",
-                Status = "OnRequestToEvent",
+                ExpenseType = ExpenseType.Special.ToString(),
+                Status = ExpenseStatus.OnRequestToEvent.ToString(),
                 ExpenseAmount = totalExpenseAmount,
                 Expenseday = DateTime.Now,
                 Description = description, // Gán description

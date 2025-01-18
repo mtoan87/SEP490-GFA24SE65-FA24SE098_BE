@@ -246,7 +246,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Update villageExpense status
-            villageExpense.Status = "OnEvent";  // Update status for event creation
+            villageExpense.Status = ExpenseStatus.OnEvent.ToString();  // Update status for event creation
             villageExpense.ModifiedDate = DateTime.Now;
             await _expenseRepository.UpdateAsync(villageExpense);
 
@@ -305,7 +305,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
                 EventCode = newEventCode,
-                Status = "Active",
+                Status = SystemStatus.Active.ToString(),
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
                 Amount = 0,
@@ -332,7 +332,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Update villageExpense status
             villageExpense.EventId = newEvent.Id;
-            villageExpense.Status = "Approved";
+            villageExpense.Status = ExpenseStatus.Approved.ToString();
             villageExpense.ModifiedDate = DateTime.Now;
             villageExpense.ApprovedBy = createEvent.CreatedBy;
             await _expenseRepository.UpdateAsync(villageExpense);
@@ -660,11 +660,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             }
 
             // Cập nhật trạng thái của Event thành "Close"
-            eventToClose.Status = "Close";
+            eventToClose.Status = SystemStatus.Close.ToString();
             eventToClose.ModifiedDate = DateTime.Now;
 
             // Cập nhật Expense
-            relatedExpense.Status = "Approved";
+            relatedExpense.Status = ExpenseStatus.Approved.ToString();
             relatedExpense.ModifiedDate = DateTime.Now;
 
             await _expenseRepository.UpdateAsync(relatedExpense);
