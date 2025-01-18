@@ -23,7 +23,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
         //Task<HouseResponseDTO[]> GetAllHouseAsync();
         Task<string> GetHouseNameByIdAsync(string houseId);
-        Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg();
+        //Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg();
         //Task<House> SoftDelete(string id);
         Task<House> RestoreHouse(string id);
         //Task<House> SoftRestoreHouse(string id);
@@ -32,5 +32,6 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         DataTable getHouse();
         Task<HouseDetailsDTO> GetHouseDetails(string houseId);
         Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO);
+        Task<IEnumerable<HouseResponseDTO>> GetHousesByRoleWithImg(string userId, string role);
     }
 }

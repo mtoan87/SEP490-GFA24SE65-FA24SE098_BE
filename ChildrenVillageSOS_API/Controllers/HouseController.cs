@@ -5,6 +5,7 @@ using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
@@ -66,11 +67,45 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(houses);
         }
 
+        //[HttpGet("GetAllHousesWithImg")]
+        //public async Task<IActionResult> GetAllHousesWithImg()
+        //{
+        //    var house = await _houseService.GetAllHousesWithImg();
+        //    return Ok(house);
+        //}
+
         [HttpGet("GetAllHousesWithImg")]
         public async Task<IActionResult> GetAllHousesWithImg()
         {
-            var house = await _houseService.GetAllHousesWithImg();
-            return Ok(house);
+            // Lấy userId và role từ JWT Token (hoặc từ claim trong token)
+            var userId = User.FindFirst("userId")?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Kiểm tra xem userId và role có tồn tại hay không
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            try
+            {
+                // Gọi service để lấy danh sách Houses theo userId và role
+                var houses = await _houseService.GetHousesByRoleWithImg(userId, role);
+
+                // Kiểm tra nếu không có dữ liệu nhà nào trả về
+                if (houses == null || !houses.Any())
+                {
+                    return NotFound("No houses found for the given user.");
+                }
+
+                // Trả về kết quả dưới dạng OK nếu có dữ liệu
+                return Ok(houses);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có (ví dụ: log lỗi)
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpGet("GetHouseById/{id}")]

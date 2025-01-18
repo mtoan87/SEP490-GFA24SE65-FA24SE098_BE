@@ -23,16 +23,19 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
         private readonly IChildRepository _childRepository;
+        private readonly IVillageRepository _villageRepository;
 
-        public HouseService(IHouseRepository houseRepository, IImageService imageService, IImageRepository imageRepository, IChildRepository childRepository)
+
+        public HouseService(IHouseRepository houseRepository, IImageService imageService, IImageRepository imageRepository, IChildRepository childRepository, IVillageRepository villageRepository)
         {
             _houseRepository = houseRepository;
             _imageRepository = imageRepository;
             _imageService = imageService;
             _childRepository = childRepository;
+            _villageRepository = villageRepository;
         }
 
-       public  DataTable getHouse()
+        public  DataTable getHouse()
         {
             return _houseRepository.getHouse();
         }
@@ -42,17 +45,97 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _houseRepository.GetAllNotDeletedAsync();
         }
 
-        public async Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg()
+        //public async Task<IEnumerable<HouseResponseDTO>> GetAllHousesWithImg()
+        //{
+        //    var houses = await _houseRepository.GetAllNotDeletedAsync();
+
+        //    var houseIds = houses.Select(h => h.Id).ToList();
+
+        //    var housesWithRelations = await _houseRepository.GetHousesWithRelationsAsync(houseIds);
+
+        //    var houseResponseDTOs = new List<HouseResponseDTO>();
+
+        //    foreach (var house in housesWithRelations)
+        //    {
+        //        int currentMembers = await _childRepository.CountChildrenByHouseIdAsync(house.Id);
+
+        //        // Tạo HouseResponseDTO với tất cả thông tin
+        //        houseResponseDTOs.Add(new HouseResponseDTO
+        //        {
+        //            Id = house.Id,
+        //            HouseName = house.HouseName,
+        //            HouseNumber = house.HouseNumber,
+        //            Location = house.Location,
+        //            Description = house.Description,
+        //            HouseMember = house.HouseMember,
+        //            CurrentMembers = currentMembers,
+        //            //HouseOwner = house.HouseOwner,
+        //            Status = house.Status,
+        //            UserAccountId = house.UserAccountId,
+        //            UserName = house.UserAccount?.UserName ?? "Unknown",
+        //            VillageId = house.VillageId,
+        //            VillageName = house.Village?.VillageName ?? "Unknown",
+        //            FoundationDate = house.FoundationDate,
+        //            LastInspectionDate = house.LastInspectionDate,
+        //            MaintenanceStatus = house.MaintenanceStatus,
+        //            CreatedBy = house.CreatedBy,
+        //            ModifiedBy = house.ModifiedBy,
+        //            IsDeleted = house.IsDeleted,
+        //            CreatedDate = house.CreatedDate,
+        //            ModifiedDate = house.ModifiedDate,
+        //            ImageUrls = house.Images.Where(img => !img.IsDeleted).Select(img => img.UrlPath).ToArray() // Lấy danh sách ảnh
+        //        });
+        //    }
+
+        //    return houseResponseDTOs.ToArray();
+        //}
+
+        public async Task<IEnumerable<HouseResponseDTO>> GetHousesByRoleWithImg(string userId, string role)
         {
+            // Lấy danh sách các nhà chưa bị xóa
             var houses = await _houseRepository.GetAllNotDeletedAsync();
 
-            var houseIds = houses.Select(h => h.Id).ToList();
-
-            var housesWithRelations = await _houseRepository.GetHousesWithRelationsAsync(houseIds);
-
+            // Khởi tạo danh sách các house sẽ trả về
             var houseResponseDTOs = new List<HouseResponseDTO>();
 
-            foreach (var house in housesWithRelations)
+            // Kiểm tra vai trò người dùng và xử lý theo từng trường hợp
+            if (role == "Admin")
+            {
+                // Nếu là Admin, trả về toàn bộ danh sách house
+                var housesWithRelations = await _houseRepository.GetHousesWithRelationsAsync(houses.Select(h => h.Id).ToList());
+                houseResponseDTOs = await GetHouseDTOs(housesWithRelations);
+            }
+            else if (role == "Director")
+            {
+                // Nếu là Director, lọc theo VillageId
+                var village = await _villageRepository.GetVillageByUserAccountIdAsync(userId);
+                if (village != null)
+                {
+                    var housesInVillage = houses.Where(h => h.VillageId == village.Id).ToList();
+                    var housesWithRelations = await _houseRepository.GetHousesWithRelationsAsync(housesInVillage.Select(h => h.Id).ToList());
+                    houseResponseDTOs = await GetHouseDTOs(housesWithRelations);
+                }
+            }
+            else if (role == "HouseMother")
+            {
+                // Nếu là HouseMother, chỉ xem được house mà họ quản lý
+                var house = await _houseRepository.GetHouseByUserAccountIdAsync(userId);
+                if (house != null)
+                {
+                    var housesWithRelations = await _houseRepository.GetHousesWithRelationsAsync(new List<string> { house.Id });
+                    houseResponseDTOs = await GetHouseDTOs(housesWithRelations);
+                }
+            }
+
+            // Trả về danh sách các house đã được lọc và tạo DTO
+            return houseResponseDTOs.ToArray();
+        }
+
+        private async Task<List<HouseResponseDTO>> GetHouseDTOs(IEnumerable<House> houses)
+        {
+            var houseResponseDTOs = new List<HouseResponseDTO>();
+
+            foreach (var house in houses)
             {
                 int currentMembers = await _childRepository.CountChildrenByHouseIdAsync(house.Id);
 
@@ -66,7 +149,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                     Description = house.Description,
                     HouseMember = house.HouseMember,
                     CurrentMembers = currentMembers,
-                    //HouseOwner = house.HouseOwner,
                     Status = house.Status,
                     UserAccountId = house.UserAccountId,
                     UserName = house.UserAccount?.UserName ?? "Unknown",
@@ -84,9 +166,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 });
             }
 
-            return houseResponseDTOs.ToArray();
+            return houseResponseDTOs;
         }
-
 
         public async Task<House> GetHouseById(string id)
         {
