@@ -35,5 +35,6 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
+        public string[] ImageUrls { get; set; } = new string[0];
     }
 }
