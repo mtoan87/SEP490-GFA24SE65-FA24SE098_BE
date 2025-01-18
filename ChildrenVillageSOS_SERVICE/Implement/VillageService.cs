@@ -60,6 +60,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _villageRepository.GetVillageByIdWithImg(villageId);
         }
+        public VillageNameDTO[] GetVillageByUserIdWithImg(string userId)
+        {
+            return _villageRepository.GetVillageByUserIdWithImg(userId);
+        }
 
         //public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
         //{
