@@ -19,16 +19,19 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IChildRepository _childRepository;
         private readonly IHouseRepository _houseRepository;
         private readonly ITransferHistoryRepository _transferHistoryRepository;
+        private readonly IUserAccountRepository _userAccountRepository;
 
         public TransferRequestService(
         ITransferRequestRepository transferRequestRepository,
         IChildRepository childRepository,
         IHouseRepository houseRepository,
+        IUserAccountRepository userAccountRepository,
         ITransferHistoryRepository transferHistoryRepository)
         {
             _transferRequestRepository = transferRequestRepository;
             _childRepository = childRepository;
             _houseRepository = houseRepository;
+            _userAccountRepository = userAccountRepository;
             _transferHistoryRepository = transferHistoryRepository;
         }
         public async Task<TransferRequest> GetTransferRequestById(int id)
@@ -105,6 +108,194 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             await _transferRequestRepository.AddAsync(transferRequest);
             return transferRequest;
         }
+
+        //public async Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto, string currentUserId)
+        //{
+        //    var transferRequest = await _transferRequestRepository.GetAsync(
+        //        x => x.Id == id,
+        //        includeProperties: "Child,FromHouse,ToHouse"
+        //    );
+        //    if (transferRequest == null)
+        //        throw new InvalidOperationException("Transfer request not found");
+
+        //    // Lấy thông tin user hiện tại
+        //    var currentUser = await _userAccountRepository.GetByIdAsync(currentUserId);
+        //    if (currentUser == null)
+        //        throw new InvalidOperationException("User not found");
+
+        //    // Kiểm tra quyền cơ bản
+        //    if (!await HasPermissionToUpdateTransfer(currentUser, transferRequest))
+        //        throw new InvalidOperationException("You don't have permission to update this transfer request");
+
+        //    if (transferRequest.Status == TransferStatus.Completed.ToString())
+        //        throw new InvalidOperationException("Cannot update a completed transfer request");
+
+        //    if (transferRequest.Status == TransferStatus.Rejected.ToString())
+        //        throw new InvalidOperationException("Cannot update a rejected transfer request");
+
+        //    // Admin/Director confirms lần 1
+        //    if (transferRequest.Status == TransferStatus.Pending.ToString())
+        //    {
+        //        if (!IsAdminOrDirector(currentUser))
+        //            throw new InvalidOperationException("Only Admin or Director can approve/reject pending transfers");
+
+        //        if (dto.Status == TransferStatus.InProcess.ToString())
+        //        {
+        //            transferRequest.Status = TransferStatus.InProcess.ToString();
+        //            transferRequest.ModifiedBy = currentUserId;
+        //            transferRequest.ModifiedDate = DateTime.Now;
+        //            transferRequest.DirectorNote = dto.DirectorNote;
+
+        //            await _transferRequestRepository.UpdateAsync(transferRequest);
+        //            return transferRequest;
+        //        }
+        //        else if (dto.Status == TransferStatus.Rejected.ToString())
+        //        {
+        //            var transferHistory = new TransferHistory
+        //            {
+        //                ChildId = transferRequest.ChildId,
+        //                FromHouseId = transferRequest.FromHouseId,
+        //                ToHouseId = transferRequest.ToHouseId,
+        //                TransferDate = DateTime.Now,
+        //                Status = TransferStatus.Rejected.ToString(),
+        //                HandledBy = currentUserId,
+        //                CreatedDate = DateTime.Now,
+        //                IsDeleted = false,
+        //                RejectionReason = dto.DirectorNote,
+        //                CreatedBy = transferRequest.CreatedBy
+        //            };
+
+        //            await _transferHistoryRepository.AddAsync(transferHistory);
+        //            transferRequest.Status = TransferStatus.Rejected.ToString();
+        //            transferRequest.ModifiedBy = currentUserId;
+        //            transferRequest.ModifiedDate = DateTime.Now;
+        //            transferRequest.DirectorNote = dto.DirectorNote;
+
+        //            await _transferRequestRepository.UpdateAsync(transferRequest);
+        //            return transferRequest;
+        //        }
+        //    }
+
+        //    // HouseMother2 confirms
+        //    if (transferRequest.Status == TransferStatus.InProcess.ToString())
+        //    {
+        //        var isTargetHouseMother = await IsHouseMotherOfHouse(currentUser.Id, transferRequest.ToHouseId);
+        //        if (!isTargetHouseMother)
+        //            throw new InvalidOperationException("Only the House Mother of the target house can confirm this transfer");
+
+        //        if (dto.Status == TransferStatus.ReadyToTransfer.ToString() ||
+        //            dto.Status == TransferStatus.DeclinedToTransfer.ToString())
+        //        {
+        //            transferRequest.Status = dto.Status;
+        //            transferRequest.ModifiedBy = currentUserId;
+        //            transferRequest.ModifiedDate = DateTime.Now;
+        //            //transferRequest.DirectorNote = dto.DirectorNote;
+
+        //            await _transferRequestRepository.UpdateAsync(transferRequest);
+        //            return transferRequest;
+        //        }
+        //    }
+
+        //    // Admin/Director confirms lần 2 - Final approval
+        //    if (transferRequest.Status == TransferStatus.ReadyToTransfer.ToString() &&
+        //        dto.Status == TransferStatus.Completed.ToString())
+        //    {
+        //        if (!IsAdminOrDirector(currentUser))
+        //            throw new InvalidOperationException("Only Admin or Director can give final approval");
+
+        //        var transferHistory = new TransferHistory
+        //        {
+        //            ChildId = transferRequest.ChildId,
+        //            FromHouseId = transferRequest.FromHouseId,
+        //            ToHouseId = transferRequest.ToHouseId,
+        //            TransferDate = DateTime.Now,
+        //            Status = TransferStatus.Completed.ToString(),
+        //            Notes = dto.DirectorNote,
+        //            HandledBy = currentUserId,
+        //            CreatedDate = DateTime.Now,
+        //            IsDeleted = false,
+        //            CreatedBy = transferRequest.CreatedBy
+        //        };
+
+        //        await _transferHistoryRepository.AddAsync(transferHistory);
+
+        //        // Cập nhật thông tin nhà của trẻ
+        //        var child = await _childRepository.GetAsync(x => x.Id == transferRequest.ChildId);
+        //        if (child != null)
+        //        {
+        //            child.HouseId = transferRequest.ToHouseId;
+        //            await _childRepository.UpdateAsync(child);
+        //        }
+
+        //        transferRequest.Status = TransferStatus.Completed.ToString();
+        //        transferRequest.ModifiedBy = currentUserId;
+        //        transferRequest.ModifiedDate = DateTime.Now;
+        //        transferRequest.DirectorNote = dto.DirectorNote;
+        //        transferRequest.ApprovedBy = currentUserId;
+
+        //        await _transferRequestRepository.UpdateAsync(transferRequest);
+        //        return transferRequest;
+        //    }
+
+        //    // Admin/Director confirms lần 2 - Final rejection
+        //    if (transferRequest.Status == TransferStatus.DeclinedToTransfer.ToString() &&
+        //        dto.Status == TransferStatus.Rejected.ToString())
+        //    {
+        //        if (!IsAdminOrDirector(currentUser))
+        //            throw new InvalidOperationException("Only Admin or Director can give final rejection");
+
+        //        var transferHistory = new TransferHistory
+        //        {
+        //            ChildId = transferRequest.ChildId,
+        //            FromHouseId = transferRequest.FromHouseId,
+        //            ToHouseId = transferRequest.ToHouseId,
+        //            TransferDate = DateTime.Now,
+        //            Status = TransferStatus.Rejected.ToString(),
+        //            HandledBy = currentUserId,
+        //            CreatedDate = DateTime.Now,
+        //            IsDeleted = false,
+        //            RejectionReason = dto.DirectorNote,
+        //            CreatedBy = transferRequest.CreatedBy
+        //        };
+
+        //        await _transferHistoryRepository.AddAsync(transferHistory);
+
+        //        transferRequest.Status = TransferStatus.Rejected.ToString();
+        //        transferRequest.ModifiedBy = currentUserId;
+        //        transferRequest.ModifiedDate = DateTime.Now;
+        //        transferRequest.DirectorNote = dto.DirectorNote;
+
+        //        await _transferRequestRepository.UpdateAsync(transferRequest);
+        //        return transferRequest;
+        //    }
+
+        //    return transferRequest;
+        //}
+
+        //private async Task<bool> HasPermissionToUpdateTransfer(UserAccount user, TransferRequest transfer)
+        //{
+        //    if (IsAdminOrDirector(user)) return true;
+
+        //    if (user.RoleId == 3) // Role HouseMother
+        //    {
+        //        var isSourceHouseMother = await IsHouseMotherOfHouse(user.Id, transfer.FromHouseId);
+        //        var isTargetHouseMother = await IsHouseMotherOfHouse(user.Id, transfer.ToHouseId);
+        //        return isSourceHouseMother || isTargetHouseMother;
+        //    }
+
+        //    return false;
+        //}
+
+        //private bool IsAdminOrDirector(UserAccount user)
+        //{
+        //    return user.RoleId == 1 || user.RoleId == 6;
+        //}
+
+        //private async Task<bool> IsHouseMotherOfHouse(string userId, string houseId)
+        //{
+        //    var house = await _houseRepository.GetAsync(x => x.Id == houseId);
+        //    return house != null && house.UserAccountId == userId;
+        //}
 
         public async Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto)
         {

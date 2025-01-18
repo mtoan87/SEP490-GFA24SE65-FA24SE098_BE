@@ -11,6 +11,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
     public interface ITransferRequestService
     {
         Task<TransferRequest> CreateTransferRequest(CreateTransferRequestDTO dto);
+        //Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto, string currentUserId);
         Task<TransferRequest> UpdateTransferRequest(int id, UpdateTransferRequestDTO dto);
         Task<TransferRequest> GetTransferRequestById(int id);
         Task<IEnumerable<TransferRequest>> GetAllTransferRequests();
