@@ -173,19 +173,18 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             {
                 ChildId = createReport.ChildId,
                 NutritionalStatus = createReport.NutritionalStatus,
-                MedicalHistory = createReport.MedicalHistory,
+                MedicalHistory = createReport.MedicalHistory ?? "None",
                 VaccinationStatus = createReport.VaccinationStatus,
                 Weight = createReport.Weight,
                 Height = createReport.Height,
                 CheckupDate = createReport.CheckupDate,
-                DoctorName = createReport.DoctorName,
-                Recommendations = createReport.Recommendations,
+                DoctorName = createReport.DoctorName ?? "None",
+                Recommendations = createReport.Recommendations ?? "None",
                 HealthStatus = createReport.HealthStatus,
                 FollowUpDate = createReport.FollowUpDate,
-                Illnesses = createReport.Illnesses,
-                Allergies = createReport.Allergies,
-                
-                Status = createReport.Status,
+                Illnesses = createReport.Illnesses ?? "None",
+                Allergies = createReport.Allergies ?? "None",               
+                Status = "Active",
                 CreatedBy = createReport.CreatedBy,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false
@@ -234,7 +233,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingReport.Illnesses = updateReport.Illnesses;
             existingReport.Allergies = updateReport.Allergies;
            
-            existingReport.Status = updateReport.Status;
+            existingReport.Status = "Active";
             existingReport.ModifiedBy = updateReport.ModifiedBy;
             existingReport.ModifiedDate = DateTime.Now;
 
