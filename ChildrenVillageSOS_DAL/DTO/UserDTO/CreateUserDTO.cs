@@ -30,6 +30,7 @@ namespace ChildrenVillageSOS_DAL.DTO.UserDTO
 
         [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; } = null!;
+        public int RoleId { get; set; }
 
         [Required(ErrorMessage = "Country is required.")]
         public string Country { get; set; } = null!;

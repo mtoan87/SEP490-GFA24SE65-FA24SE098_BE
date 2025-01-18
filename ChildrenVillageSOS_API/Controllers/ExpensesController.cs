@@ -65,6 +65,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var exp = await _expenseService.GetAllExpenses();
             return Ok(exp);
         }
+        [HttpGet("getExpensewithEvent")]
+        public  IActionResult GetAllExpensewithEvent()
+        {
+            var exp =  _expenseService.GetAllExpensewithEvent();
+            return Ok(exp);
+        }
         [HttpPost("RequestChildExpense")]
         public async Task<IActionResult> RequestChildExpense(RequestSpecialExpenseDTO rq/*, string userId*/)
         {
