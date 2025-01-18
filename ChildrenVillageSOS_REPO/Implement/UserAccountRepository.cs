@@ -198,7 +198,11 @@ namespace ChildrenVillageSOS_REPO.Implement
                     RoleId = x.RoleId,
                     IsDeleted = x.IsDeleted,
                     CreatedDate = x.CreatedDate,
-                    ModifiedDate = x.ModifiedDate
+                    ModifiedDate = x.ModifiedDate,
+                    ImageUrls = x.Images
+                                .Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
+                                .Select(img => img.UrlPath)
+                                .ToArray() // Chuyển thành mảng
                 })
                 .ToArrayAsync(); // Chuyển kết quả truy vấn thành mảng bất đồng bộ
         }
