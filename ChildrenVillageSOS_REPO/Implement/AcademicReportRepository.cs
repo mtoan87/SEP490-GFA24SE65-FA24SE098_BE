@@ -128,5 +128,13 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<AcademicReport>> GetReportsByChildIdsAsync(IEnumerable<string> childIds)
+        {
+            return await _context.AcademicReports
+                .Include(ar => ar.Images)
+                .Where(ar => childIds.Contains(ar.ChildId) && !ar.IsDeleted)
+                .ToListAsync();
+        }
     }
 }

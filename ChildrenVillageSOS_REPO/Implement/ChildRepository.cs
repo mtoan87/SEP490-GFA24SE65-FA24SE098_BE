@@ -427,5 +427,13 @@ namespace ChildrenVillageSOS_REPO.Implement
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<string>> GetChildrenByHouseIdsAsync(IEnumerable<string> houseIds)
+        {
+            return await _context.Children
+                .Where(c => houseIds.Contains(c.HouseId) && !c.IsDeleted) // Điều kiện HouseId và không bị xóa
+                .Select(c => c.Id)
+                .ToListAsync();
+        }
     }
 }

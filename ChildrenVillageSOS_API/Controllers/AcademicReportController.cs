@@ -3,7 +3,9 @@ using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Models;
 using ChildrenVillageSOS_SERVICE.Implement;
 using ChildrenVillageSOS_SERVICE.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChildrenVillageSOS_API.Controllers
 {
@@ -44,11 +46,38 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(reports);
         }
 
+        //[HttpGet("GetAllAcademicReportWithImg")]
+        //public async Task<IActionResult> GetAllAcademicReportWithImg()
+        //{
+        //    var reports = await _academicReportService.GetAllAcademicReportWithImg();
+        //    return Ok(reports);
+        //}
+
         [HttpGet("GetAllAcademicReportWithImg")]
+        //[Authorize]
         public async Task<IActionResult> GetAllAcademicReportWithImg()
         {
-            var reports = await _academicReportService.GetAllAcademicReportWithImg();
-            return Ok(reports);
+            try
+            {
+                // Lấy thông tin userId và role từ token
+                var userId = User.FindFirst("userId")?.Value;
+                var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+                {
+                    return Unauthorized("User information is missing in the token.");
+                }
+
+                // Gọi service để lấy danh sách Academic Report theo role
+                var reports = await _academicReportService.GetAllAcademicReportWithImg(userId, role);
+
+                return Ok(reports);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi và trả về phản hồi
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpGet("GetAcademicReportByIdWithImg/{id}")]
