@@ -25,7 +25,7 @@ namespace ChildrenVillageSOS_DAL.DTO.ChildDTO
 
         //public int? NecessitiesWalletId { get; set; }
 
-        public decimal? Amount { get; set; }
+        //public decimal? Amount { get; set; }
 
         public decimal? AmountLimit { get; set; }
 
