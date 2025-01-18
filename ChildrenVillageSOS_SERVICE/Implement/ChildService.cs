@@ -78,39 +78,39 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return await _childRepository.GetAllNotDeletedAsync();
         }
 
-        //public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
-        //{
-        //    var children = await _childRepository.GetChildrenWithRelationsAsync();
+        public async Task<IEnumerable<ChildResponseDTO>> GetAllChildrenWithImg()
+        {
+            var children = await _childRepository.GetChildrenWithRelationsAsync();
 
-        //    var childResponseDTOs = children.Select(x => new ChildResponseDTO
-        //    {
-        //        Id = x.Id,
-        //        ChildName = x.ChildName,
-        //        HealthStatus = x.HealthStatus,
-        //        HouseId = x.HouseId,
-        //        HouseName = x.House?.HouseName ?? "Unknown",
-        //        SchoolId = x.SchoolId,
-        //        SchoolName = x.School?.SchoolName ?? "Unknown",
-        //        FacilitiesWalletId = x.FacilitiesWalletId,
-        //        SystemWalletId = x.SystemWalletId,
-        //        FoodStuffWalletId = x.FoodStuffWalletId,
-        //        HealthWalletId = x.HealthWalletId,
-        //        NecessitiesWalletId = x.NecessitiesWalletId,
-        //        Amount = x.Amount ?? 0,
-        //        CurrentAmount = x.CurrentAmount ?? 0,
-        //        AmountLimit = x.AmountLimit ?? 0,
-        //        Gender = x.Gender,
-        //        Dob = x.Dob,
-        //        Status = x.Status,
-        //        CreatedDate = x.CreatedDate,
-        //        ModifiedDate = x.ModifiedDate,
-        //        ImageUrls = x.Images.Where(img => !img.IsDeleted)
-        //                             .Select(img => img.UrlPath)
-        //                             .ToArray()
-        //    }).ToArray();
+            var childResponseDTOs = children.Select(x => new ChildResponseDTO
+            {
+                Id = x.Id,
+                ChildName = x.ChildName,
+                HealthStatus = x.HealthStatus,
+                HouseId = x.HouseId,
+                HouseName = x.House?.HouseName ?? "Unknown",
+                SchoolId = x.SchoolId,
+                SchoolName = x.School?.SchoolName ?? "Unknown",
+                FacilitiesWalletId = x.FacilitiesWalletId,
+                SystemWalletId = x.SystemWalletId,
+                FoodStuffWalletId = x.FoodStuffWalletId,
+                HealthWalletId = x.HealthWalletId,
+                NecessitiesWalletId = x.NecessitiesWalletId,
+                Amount = x.Amount ?? 0,
+                CurrentAmount = x.CurrentAmount ?? 0,
+                AmountLimit = x.AmountLimit ?? 0,
+                Gender = x.Gender,
+                Dob = x.Dob,
+                Status = x.Status,
+                CreatedDate = x.CreatedDate,
+                ModifiedDate = x.ModifiedDate,
+                ImageUrls = x.Images.Where(img => !img.IsDeleted)
+                                     .Select(img => img.UrlPath)
+                                     .ToArray()
+            }).ToArray();
 
-        //    return childResponseDTOs;
-        //}
+            return childResponseDTOs;
+        }
 
         public async Task<IEnumerable<ChildResponseDTO>> GetChildrenByUserAsync(string userId, string role)
         {

@@ -188,7 +188,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 AcademicYear = createReport.AcademicYear,
                 Remarks = createReport.Remarks,
                 Achievement = createReport.Achievement,
-                Status = createReport.Status,
+                Status = "Active",
                 Class = createReport.Class,
                 Feedback = createReport.Feedback,
                 CreatedBy = createReport.CreatedBy,
@@ -236,7 +236,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             editReport.AcademicYear = updateReport.AcademicYear;
             editReport.Remarks = updateReport.Remarks;
             editReport.Achievement = updateReport.Achievement;
-            editReport.Status = updateReport.Status;
+            editReport.Status = "Active";
             editReport.Class = updateReport.Class;
             editReport.Feedback = updateReport.Feedback;
             editReport.ModifiedBy = updateReport.ModifiedBy;
