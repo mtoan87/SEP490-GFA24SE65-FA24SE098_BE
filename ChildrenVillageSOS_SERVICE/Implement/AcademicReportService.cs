@@ -20,14 +20,23 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IAcademicReportRepository _academicReportRepository;
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
+        private readonly IHouseRepository _houseRepository;
+        private readonly IVillageRepository _villageRepository;
+        private readonly IChildRepository _childRepository;
 
         public AcademicReportService(IAcademicReportRepository academicReportRepository,
             IImageService imageService,
-            IImageRepository imageRepository)
+            IHouseRepository houseRepository,
+            IImageRepository imageRepository,
+            IVillageRepository villageRepository,
+            IChildRepository childRepository)
         {
             _academicReportRepository = academicReportRepository;
             _imageService = imageService;
             _imageRepository = imageRepository;
+            _houseRepository = houseRepository;
+            _villageRepository = villageRepository;
+            _childRepository = childRepository;
         }
 
         public async Task<IEnumerable<AcademicReport>> GetAllAcademicReports()
@@ -40,10 +49,79 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return _academicReportRepository.GetAllAcademicReportIsDeleteAsync();
         }
 
-        public async Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg()
-        {
-            var academicReports = await _academicReportRepository.GetAllNotDeletedAsync();
+        //public async Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg()
+        //{
+        //    var academicReports = await _academicReportRepository.GetAllNotDeletedAsync();
 
+        //    var academicReportResponseDTOs = academicReports.Select(ar => new AcademicReportResponseDTO
+        //    {
+        //        Id = ar.Id,
+        //        Diploma = ar.Diploma,
+        //        SchoolLevel = ar.SchoolLevel,
+        //        ChildId = ar.ChildId,
+        //        SchoolId = ar.SchoolId,
+        //        Gpa = ar.Gpa,
+        //        SchoolReport = ar.SchoolReport,
+        //        Semester = ar.Semester,
+        //        AcademicYear = ar.AcademicYear,
+        //        Remarks = ar.Remarks,
+        //        Achievement = ar.Achievement,
+        //        Status = ar.Status,
+        //        Class = ar.Class,
+        //        Feedback = ar.Feedback,
+        //        IsDeleted = ar.IsDeleted,
+        //        CreatedBy = ar.CreatedBy,
+        //        CreatedDate = ar.CreatedDate,
+        //        ModifiedBy = ar.ModifiedBy,
+        //        ModifiedDate = ar.ModifiedDate,
+        //        ImageUrls = ar.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
+        //                        .Select(img => img.UrlPath)
+        //                        .ToArray()
+        //    }).ToArray();
+
+        //    return academicReportResponseDTOs;
+        //}
+
+        public async Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg(string userId, string role)
+        {
+            IEnumerable<AcademicReport> academicReports;
+
+            if (role == "Admin")
+            {
+                // Admin có thể xem toàn bộ báo cáo học tập
+                academicReports = await _academicReportRepository.GetAllNotDeletedAsync();
+            }
+            else if (role == "Director")
+            {
+                // Lấy danh sách Village mà Director quản lý
+                var villages = await _villageRepository.GetVillagesByUserAccountIdAsync(userId);
+
+                // Lấy danh sách House trong các Village
+                var houseIds = villages.SelectMany(v => v.Houses.Where(h => !h.IsDeleted)).Select(h => h.Id).ToList();
+
+                // Lấy danh sách Child trong các House
+                var childIds = await _childRepository.GetChildrenByHouseIdsAsync(houseIds);
+
+                // Lấy các báo cáo học tập của các Child này
+                academicReports = await _academicReportRepository.GetReportsByChildIdsAsync(childIds);
+            }
+            else if (role == "HouseMother")
+            {
+                // Lấy danh sách House mà HouseMother quản lý
+                var houses = await _houseRepository.GetHousesByUserAccountIdAsync(userId);
+
+                // Lấy danh sách Child trong các House
+                var childIds = await _childRepository.GetChildrenByHouseIdsAsync(houses.Select(h => h.Id));
+
+                // Lấy các báo cáo học tập của các Child này
+                academicReports = await _academicReportRepository.GetReportsByChildIdsAsync(childIds);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("User role not authorized to view academic reports.");
+            }
+
+            // Map dữ liệu AcademicReport sang DTO
             var academicReportResponseDTOs = academicReports.Select(ar => new AcademicReportResponseDTO
             {
                 Id = ar.Id,
@@ -65,9 +143,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 CreatedDate = ar.CreatedDate,
                 ModifiedBy = ar.ModifiedBy,
                 ModifiedDate = ar.ModifiedDate,
-                ImageUrls = ar.Images.Where(img => !img.IsDeleted) // Lọc hình ảnh chưa bị xóa
-                                .Select(img => img.UrlPath)
-                                .ToArray()
+                ImageUrls = ar.Images.Where(img => !img.IsDeleted)
+                                    .Select(img => img.UrlPath)
+                                    .ToArray()
             }).ToArray();
 
             return academicReportResponseDTOs;

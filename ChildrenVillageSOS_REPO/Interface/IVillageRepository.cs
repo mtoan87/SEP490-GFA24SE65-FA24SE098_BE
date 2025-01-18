@@ -25,5 +25,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<VillageDetailsDTO> GetVillageDetails(string villageId);
         Task<List<Village>> SearchVillages(SearchVillageDTO searchVillageDTO);
         Task<Village?> GetVillageByUserAccountIdAsync(string userAccountId);
+        Task<IEnumerable<Village>> GetVillagesByUserAccountIdAsync(string userId);
     }
 }

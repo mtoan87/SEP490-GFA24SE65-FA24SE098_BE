@@ -385,5 +385,13 @@ namespace ChildrenVillageSOS_REPO.Implement
 
             return village;
         }
+
+        public async Task<IEnumerable<Village>> GetVillagesByUserAccountIdAsync(string userId)
+        {
+            return await _context.Villages
+                .Include(v => v.Houses) // Bao gồm Houses trong Village
+                .Where(v => v.UserAccountId == userId && !v.IsDeleted) // Điều kiện userId và không bị xóa
+                .ToListAsync();
+        }
     }
 }

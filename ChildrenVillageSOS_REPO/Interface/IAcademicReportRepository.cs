@@ -16,5 +16,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         AcademicReportResponseDTO GetAcademicReportByIdWithImg(int academicReportId);
         Task<List<AcademicReport>> GetAcademicPerformanceDistribution();
         Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO);
+        Task<IEnumerable<AcademicReport>> GetReportsByChildIdsAsync(IEnumerable<string> childIds);
     }
 }

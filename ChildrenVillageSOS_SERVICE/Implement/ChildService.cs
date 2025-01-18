@@ -343,6 +343,17 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<Child> CreateChild(CreateChildDTO createChild)
         {
+            // Kiểm tra giá trị của Dob (Date of Birth)
+            var today = DateTime.Today;
+            var age = today.Year - createChild.Dob.Year;
+            if (createChild.Dob.Date > today.AddYears(-age)) age--;
+
+            // Đảm bảo tuổi nằm trong khoảng từ 0 đến 18
+            if (age < 0 || age > 18)
+            {
+                throw new ArgumentException("Date of Birth must result in an age between 0 and 18 years.");
+            }
+
             // Lấy toàn bộ danh sách ChildId hiện có
             var allChildIds = await _childRepository.Entities()
                                                     .Select(c => c.Id)
@@ -359,33 +370,46 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             int? necessitiesWalletId = null;
 
             // Kiểm tra HealthStatus
+            //if (createChild.HealthStatus == "Bad")
+            //{
+            //    if (string.IsNullOrEmpty(createChild.WalletType) || createChild.Amount <= 0)
+            //    {
+            //        throw new ArgumentException("WalletType and Amount cannot be blank if HealthStatus is 'Bad'.");
+            //    }
+
+            //    // Xác định loại ví theo WalletType
+            //    switch (createChild.WalletType)
+            //    {
+            //        case "facilitiesWalletId":
+            //            facilitiesWalletId = 1;
+            //            break;
+            //        case "systemWalletId":
+            //            systemWalletId = 1;
+            //            break;
+            //        case "foodStuffWalletId":
+            //            foodStuffWalletId = 1;
+            //            break;
+            //        case "healthWalletId":
+            //            healthWalletId = 1;
+            //            break;
+            //        case "necessitiesWalletId":
+            //            necessitiesWalletId = 1;
+            //            break;
+            //        default:
+            //            throw new ArgumentException("WalletType not valid.");
+            //    }
+            //}
+
+            // Kiểm tra HealthStatus
             if (createChild.HealthStatus == "Bad")
             {
-                if (string.IsNullOrEmpty(createChild.WalletType) || createChild.Amount <= 0)
-                {
-                    throw new ArgumentException("WalletType and Amount cannot be blank if HealthStatus is 'Bad'.");
-                }
+                // Gán HealthWalletId = 1
+                healthWalletId = 1;
 
-                // Xác định loại ví theo WalletType
-                switch (createChild.WalletType)
+                // Đảm bảo Amount được cung cấp và > 0
+                if (createChild.Amount <= 0)
                 {
-                    case "facilitiesWalletId":
-                        facilitiesWalletId = 1;
-                        break;
-                    case "systemWalletId":
-                        systemWalletId = 1;
-                        break;
-                    case "foodStuffWalletId":
-                        foodStuffWalletId = 1;
-                        break;
-                    case "healthWalletId":
-                        healthWalletId = 1;
-                        break;
-                    case "necessitiesWalletId":
-                        necessitiesWalletId = 1;
-                        break;
-                    default:
-                        throw new ArgumentException("WalletType not valid.");
+                    throw new ArgumentException("Amount must be greater than 0 when HealthStatus is 'Bad'.");
                 }
             }
 
@@ -573,12 +597,25 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         }
         public async Task<Child> UpdateChild(string id, UpdateChildDTO updateChild)
         {
+            // Lấy thông tin của Child từ repository
             var existingChild = await _childRepository.GetByIdAsync(id);
             if (existingChild == null)
             {
                 throw new Exception($"Child with ID {id} not found!");
             }
 
+            // Kiểm tra giá trị của Dob (Date of Birth)
+            var today = DateTime.Today;
+            var age = today.Year - updateChild.Dob.Year;
+            if (updateChild.Dob.Date > today.AddYears(-age)) age--;
+
+            // Đảm bảo tuổi nằm trong khoảng từ 0 đến 18
+            if (age < 0 || age > 18)
+            {
+                throw new ArgumentException("Date of Birth (Dob) must result in an age between 0 and 18 years.");
+            }
+
+            // Cập nhật các thông tin cơ bản
             existingChild.ChildName = updateChild.ChildName;
             existingChild.HealthStatus = updateChild.HealthStatus;
             existingChild.HouseId = updateChild.HouseId;
@@ -589,37 +626,33 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             existingChild.AmountLimit = updateChild.AmountLimit ?? existingChild.AmountLimit;
             existingChild.ModifiedDate = DateTime.Now;
 
-            // Xử lý cập nhật WalletType và Amount dựa trên HealthStatus
+            // Xử lý logic dựa trên HealthStatus
             if (updateChild.HealthStatus == "Bad")
             {
-                existingChild.Amount = updateChild.Amount ?? existingChild.Amount;
-
+                // Gán HealthWalletId = 1, các ví khác mặc định là null
                 existingChild.FacilitiesWalletId = null;
                 existingChild.SystemWalletId = null;
                 existingChild.FoodStuffWalletId = null;
-                existingChild.HealthWalletId = null;
                 existingChild.NecessitiesWalletId = null;
+                existingChild.HealthWalletId = 1;
 
-                switch (updateChild.WalletType)
+                // Đảm bảo Amount được cung cấp và > 0
+                if (updateChild.Amount <= 0)
                 {
-                    case "facilitiesWalletId":
-                        existingChild.FacilitiesWalletId = 1;
-                        break;
-                    case "systemWalletId":
-                        existingChild.SystemWalletId = 1;
-                        break;
-                    case "foodStuffWalletId":
-                        existingChild.FoodStuffWalletId = 1;
-                        break;
-                    case "healthWalletId":
-                        existingChild.HealthWalletId = 1;
-                        break;
-                    case "necessitiesWalletId":
-                        existingChild.NecessitiesWalletId = 1;
-                        break;
+                    throw new ArgumentException("Amount must be greater than 0 when HealthStatus is 'Bad'.");
                 }
             }
+            else
+            {
+                // Nếu HealthStatus không phải là "Bad", giữ nguyên giá trị ví
+                existingChild.FacilitiesWalletId = existingChild.FacilitiesWalletId;
+                existingChild.SystemWalletId = existingChild.SystemWalletId;
+                existingChild.FoodStuffWalletId = existingChild.FoodStuffWalletId;
+                existingChild.NecessitiesWalletId = existingChild.NecessitiesWalletId;
+                existingChild.HealthWalletId = existingChild.HealthWalletId;
+            }
 
+            // Cập nhật dữ liệu trong repository
             await _childRepository.UpdateAsync(existingChild);
 
             var existingImages = await _imageRepository.GetByChildIdAsync(existingChild.Id);
