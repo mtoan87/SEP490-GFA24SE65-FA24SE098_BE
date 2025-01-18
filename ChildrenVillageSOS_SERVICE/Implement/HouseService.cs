@@ -187,6 +187,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _houseRepository.SearchHousesAsync(searchTerm);
         }
+        public HouseNameDTO[] GetHouseByUserIdWithImg(string userId)
+        {
+            return _houseRepository.GetHouseByUserIdWithImg(userId);
+        }
 
         public async Task<House> CreateHouse(CreateHouseDTO createHouse)
         {

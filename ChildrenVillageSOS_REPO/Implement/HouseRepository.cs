@@ -406,6 +406,19 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+        public HouseNameDTO[] GetHouseByUserIdWithImg(string userId)
+        {
+            var housename = _context.Houses
+                .Where(h => h.UserAccountId == userId && !h.IsDeleted) // Kiểm tra ID và không bị xóa
+                .Select(h => new HouseNameDTO
+                {
+                    Id = h.Id,
+                    HouseName = h.HouseName ?? string.Empty,
+                    UserAccountId = h.UserAccountId,
+                })
+                .ToArray();
+            return housename;
+        }
         // HouseMother view
         public async Task<House?> GetHouseByUserAccountIdAsync(string userAccountId)
         {

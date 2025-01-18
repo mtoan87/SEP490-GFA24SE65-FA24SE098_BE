@@ -130,6 +130,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var vil =  _villageService.GetVillagesDonatedByUser(userId);
             return Ok(vil);
         }
+        [HttpGet("GetVillagesByUserId")]
+        public IActionResult GetVillageByUserIdWithImg(string userId)
+        {
+            var vil = _villageService.GetVillageByUserIdWithImg(userId);
+            return Ok(vil);
+        }
 
         [HttpGet("GetVillagesByUser/{userAccountId}")]
         public IActionResult GetVillagesByUser(string userAccountId)

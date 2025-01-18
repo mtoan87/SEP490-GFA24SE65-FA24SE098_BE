@@ -97,6 +97,19 @@ namespace ChildrenVillageSOS_REPO.Implement
                 })
                 .ToArrayAsync();
         }
+        public VillageNameDTO[] GetVillageByUserIdWithImg(string userId)
+        {
+            var villagename = _context.Villages
+                .Where(village => village.UserAccountId == userId && !village.IsDeleted) // Kiểm tra ID và không bị xóa
+                .Select(village => new VillageNameDTO
+                {
+                    Id = village.Id,
+                    VillageName = village.VillageName ?? string.Empty,
+                    UserAccountId = village.UserAccountId,
+                })
+                .ToArray();
+            return villagename;
+        }
 
         public async Task<VillageResponseDTO[]> GetAllVillageIsDelete()
         {

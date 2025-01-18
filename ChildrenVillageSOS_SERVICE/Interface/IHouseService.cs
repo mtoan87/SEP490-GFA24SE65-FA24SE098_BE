@@ -19,6 +19,7 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<House> CreateHouse(CreateHouseDTO createHouse);
         Task<House> UpdateHouse(string id, UpdateHouseDTO updateHouse);
         Task<House> DeleteHouse(string id);
+        HouseNameDTO[] GetHouseByUserIdWithImg(string userId);
         Task<string?> GetUserAccountIdByHouseId(string houseId);
         Task<HouseResponseDTO[]> getHouseByVillageId(string villageId);
         //Task<HouseResponseDTO[]> GetAllHouseAsync();

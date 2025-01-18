@@ -66,6 +66,12 @@ namespace ChildrenVillageSOS_API.Controllers
             var houses =  _houseService.GetHouseByUserAccountId(userAccountId);
             return Ok(houses);
         }
+        [HttpGet("GetHouseNameByAccountId")]
+        public IActionResult GetHouseByUserIdWithImg(string userAccountId)
+        {
+            var houses = _houseService.GetHouseByUserIdWithImg(userAccountId);
+            return Ok(houses);
+        }
 
         [HttpGet("GetAllHousesWithImg")]
         public async Task<IActionResult> GetAllHousesWithImg()
