@@ -87,7 +87,7 @@ namespace ChildrenVillageSOS_REPO.Implement
         public ExpenseResponseDTO[] GetAllExpenses()
         {
             var expenses = _context.Expenses
-                .Where(e => !e.IsDeleted) // Exclude deleted records
+                .Where(e => !e.IsDeleted && e.EventId == null) // Exclude deleted records
                 .Select(e => new ExpenseResponseDTO
                 {
                     Id = e.Id,
@@ -116,6 +116,37 @@ namespace ChildrenVillageSOS_REPO.Implement
             return expenses;
         }
 
+        public ExpenseResponseDTO[] GetAllExpense()
+        {
+            var expenses = _context.Expenses
+                .Where(e => !e.IsDeleted && e.EventId != null) // Exclude deleted records
+                .Select(e => new ExpenseResponseDTO
+                {
+                    Id = e.Id,
+                    ExpenseAmount = e.ExpenseAmount,
+                    AmountReceive = e.AmountReceive,
+                    ExpenseType = e.ExpenseType,
+                    RequestedBy = e.RequestedBy,
+                    ApprovedBy = e.ApprovedBy,
+                    EventId = e.EventId,
+                    Description = e.Description,
+                    Expenseday = e.Expenseday,
+                    Status = e.Status,
+                    SystemWalletId = e.SystemWalletId,
+                    FacilitiesWalletId = e.FacilitiesWalletId,
+                    FoodStuffWalletId = e.FoodStuffWalletId,
+                    HealthWalletId = e.HealthWalletId,
+                    NecessitiesWalletId = e.NecessitiesWalletId,
+                    VillageId = e.VillageId,
+                    ChildId = e.ChildId,
+                    HouseId = e.HouseId,
+                    CreatedDate = e.CreatedDate,
+                    ModifiedDate = e.ModifiedDate
+                })
+                .ToArray(); // Convert to an array
+
+            return expenses;
+        }
         public  ExpenseResponseDTO[] GetUnComfirmHouseExpense()
         {
             var  expenses = _context.Expenses

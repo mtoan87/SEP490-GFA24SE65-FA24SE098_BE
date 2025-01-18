@@ -49,6 +49,8 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         {
             return _expenseRepository.getExpense();
         }
+
+       
         public ExpenseResponseDTO[] GetFormatedExpenses()
         {
             return _expenseRepository.GetAllExpenses();
@@ -427,6 +429,11 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public async Task<List<Expense>> SearchExpenses(SearchExpenseDTO searchExpenseDTO)
         {
             return await _expenseRepository.SearchExpenses(searchExpenseDTO);
+        }
+
+        public ExpenseResponseDTO[] GetAllExpensewithEvent()
+        {
+            return _expenseRepository.GetAllExpense();
         }
     }
 }

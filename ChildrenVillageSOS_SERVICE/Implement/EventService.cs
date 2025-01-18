@@ -2,6 +2,7 @@
 using ChildrenVillageSOS_DAL.DTO.ChildDTO;
 using ChildrenVillageSOS_DAL.DTO.DonationDTO;
 using ChildrenVillageSOS_DAL.DTO.EventDTO;
+using ChildrenVillageSOS_DAL.DTO.ExpenseDTO;
 using ChildrenVillageSOS_DAL.DTO.PaymentDTO;
 using ChildrenVillageSOS_DAL.DTO.VillageDTO;
 using ChildrenVillageSOS_DAL.Enum;
@@ -338,6 +339,9 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             return newEvent;
         }
+
+        
+
 
         public async Task<EventResponseDTO> GetEventById(int id)
         {
