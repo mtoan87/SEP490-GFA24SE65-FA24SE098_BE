@@ -18,7 +18,8 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<HealthReport> RestoreHealthReport(int id);
         Task<HealthReportResponseDTO> GetHealthReportByIdWithImg(int id);
         Task<HealthReportResponseDTO[]> GetAllHealthReportIsDeleteAsync();
-        Task<IEnumerable<HealthReportResponseDTO>> GetAllHealthReportWithImg();
+        //Task<IEnumerable<HealthReportResponseDTO>> GetAllHealthReportWithImg();
         Task<List<HealthReport>> SearchHealthReports(SearchHealthReportDTO searchHealthReportDTO);
+        Task<IEnumerable<HealthReportResponseDTO>> GetAllHealthReportWithImg(string userId, string role);
     }
 }

@@ -199,7 +199,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                         </div>
                         <div class='footer'>
                             <p>Warm regards,</p>
-                            <p>The ChildrenVillageSOS Team</p>
+                            <p>The ChildrenVillageSOS System</p>
                         </div>
                     </div>
                 </body>

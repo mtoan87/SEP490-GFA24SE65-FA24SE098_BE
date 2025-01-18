@@ -17,8 +17,9 @@ namespace ChildrenVillageSOS_SERVICE.Interface
         Task<AcademicReport> DeleteAcademicReport(int id);
         Task<AcademicReport> RestoreAcademicReport(int id);
         Task<AcademicReportResponseDTO[]> GetAllAcademicReportIsDeleteAsync();
-        Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg();
+        //Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg();
         Task<AcademicReportResponseDTO> GetAcademicReportByIdWithImg(int id);
         Task<List<AcademicReport>> SearchAcademicReports(SearchAcademicReportDTO searchAcademicReportDTO);
+        Task<IEnumerable<AcademicReportResponseDTO>> GetAllAcademicReportWithImg(string userId, string role);
     }
 }

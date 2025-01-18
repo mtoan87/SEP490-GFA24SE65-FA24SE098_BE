@@ -127,5 +127,12 @@ namespace ChildrenVillageSOS_REPO.Implement
             }
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<HealthReport>> GetReportsByChildIdsAsync(IEnumerable<string> childIds)
+        {
+            return await _context.HealthReports
+                .Where(hr => childIds.Contains(hr.ChildId) && !hr.IsDeleted)
+                .ToListAsync();
+        }
     }
 }
