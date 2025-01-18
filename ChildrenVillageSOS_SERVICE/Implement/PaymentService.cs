@@ -121,8 +121,6 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<string> CreateFacilitiesWalletPayment(DonateRequest paymentRequest)
         {
-
-           
             string? userName, userEmail, address;
             string? phone;
 
@@ -151,6 +149,44 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 address = paymentRequest.Address;
             }
 
+            // Lấy thông tin ví Facilities
+            var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
+            if (facilitiesWallet == null)
+            {
+                throw new Exception("Facilities wallet not found.");
+            }
+
+            // Lấy thông tin từng ví khác
+            var foodStuffWallet = await _foodStuffWalletRepository.GetByIdAsync(1);
+            var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(1);
+            var healthWallet = await _healthWalletRepository.GetByIdAsync(1);
+            var systemWallet = await _systemWalletRepository.GetByIdAsync(1); 
+
+            // So sánh ngân sách của FacilitiesWallet với từng ví khác
+            if (foodStuffWallet != null &&
+                (facilitiesWallet.Budget + paymentRequest.Amount) > foodStuffWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Facilities wallet exceeds the Food Stuff Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (necessitiesWallet != null &&
+                (facilitiesWallet.Budget + paymentRequest.Amount) > necessitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Facilities wallet exceeds the Necessities Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (healthWallet != null &&
+                (facilitiesWallet.Budget + paymentRequest.Amount) > healthWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Facilities wallet exceeds the Health Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (systemWallet != null &&
+                (facilitiesWallet.Budget + paymentRequest.Amount) > systemWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Facilities wallet exceeds the System Wallet limit by 10%. Please choose a different wallet.");
+            }
+
             // Tạo đối tượng DonationDTO
             var donationDto = new DonateDTO
             {
@@ -159,7 +195,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 UserEmail = userEmail,
                 Phone = phone,
                 Address = address,
-                FacilitiesWalletId = 1,
+                FacilitiesWalletId = facilitiesWallet.Id,
                 DonationType = DonateType.Wallet.ToString(),
                 DateTime = DateTime.Now,
                 Amount = paymentRequest.Amount,
@@ -171,9 +207,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Gửi donation
             var donation = await _donationService.DonateNow(donationDto);
 
-            //var donation = await _donationService.CreateDonationPayment(donationDto);
-            var facilitiesWallet = await _failitiesWalletRepository.GetFacilitiesWalletByUserIdAsync("UA001");
-            // Step 2: Create VNPay URL
+            // Tạo URL thanh toán VNPay
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];
@@ -183,7 +217,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_Version", "2.1.0");
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString()); // Multiply by 100 for VNPay
+            vnpay.AddRequestData("vnp_Amount", (paymentRequest.Amount * 100).ToString());
             vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
             vnpay.AddRequestData("vnp_IpAddr", "192.168.1.105");
@@ -191,15 +225,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán cho Donation {donation.Id}, facilitiesWalletId {facilitiesWallet.Id}");
             vnpay.AddRequestData("vnp_OrderType", "donation");
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
-           
+
             string uniqueTxnRef = $"{donation.Id}_{DateTime.Now.Ticks}";
             vnpay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
-            
 
-            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);        
+            var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
             var income = new Income
             {
-                FacilitiesWalletId = facilitiesWallet?.Id,
+                FacilitiesWalletId = facilitiesWallet.Id,
                 Amount = paymentRequest.Amount,
                 Receiveday = DateTime.Now,
                 UserAccountId = paymentRequest.UserAccountId,
@@ -209,7 +243,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
             await _incomeRepository.AddAsync(income);
 
-            // Step 5: Create Payment
+            // Tạo Payment
             var payment = new Payment
             {
                 DonationId = donation.Id,
@@ -222,7 +256,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             };
             await _paymentRepository.AddAsync(payment);
 
-            // Return the VNPay URL for the user to complete the payment
+            // Trả về URL thanh toán
             return paymentUrl;
         }
 
@@ -379,6 +413,35 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Gửi donation
             var donation = await _donationService.DonateNow(donationDto);
             var foodWallet = await _foodStuffWalletRepository.GetWalletByUserIdAsync("UA001");
+
+            var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(1);
+            var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(1);
+            var healthWallet = await _healthWalletRepository.GetByIdAsync(1);
+            var systemWallet = await _systemWalletRepository.GetByIdAsync(1);
+
+            if (facilitiesWallet != null &&
+                (foodWallet.Budget + paymentRequest.Amount) > facilitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("foodWallet  exceeds the Food Stuff Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (necessitiesWallet != null &&
+                (foodWallet.Budget + paymentRequest.Amount) > necessitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("foodWallet  exceeds the Necessities Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (healthWallet != null &&
+                (foodWallet.Budget + paymentRequest.Amount) > healthWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("foodWallet  exceeds the Health Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (systemWallet != null &&
+                (foodWallet.Budget + paymentRequest.Amount) > systemWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("foodWallet  exceeds the System Wallet limit by 10%. Please choose a different wallet.");
+            }
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -534,13 +597,41 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
             // Gửi donation
             var donation = await _donationService.DonateNow(donationDto);
+            var wallet = await _healthWalletRepository.GetHealthWalletByUserIdAsync("UA001");
+            var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(1);
+            var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(1);
+            var foodstuff = await _foodStuffWalletRepository.GetByIdAsync(1);
+            var systemWallet = await _systemWalletRepository.GetByIdAsync(1);
 
+            if (facilitiesWallet != null &&
+               (wallet.Budget + paymentRequest.Amount) > facilitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Health wallet exceeds the Food Stuff Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (necessitiesWallet != null &&
+                (wallet.Budget + paymentRequest.Amount) > necessitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Health wallet exceeds the Necessities Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (foodstuff != null &&
+                (wallet.Budget + paymentRequest.Amount) > foodstuff.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Health wallet exceeds the Health Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (systemWallet != null &&
+                (wallet.Budget + paymentRequest.Amount) > systemWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Health wallet exceeds the System Wallet limit by 10%. Please choose a different wallet.");
+            }
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
             var vnp_TmnCode = _configuration["VNPay:TmnCode"];
             var vnp_HashSecret = _configuration["VNPay:HashSecret"];
-            var wallet = await _healthWalletRepository.GetHealthWalletByUserIdAsync("UA001");
+            
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", "2.1.0");
             vnpay.AddRequestData("vnp_Command", "pay");
@@ -647,6 +738,34 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Gửi donation
             var donation = await _donationService.DonateNow(donationDto);
             var wallet = await _systemWalletRepository.GetWalletByUserIdAsync("UA001");
+            var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(1);
+            var necessitiesWallet = await _necessitiesWalletRepository.GetByIdAsync(1);
+            var foodstuff = await _foodStuffWalletRepository.GetByIdAsync(1);
+            var healthWallet = await _healthWalletRepository.GetByIdAsync(1);
+
+            if (facilitiesWallet != null &&
+               (wallet.Budget + paymentRequest.Amount) > facilitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("System wallet exceeds the Food Stuff Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (necessitiesWallet != null &&
+                (wallet.Budget + paymentRequest.Amount) > necessitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("System wallet exceeds the Necessities Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (foodstuff != null &&
+                (wallet.Budget + paymentRequest.Amount) > foodstuff.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("System wallet exceeds the Health Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (healthWallet != null &&
+                (wallet.Budget + paymentRequest.Amount) > healthWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("System wallet exceeds the System Wallet limit by 10%. Please choose a different wallet.");
+            }
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
@@ -757,6 +876,35 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             // Gửi donation
             var donation = await _donationService.DonateNow(donationDto);
             var wallet = await _necessitiesWalletRepository.GetNecessitiesWalletByUserIdAsync("UA001");
+
+            var facilitiesWallet = await _failitiesWalletRepository.GetByIdAsync(1);
+            var system = await _systemWalletRepository.GetByIdAsync(1);
+            var foodstuff = await _foodStuffWalletRepository.GetByIdAsync(1);
+            var healthWallet = await _healthWalletRepository.GetByIdAsync(1);
+
+            if (facilitiesWallet != null &&
+               (wallet.Budget + paymentRequest.Amount) > facilitiesWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Neccesity wallet exceeds the Food Stuff Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (system != null &&
+                (wallet.Budget + paymentRequest.Amount) > system.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Neccesity wallet exceeds the Necessities Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (foodstuff != null &&
+                (wallet.Budget + paymentRequest.Amount) > foodstuff.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Neccesity wallet exceeds the Health Wallet limit by 10%. Please choose a different wallet.");
+            }
+
+            if (healthWallet != null &&
+                (wallet.Budget + paymentRequest.Amount) > healthWallet.Budget * 1.1m)
+            {
+                throw new InvalidOperationException("Neccesity wallet exceeds the System Wallet limit by 10%. Please choose a different wallet.");
+            }
             // Step 2: Create VNPay URL
             var vnp_ReturnUrl = _configuration["VNPay:ReturnUrl"];
             var vnp_Url = _configuration["VNPay:Url"];
