@@ -425,6 +425,16 @@ namespace ChildrenVillageSOS_REPO.Implement
             return houses;
         }
 
+        public async Task<IEnumerable<House>> GetHousesByUserAccountIdAsync(string userAccountId)
+        {
+            // Truy vấn các house mà userAccountId quản lý
+            var houses = await _context.Houses
+                .Where(h => h.UserAccountId == userAccountId && !h.IsDeleted)  // Kiểm tra nếu nhà chưa bị xóa
+                .ToListAsync();
+
+            return houses;
+        }
+
         public async Task<IEnumerable<House>> GetHousesWithRelationsAsync(IEnumerable<string> houseIds)
         {
             return await _context.Houses

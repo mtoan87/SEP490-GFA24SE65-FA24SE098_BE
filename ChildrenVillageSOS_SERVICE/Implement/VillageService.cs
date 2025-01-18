@@ -24,12 +24,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IVillageRepository _villageRepository;
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
-        public VillageService(IVillageRepository villageRepository, IImageService imageService, IImageRepository imageRepository)
+        private readonly IHouseRepository _houseRepository;
+
+        public VillageService(IVillageRepository villageRepository, IImageService imageService, IImageRepository imageRepository, IHouseRepository houseRepository)
         {
             _villageRepository = villageRepository;
             _imageRepository = imageRepository;
             _imageService = imageService;
-
+            _houseRepository = houseRepository;
         }
 
         public DataTable getVillage()
@@ -59,39 +61,147 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             return _villageRepository.GetVillageByIdWithImg(villageId);
         }
 
-        public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
+        //public async Task<IEnumerable<VillageResponseDTO>> GetAllVillageWithImg()
+        //{
+        //    // Lấy danh sách villages từ repository
+        //    var villages = await _villageRepository.GetVillagesWithHousesAndChildrenAsync();
+
+        //    // Chuyển đổi sang DTO
+        //    var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
+        //    {
+        //        Id = village.Id,
+        //        VillageName = village.VillageName ?? string.Empty,
+        //        EstablishedDate = village.EstablishedDate,
+        //        TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+        //        TotalChildren = village.Houses
+        //                .SelectMany(h => h.Children)
+        //                .Count(c => !c.IsDeleted),
+        //        ContactNumber = village.ContactNumber,
+        //        Location = village.Location ?? string.Empty,
+        //        Description = village.Description ?? string.Empty,
+        //        Status = "Active",
+        //        UserAccountId = village.UserAccountId,
+        //        UserName = village.UserAccount?.UserName ?? "Unknown",
+        //        CreatedBy = village.CreatedBy,
+        //        ModifiedBy = village.ModifiedBy,
+        //        IsDeleted = village.IsDeleted,
+        //        CreatedDate = village.CreatedDate,
+        //        ModifiedDate = village.ModifiedDate,
+        //        ImageUrls = village.Images
+        //            .Where(img => !img.IsDeleted)
+        //            .Select(img => img.UrlPath)
+        //            .ToArray()
+        //    }).ToArray();
+
+        //    return villageResponseDTOs;
+        //}
+
+        public async Task<IEnumerable<VillageResponseDTO>> GetVillagesByRoleWithImg(string userId, string role)
         {
-            // Lấy danh sách villages từ repository
             var villages = await _villageRepository.GetVillagesWithHousesAndChildrenAsync();
 
             // Chuyển đổi sang DTO
-            var villageResponseDTOs = villages.Select(village => new VillageResponseDTO
+            var villageResponseDTOs = new List<VillageResponseDTO>();
+
+            // Kiểm tra vai trò người dùng và xử lý theo từng trường hợp
+            if (role == "Admin")
             {
-                Id = village.Id,
-                VillageName = village.VillageName ?? string.Empty,
-                EstablishedDate = village.EstablishedDate,
-                TotalHouses = village.Houses.Count(h => !h.IsDeleted),
-                TotalChildren = village.Houses
+                // Nếu là Admin, trả về toàn bộ danh sách village
+                villageResponseDTOs = villages.Select(village => new VillageResponseDTO
+                {
+                    Id = village.Id,
+                    VillageName = village.VillageName ?? string.Empty,
+                    EstablishedDate = village.EstablishedDate,
+                    TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                    TotalChildren = village.Houses
                         .SelectMany(h => h.Children)
                         .Count(c => !c.IsDeleted),
-                ContactNumber = village.ContactNumber,
-                Location = village.Location ?? string.Empty,
-                Description = village.Description ?? string.Empty,
-                Status = "Active",
-                UserAccountId = village.UserAccountId,
-                UserName = village.UserAccount?.UserName ?? "Unknown",
-                CreatedBy = village.CreatedBy,
-                ModifiedBy = village.ModifiedBy,
-                IsDeleted = village.IsDeleted,
-                CreatedDate = village.CreatedDate,
-                ModifiedDate = village.ModifiedDate,
-                ImageUrls = village.Images
-                    .Where(img => !img.IsDeleted)
-                    .Select(img => img.UrlPath)
-                    .ToArray()
-            }).ToArray();
+                    ContactNumber = village.ContactNumber,
+                    Location = village.Location ?? string.Empty,
+                    Description = village.Description ?? string.Empty,
+                    Status = "Active",
+                    UserAccountId = village.UserAccountId,
+                    UserName = village.UserAccount?.UserName ?? "Unknown",
+                    CreatedBy = village.CreatedBy,
+                    ModifiedBy = village.ModifiedBy,
+                    IsDeleted = village.IsDeleted,
+                    CreatedDate = village.CreatedDate,
+                    ModifiedDate = village.ModifiedDate,
+                    ImageUrls = village.Images
+                        .Where(img => !img.IsDeleted)
+                        .Select(img => img.UrlPath)
+                        .ToArray()
+                }).ToList();
+            }
+            else if (role == "Director")
+            {
+                // Nếu là Director, lọc theo VillageId mà Director quản lý
+                var village = await _villageRepository.GetVillageByUserAccountIdAsync(userId);
+                if (village != null)
+                {
+                    villageResponseDTOs.Add(new VillageResponseDTO
+                    {
+                        Id = village.Id,
+                        VillageName = village.VillageName ?? string.Empty,
+                        EstablishedDate = village.EstablishedDate,
+                        TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                        TotalChildren = village.Houses
+                            .SelectMany(h => h.Children)
+                            .Count(c => !c.IsDeleted),
+                        ContactNumber = village.ContactNumber,
+                        Location = village.Location ?? string.Empty,
+                        Description = village.Description ?? string.Empty,
+                        Status = "Active",
+                        UserAccountId = village.UserAccountId,
+                        UserName = village.UserAccount?.UserName ?? "Unknown",
+                        CreatedBy = village.CreatedBy,
+                        ModifiedBy = village.ModifiedBy,
+                        IsDeleted = village.IsDeleted,
+                        CreatedDate = village.CreatedDate,
+                        ModifiedDate = village.ModifiedDate,
+                        ImageUrls = village.Images
+                            .Where(img => !img.IsDeleted)
+                            .Select(img => img.UrlPath)
+                            .ToArray()
+                    });
+                }
+            }
+            else if (role == "HouseMother")
+            {
+                // Nếu là HouseMother, lọc theo các house mà họ quản lý để lấy Village của house đó
+                var houses = await _houseRepository.GetHousesByUserAccountIdAsync(userId);
+                var villageIds = houses.Select(h => h.VillageId).Distinct().ToList();
 
-            return villageResponseDTOs;
+                villageResponseDTOs = villages
+                    .Where(v => villageIds.Contains(v.Id))
+                    .Select(village => new VillageResponseDTO
+                    {
+                        Id = village.Id,
+                        VillageName = village.VillageName ?? string.Empty,
+                        EstablishedDate = village.EstablishedDate,
+                        TotalHouses = village.Houses.Count(h => !h.IsDeleted),
+                        TotalChildren = village.Houses
+                            .SelectMany(h => h.Children)
+                            .Count(c => !c.IsDeleted),
+                        ContactNumber = village.ContactNumber,
+                        Location = village.Location ?? string.Empty,
+                        Description = village.Description ?? string.Empty,
+                        Status = "Active",
+                        UserAccountId = village.UserAccountId,
+                        UserName = village.UserAccount?.UserName ?? "Unknown",
+                        CreatedBy = village.CreatedBy,
+                        ModifiedBy = village.ModifiedBy,
+                        IsDeleted = village.IsDeleted,
+                        CreatedDate = village.CreatedDate,
+                        ModifiedDate = village.ModifiedDate,
+                        ImageUrls = village.Images
+                            .Where(img => !img.IsDeleted)
+                            .Select(img => img.UrlPath)
+                            .ToArray()
+                    }).ToList();
+            }
+
+            return villageResponseDTOs.ToArray();
         }
 
         public async Task<VillageResponseDTO[]> SearchVillagesAsync(string searchTerm)

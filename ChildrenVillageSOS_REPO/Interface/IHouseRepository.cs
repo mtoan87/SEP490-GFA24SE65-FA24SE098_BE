@@ -26,5 +26,6 @@ namespace ChildrenVillageSOS_REPO.Interface
         Task<HouseDetailsDTO> GetHouseDetails(string houseId);
         Task<List<House>> SearchHouses(SearchHouseDTO searchHouseDTO);
         Task<IEnumerable<House>> GetHousesWithRelationsAsync(IEnumerable<string> houseIds);
+        Task<IEnumerable<House>> GetHousesByUserAccountIdAsync(string userAccountId);
     }
 }
