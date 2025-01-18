@@ -350,8 +350,14 @@ namespace ChildrenVillageSOS_SERVICE.Implement
 
         public async Task<Event> CreateEvent(EventCreateDTO createEvent)
         {
+            var allEventCodes = await _eventRepository.Entities()
+                                       .Select(c => c.EventCode)
+                                       .ToListAsync();
+            string newEventCode = IdGenerator.GenerateId(allEventCodes, "E");
+
             var newEvent = new Event
             {
+                CreatedBy = createEvent.CreatedBy,
                 Name = createEvent.Name,
                 Description = createEvent.Description,
                 FacilitiesWalletId = createEvent.FacilitiesWalletId,
@@ -361,12 +367,12 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 NecessitiesWalletId = createEvent.NecessitiesWalletId,
                 StartTime = createEvent.StartTime,
                 EndTime = createEvent.EndTime,
-                EventCode = createEvent.EventCode,
+                EventCode = newEventCode,
                 Status = "Active",
                 IsDeleted = false,
                 CreatedDate = DateTime.Now,
-                Amount = createEvent.Amount,
-                CurrentAmount = createEvent.Amount,
+                Amount = 0,
+                CurrentAmount = 0,
                 AmountLimit = createEvent.AmountLimit, 
                 VillageId = createEvent.VillageId,
                

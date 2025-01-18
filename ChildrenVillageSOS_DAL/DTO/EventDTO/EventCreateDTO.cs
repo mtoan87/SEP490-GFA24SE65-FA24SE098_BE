@@ -12,7 +12,6 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
     {
         [Required(ErrorMessage = "EventCode is required.")]
         [StringLength(50, ErrorMessage = "EventCode cannot exceed 50 characters.")]
-        public string? EventCode { get; set; }
         public string? CreatedBy { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
@@ -33,8 +32,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
         public DateTime? StartTime { get; set; }
         [Required(ErrorMessage = "StartTime is required.")]
         public DateTime? EndTime { get; set; }
-        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a positive value.")]
-        public decimal? Amount { get; set; }
+
         [Range(0, double.MaxValue, ErrorMessage = "AmountLimit must be a positive value.")]
         public decimal? AmountLimit { get; set; }
 
