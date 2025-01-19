@@ -12,7 +12,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
     {
         [Required(ErrorMessage = "EventCode is required.")]
         [StringLength(50, ErrorMessage = "EventCode cannot exceed 50 characters.")]
-        public string? EventCode { get; set; }
+        public string? CreatedBy { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(200, ErrorMessage = "Name cannot exceed 200 characters.")]
@@ -51,6 +51,7 @@ namespace ChildrenVillageSOS_DAL.DTO.EventDTO
 
         [Range(0.01, double.MaxValue, ErrorMessage = "AmountLimit must be greater than 0.")]
         public decimal? AmountLimit { get; set; }
+        public string? VillageId { get; set; }
 
         public List<IFormFile>? Img { get; set; }
 
