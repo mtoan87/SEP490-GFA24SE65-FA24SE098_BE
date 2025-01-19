@@ -405,7 +405,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 throw new Exception($"Event with ID{id} not found!");
             }
 
-            editEvent.EventCode = updateEvent.EventCode;
+            editEvent.CreatedBy = updateEvent.CreatedBy;
             editEvent.Name = updateEvent.Name;
             editEvent.Description = updateEvent.Description;
             editEvent.FacilitiesWalletId = updateEvent.FacilitiesWalletId;
@@ -416,9 +416,10 @@ namespace ChildrenVillageSOS_SERVICE.Implement
             editEvent.StartTime = updateEvent.StartTime;
             editEvent.EndTime = updateEvent.EndTime;
             editEvent.Status = updateEvent.Status;
+            //editEvent.EventCode = editEvent.EventCode;
             editEvent.ModifiedDate = DateTime.Now;
             editEvent.IsDeleted = updateEvent.IsDeleted;
-            editEvent.Amount = updateEvent.Amount;
+            //editEvent.Amount = updateEvent.Amount;
             editEvent.AmountLimit = updateEvent.AmountLimit;
 
             // Lấy danh sách ảnh hiện tại
