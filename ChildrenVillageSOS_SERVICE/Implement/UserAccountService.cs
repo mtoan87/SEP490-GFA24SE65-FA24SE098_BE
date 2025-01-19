@@ -15,6 +15,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace ChildrenVillageSOS_SERVICE.Implement
 {
@@ -23,11 +28,15 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IImageService _imageService;
         private readonly IImageRepository _imageRepository;
-        public UserAccountService(IUserAccountRepository userAccountRepository, IImageService imageService, IImageRepository imageRepository)
+        private readonly IConfiguration _config;
+
+        public UserAccountService(IUserAccountRepository userAccountRepository, IImageService imageService, IImageRepository imageRepository, IConfiguration config)
         {
             _userAccountRepository = userAccountRepository;
             _imageService = imageService;
             _imageRepository = imageRepository;
+            _config = config;
+    
         }
         public string? GetRoleNameById(int roleId)
         {
@@ -311,6 +320,29 @@ namespace ChildrenVillageSOS_SERVICE.Implement
         public Task<UserResponseDTO[]> GetAllUserArrayAsync()
         {
             return _userAccountRepository.GetAllUserArrayAsync();
+        }
+
+        public string GenerateToken(UserAccount user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.Email, user.UserEmail),
+            new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+            new Claim("userId", user.Id.ToString())
+        };
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(120),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task<GetAuthTokenDTO> LoginWithGoogle(string googleToken)
