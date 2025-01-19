@@ -27,38 +27,36 @@ namespace ChildrenVillageSOS_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] Model.LoginRequest request)
         {
-            if (request == null)
+            if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             {
                 return BadRequest(new ApiResponse
                 {
                     StatusCode = 400,
                     Message = "Invalid client request",
-                    Data = null,
-                    RoleId = 0
+                    Data = null
                 });
             }
-            var account = await this._customerService.Login(request.Email, request.Password);
-            if (account == null)
+
+            var user = await _customerService.Login(request.Email, request.Password);
+            if (user == null)
             {
                 return Unauthorized(new ApiResponse
                 {
                     StatusCode = 401,
-                    Message = "Unauthorized",
-                    Data = null,
-                    RoleId = 0
+                    Message = "Invalid email or password",
+                    Data = null
                 });
             }
 
-            var token = this.GenerateJSONWebToken(account);
-            var user = await _customerService.GetUserById(account.Id);
-            var roleId = account.RoleId;
+            var token = _customerService.GenerateToken(user);
+
             return Ok(new ApiResponse
             {
                 StatusCode = 200,
                 Message = "Login successful",
-                Data = token,
-                RoleId = (int)roleId,
-                UserId = account.Id
+                Data = new { Token = token },
+                RoleId = user.RoleId,
+                UserId = user.Id
             });
         }
 
@@ -69,24 +67,5 @@ namespace ChildrenVillageSOS_API.Controllers
             return Ok(result);
         }
 
-        private string GenerateJSONWebToken(UserAccount userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Audience"],
-              new Claim[]
-              {
-              new(ClaimTypes.Email, userInfo.UserEmail),
-              new(ClaimTypes.Role, _customerService.GetRoleNameById(userInfo.RoleId)),
-              new("userId", userInfo.Id.ToString()),
-              },
-              expires: DateTime.Now.AddMinutes(120),
-              signingCredentials: credentials
-              );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
     }
 }
