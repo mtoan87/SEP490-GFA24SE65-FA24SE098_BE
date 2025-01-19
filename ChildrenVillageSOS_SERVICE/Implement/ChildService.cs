@@ -432,6 +432,7 @@ namespace ChildrenVillageSOS_SERVICE.Implement
                 Dob = createChild.Dob,
                 CreatedDate = DateTime.Now,
                 Status = "Active",
+                ExpenseRequestStatus = "Available",
                 IsDeleted = false
             };
 
